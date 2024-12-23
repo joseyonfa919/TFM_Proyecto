@@ -105,6 +105,7 @@ def upload_image():
 #@api_bp.route('/photos', methods=['GET'])
 #@app.route('/photos', methods=['GET'])
 
+
 @api_bp.route('/photos', methods=['GET'])
 @jwt_required()
 def get_photos():
