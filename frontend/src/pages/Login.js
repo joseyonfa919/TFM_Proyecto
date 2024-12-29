@@ -13,12 +13,16 @@ function Login() {
         try {
             const response = await axios.post('http://127.0.0.1:5000/login', { email, password });
             console.log('Respuesta del servidor:', response.data);
-            if (response.data.token) {
-                localStorage.setItem('token', response.data.token); // Guarda el token
+
+            if (response.data.token && response.data.user_id) {
+                // Guarda el token y el ID del usuario en localStorage
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user_id', response.data.user_id);
+
                 alert('Login exitoso');
-                navigate('/'); // Redirige a la página de fotos
+                navigate('/'); // Redirige a la página de inicial
             } else {
-                alert('No se recibió un token válido');
+                alert('No se recibió un token o ID de usuario válido');
             }
         } catch (error) {
             console.error('Error al iniciar sesión:', error);
