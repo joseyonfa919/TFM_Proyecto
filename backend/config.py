@@ -6,3 +6,4 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = "secret_key"
     CORS_HEADERS = "Content-Type"
+    JWT_ACCESS_TOKEN_EXPIRES = False  # Deshabilita la expiración del token

@@ -5,11 +5,12 @@ import Navbar from '../components/Navbar';
 function Photos() {
     const [photos, setPhotos] = useState([]);
     const [loading, setLoading] = useState(true); // Estado para indicar que está cargando
-    const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local
+  // Obtener el token del almacenamiento local
 
     useEffect(() => {
         const fetchPhotos = async () => {
             try {
+                const token = localStorage.getItem('token'); 
                 const response = await axios.get('http://127.0.0.1:5000/photos', {
                     headers: {
                         Authorization: `Bearer ${token}`, // Enviar el token como encabezado

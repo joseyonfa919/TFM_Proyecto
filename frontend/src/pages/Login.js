@@ -16,7 +16,7 @@ function Login() {
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token); // Guarda el token
                 alert('Login exitoso');
-                navigate('/home'); // Redirige a la página de fotos
+                navigate('/'); // Redirige a la página de fotos
             } else {
                 alert('No se recibió un token válido');
             }
