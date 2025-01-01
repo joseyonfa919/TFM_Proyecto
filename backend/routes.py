@@ -1,26 +1,45 @@
 from datetime import timedelta
+import bcrypt
 from flask import Blueprint, request, jsonify, send_from_directory
-from flask_bcrypt import generate_password_hash, check_password_hash
+from flask_bcrypt import check_password_hash
 from flask_jwt_extended import create_access_token,jwt_required, get_jwt_identity,verify_jwt_in_request
-from models import db, User, Image
+from models import db, User, Image, Album
 import os
 from werkzeug.utils import secure_filename
 from flask import current_app
+from flask_bcrypt import Bcrypt
 
 
 
 api_bp = Blueprint('api', __name__)
-
+bcrypt = Bcrypt()
 
 #registro Usuarios
 @api_bp.route('/register', methods=['POST'])
 def register():
-    data = request.get_json()
-    hashed_password = generate_password_hash(data['password']).decode('utf-8')
-    new_user = User(name=data['name'], email=data['email'], password=hashed_password)
-    db.session.add(new_user)
-    db.session.commit()
-    return jsonify({"message": "User registered successfully"}), 201
+    try:
+        data = request.get_json()
+        name = data.get('name')
+        email = data.get('email')
+        password = data.get('password')
+
+        if not name or not email or not password:
+            return jsonify({"message": "Todos los campos son obligatorios"}), 400
+
+        # Verificar si el usuario ya existe
+        if User.query.filter_by(email=email).first():
+            return jsonify({"message": "El usuario ya está registrado"}), 400
+
+        # Crear un nuevo usuario
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        new_user = User(name=name, email=email, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        return jsonify({"message": "Usuario registrado con éxito"}), 201
+    except Exception as e:
+        print(f"Error durante el registro: {e}", flush=True)
+        return jsonify({"message": "Error durante el registro", "error": str(e)}), 500
 
 #login - inicio de sesion
 @api_bp.route('/login', methods=['POST'])
@@ -128,3 +147,60 @@ def serve_file(filename):
         print(f"Error al servir la imagen: {e}", flush=True)
         return jsonify({"message": "Error al servir la imagen"}), 500
 
+
+@api_bp.route('/albums', methods=['POST'])
+@jwt_required()
+def create_album():
+    try:
+        data = request.get_json()
+        album_name = data.get('name')
+        photo_ids = data.get('photo_ids')  # Lista de IDs de fotos seleccionadas
+
+        if not album_name or not photo_ids:
+            return jsonify({"message": "El nombre del álbum y las fotos son obligatorios"}), 400
+
+        user_id = get_jwt_identity()
+
+        # Crear el álbum
+        new_album = Album(name=album_name, user_id=user_id)
+        db.session.add(new_album)
+        db.session.commit()
+
+        # Asociar las fotos al álbum
+        for photo_id in photo_ids:
+            photo = Image.query.filter_by(id=photo_id, user_id=user_id).first()
+            if photo:
+                photo.album_id = new_album.id
+        db.session.commit()
+
+        return jsonify({"message": "Álbum creado con éxito", "album_id": new_album.id}), 201
+    except Exception as e:
+        print(f"Error al crear el álbum: {e}", flush=True)
+        return jsonify({"message": "Error al crear el álbum", "error": str(e)}), 500
+
+
+# Obtener álbumes del usuario autenticado
+@api_bp.route('/albums', methods=['GET'])
+@jwt_required()
+def get_albums():
+    try:
+        user_id = get_jwt_identity()
+        albums = Album.query.filter_by(user_id=user_id).all()
+
+        album_list = [
+            {
+                "id": album.id,
+                "name": album.name,
+                "photos": [
+                    {
+                        "id": photo.id,
+                        "file_name": photo.file_name,
+                        "file_path": os.path.basename(photo.file_path)
+                    } for photo in album.photos
+                ]
+            } for album in albums
+        ]
+        return jsonify(album_list), 200
+    except Exception as e:
+        print(f"Error al obtener los álbumes: {e}", flush=True)
+        return jsonify({"message": "Error al obtener los álbumes", "error": str(e)}), 500

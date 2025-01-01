@@ -11,11 +11,20 @@ function Register() {
 
   const handleRegister = async () => {
     try {
-      await axios.post('http://127.0.0.1:5000/register', { name, email, password });
-      alert('Registro exitoso. Ahora puedes iniciar sesión.');
+      console.log({ name, email, password });
+      const response = await axios.post('http://127.0.0.1:5000/register', {
+        name,
+        email,
+        password,
+      });
+      alert(response.data.message);
       navigate('/login');
     } catch (error) {
-      alert('Error al registrar el usuario');
+      if (error.response && error.response.data.message) {
+        alert(error.response.data.message);
+      } else {
+        alert('Error desconocido al registrar el usuario.');
+      }
     }
   };
 

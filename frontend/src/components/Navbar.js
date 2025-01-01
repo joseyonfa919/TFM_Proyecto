@@ -22,7 +22,9 @@ function Navbar() {
         <>
           <Link to="/upload" style={styles.link}>Subir Foto</Link>
           <Link to="/Photos" style={styles.link}>Ver Foto</Link>
-
+          <Link to="/create-album" style={styles.link}>Subir Album</Link>
+          <Link to="/view-albums" style={styles.link}>Ver Album</Link>
+          
           {/* Icono y Menú desplegable */}
           <div style={styles.profileContainer}>
             <FaUserCircle 
