@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, current_app, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
@@ -40,6 +40,14 @@ if not os.path.exists(UPLOAD_FOLDER):
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route('/uploads/<filename>')
+def serve_file(filename):
+    try:
+        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    except Exception as e:
+        print(f"Error al servir la imagen: {e}", flush=True)
+        return jsonify({"message": "Error al servir la imagen"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

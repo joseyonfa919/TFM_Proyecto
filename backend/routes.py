@@ -120,26 +120,24 @@ def upload_file():
 #@jwt_required()
 @api_bp.route('/photos', methods=['GET'])
 def get_photos():
-    user_id = request.args.get('user_id')
+    user_id = request.args.get('user_id')  # Obtener el user_id del parámetro de consulta
     if not user_id:
         return jsonify({"message": "User ID is required"}), 400
-    try:
-        photos = Image.query.filter_by(user_id=int(user_id)).all()
-        photo_list = [
-            {
-                'id': photo.id,
-                'file_path': os.path.basename(photo.file_path),  # Solo el nombre del archivo
-                'uploaded_at': photo.uploaded_at.isoformat()
-            } for photo in photos
-        ]
-        return jsonify(photo_list), 200
-    except Exception as e:
-        print(f"Error al obtener fotos: {e}", flush=True)
-        return jsonify({"message": "Error al obtener fotos", "error": str(e)}), 500
 
+    photos = Image.query.filter_by(user_id=int(user_id)).all()
+    photo_list = [
+        {
+            'id': photo.id,
+            'file_name': photo.file_name,
+            'file_path': f"/uploads/{os.path.basename(photo.file_path)}",  # Ruta relativa
+            'uploaded_at': photo.uploaded_at.isoformat()
+        } for photo in photos
+    ]
+    return jsonify(photo_list), 200
 
 
 @api_bp.route('/uploads/<filename>')
+@jwt_required()
 def serve_file(filename):
     try:
         return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
@@ -148,27 +146,26 @@ def serve_file(filename):
         return jsonify({"message": "Error al servir la imagen"}), 500
 
 
+
 @api_bp.route('/albums', methods=['POST'])
-@jwt_required()
 def create_album():
     try:
         data = request.get_json()
         album_name = data.get('name')
-        photo_ids = data.get('photo_ids')  # Lista de IDs de fotos seleccionadas
+        photo_ids = data.get('photo_ids')
+        user_id = data.get('user_id')  # Obtener el user_id del cuerpo de la solicitud
 
-        if not album_name or not photo_ids:
-            return jsonify({"message": "El nombre del álbum y las fotos son obligatorios"}), 400
-
-        user_id = get_jwt_identity()
+        if not album_name or not photo_ids or not user_id:
+            return jsonify({"message": "El nombre del álbum, las fotos y el ID del usuario son obligatorios"}), 400
 
         # Crear el álbum
-        new_album = Album(name=album_name, user_id=user_id)
+        new_album = Album(name=album_name, user_id=int(user_id))
         db.session.add(new_album)
         db.session.commit()
 
         # Asociar las fotos al álbum
         for photo_id in photo_ids:
-            photo = Image.query.filter_by(id=photo_id, user_id=user_id).first()
+            photo = Image.query.filter_by(id=photo_id, user_id=int(user_id)).first()
             if photo:
                 photo.album_id = new_album.id
         db.session.commit()
@@ -181,11 +178,13 @@ def create_album():
 
 # Obtener álbumes del usuario autenticado
 @api_bp.route('/albums', methods=['GET'])
-@jwt_required()
 def get_albums():
     try:
-        user_id = get_jwt_identity()
-        albums = Album.query.filter_by(user_id=user_id).all()
+        user_id = request.args.get('user_id')  # Obtener el user_id del parámetro de consulta
+        if not user_id:
+            return jsonify({"message": "User ID is required"}), 400
+
+        albums = Album.query.filter_by(user_id=int(user_id)).all()
 
         album_list = [
             {
@@ -204,3 +203,57 @@ def get_albums():
     except Exception as e:
         print(f"Error al obtener los álbumes: {e}", flush=True)
         return jsonify({"message": "Error al obtener los álbumes", "error": str(e)}), 500
+    
+@api_bp.route('/photos/delete', methods=['POST'])
+def delete_photos():
+    try:
+        data = request.get_json()
+        user_id = data.get('user_id')
+        photo_ids = data.get('photo_ids')
+
+        if not user_id or not photo_ids:
+            return jsonify({"message": "User ID y photo_ids son obligatorios"}), 400
+
+        # Verificar y eliminar fotos
+        for photo_id in photo_ids:
+            photo = Image.query.filter_by(id=photo_id, user_id=int(user_id)).first()
+            if photo:
+                # Eliminar archivo físico del servidor
+                try:
+                    os.remove(photo.file_path)
+                except Exception as e:
+                    print(f"Error al eliminar archivo físico: {e}", flush=True)
+                # Eliminar registro de la base de datos
+                db.session.delete(photo)
+
+        db.session.commit()
+        return jsonify({"message": "Fotos eliminadas con éxito"}), 200
+    except Exception as e:
+        print(f"Error al eliminar fotos: {e}", flush=True)
+        return jsonify({"message": "Error al eliminar fotos", "error": str(e)}), 500
+    
+
+@api_bp.route('/albums/delete', methods=['POST'])
+def delete_albums():
+    try:
+        data = request.get_json()
+        user_id = data.get('user_id')
+        album_ids = data.get('album_ids')
+
+        if not user_id or not album_ids:
+            return jsonify({"message": "User ID y album_ids son obligatorios"}), 400
+
+        # Verificar y eliminar álbumes
+        for album_id in album_ids:
+            album = Album.query.filter_by(id=album_id, user_id=int(user_id)).first()
+            if album:
+                # Desasociar y eliminar fotos del álbum
+                for photo in album.photos:
+                    photo.album_id = None
+                db.session.delete(album)
+
+        db.session.commit()
+        return jsonify({"message": "Álbumes eliminados con éxito"}), 200
+    except Exception as e:
+        print(f"Error al eliminar álbumes: {e}", flush=True)
+        return jsonify({"message": "Error al eliminar álbumes", "error": str(e)}), 500
