@@ -1,31 +1,33 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/Login';
+import React from "react";
+import './index.css'; // Para estilos globales
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import WelcomePage from "./pages/WelcomePage";
+//import Home from "./pages/Home";
+//import ProtectedRoute from "./components/ProtectedRoute";
 import Register from './pages/Register';
 import Upload from './pages/Upload';
 import Photos from "./pages/Photos";
 import CreateAlbum from './pages/CreateAlbum'; 
 import ViewAlbums from './pages/ViewAlbums';   
+import InfoPage from './pages/InfoPage';
 
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/upload" element={<Upload />} />
-        <Route path="/photos" element={<Photos />} />
-        <Route path="/create-album" element={<CreateAlbum />} />
-        <Route path="/view-albums" element={<ViewAlbums />} />
-      </Routes>
-    </Router>
-  );
-}
-
+const App = () => {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<InfoPage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/upload" element={<Upload />} />
+                <Route path="/photos" element={<Photos />} />
+                <Route path="/create-album" element={<CreateAlbum />} />
+                <Route path="/view-albums" element={<ViewAlbums />} />
+                <Route path="/WelcomePage" element={ <WelcomePage /> }
+                />
+            </Routes>
+        </Router>
+    );
+};
 
 export default App;
-
-
-

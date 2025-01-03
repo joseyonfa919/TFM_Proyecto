@@ -5,17 +5,30 @@ import { FaUserCircle } from 'react-icons/fa'; // Importar el ícono de usuario
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false); // Estado para mostrar el menú
   const token = localStorage.getItem('token');
+  //const name = localStorage.getItem('name');
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem('token'); // Eliminar el token
-    navigate('/'); // Redirigir al inicio
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('name');
+    navigate('/'); // Redirigir al login
+  };
+
+  const handleHomeClick = () => {
+    if (token) {
+      navigate('/WelcomePage');
+    } else {
+      navigate('/');
+    }
   };
 
   return (
     <nav style={styles.navbar}>
       {/* Enlace de Inicio */}
-      <Link to="/" style={styles.link}>Inicio</Link>
+      <span onClick={handleHomeClick} style={{ ...styles.link, cursor: 'pointer' }}>
+        Inicio
+      </span>
 
       {/* Opciones cuando el usuario está logueado */}
       {token ? (

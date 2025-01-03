@@ -14,15 +14,15 @@ function Login() {
             const response = await axios.post('http://127.0.0.1:5000/login', { email, password });
             console.log('Respuesta del servidor:', response.data);
 
-            if (response.data.token && response.data.user_id) {
-                // Guarda el token y el ID del usuario en localStorage
+            if (response.data.token && response.data.user_id && response.data.name) {
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('user_id', response.data.user_id);
+                localStorage.setItem('name', JSON.stringify({ name: response.data.name }));
 
                 alert('Login exitoso');
-                navigate('/'); // Redirige a la página de inicial
+                navigate('/WelcomePage');
             } else {
-                alert('No se recibió un token o ID de usuario válido');
+                alert('Credenciales inválidas o datos incompletos del servidor.');
             }
         } catch (error) {
             console.error('Error al iniciar sesión:', error);
@@ -38,6 +38,7 @@ function Login() {
                 <input
                     type="email"
                     placeholder="Email"
+                    value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     style={{ margin: '10px', padding: '8px' }}
                 />
@@ -45,6 +46,7 @@ function Login() {
                 <input
                     type="password"
                     placeholder="Contraseña"
+                    value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     style={{ margin: '10px', padding: '8px' }}
                 />

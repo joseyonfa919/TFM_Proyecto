@@ -110,7 +110,7 @@ function CreateAlbum() {
                             />
                             <img
                                 src={`http://127.0.0.1:5000${photo.file_path}`}
-                                alt={photo.file_name}
+                                alt="Foto"
                                 style={{
                                     width: '100%',
                                     height: '150px',
@@ -119,7 +119,6 @@ function CreateAlbum() {
                                     marginTop: '10px',
                                 }}
                             />
-                            <p style={{ marginTop: '10px', fontSize: '14px' }}>{photo.file_name}</p>
                         </div>
                     ))}
                 </div>

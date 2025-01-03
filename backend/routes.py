@@ -54,9 +54,9 @@ def login():
         if user and check_password_hash(user.password, password):
             # Generar un token JWT
             access_token = create_access_token(identity=user.id)
-            print(f"Access Token generado: {access_token}") 
+            #print(f"Access Token generado: {access_token}") 
             #return jsonify({"token": access_token}), 200
-            return jsonify({"token": access_token, "user_id": user.id}), 200
+            return jsonify({"token": access_token, "user_id": user.id, "name":user.name}), 200
         else:
             return jsonify({"error": "Invalid email or password"}), 401
     except Exception as e:
@@ -91,16 +91,19 @@ def upload_file():
         if file.filename == '':
             return jsonify({'error': 'No selected file'}), 400
 
-        # Guardar el archivo en el servidor
+        # Modificar el nombre del archivo para incluir el user_id
         filename = secure_filename(file.filename)
+        filename_with_user_id = f"{user_id}_{filename}"
+
+        # Guardar el archivo en el servidor
         upload_folder = current_app.config['UPLOAD_FOLDER']
-        file_path = os.path.join(upload_folder, filename)
+        file_path = os.path.join(upload_folder, filename_with_user_id)
         file.save(file_path)
 
         # Crear un registro en la base de datos
         new_image = Image(
             user_id=int(user_id),  # Asegurarse de que sea un entero
-            file_name=file.filename,
+            file_name=filename_with_user_id,
             file_path=file_path,
         )
         db.session.add(new_image)
@@ -110,6 +113,7 @@ def upload_file():
     except Exception as e:
         print(f"Error al subir imagen: {e}", flush=True)
         return jsonify({"message": "Error al procesar la solicitud", "error": str(e)}), 500
+
     
     
 #@api_bp.route('/photos', methods=['GET'])
@@ -137,7 +141,6 @@ def get_photos():
 
 
 @api_bp.route('/uploads/<filename>')
-@jwt_required()
 def serve_file(filename):
     try:
         return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)

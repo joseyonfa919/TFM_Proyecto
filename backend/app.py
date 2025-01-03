@@ -49,5 +49,6 @@ def serve_file(filename):
         print(f"Error al servir la imagen: {e}", flush=True)
         return jsonify({"message": "Error al servir la imagen"}), 500
 
+
 if __name__ == '__main__':
     app.run(debug=True)
