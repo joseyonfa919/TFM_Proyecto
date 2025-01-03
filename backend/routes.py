@@ -8,11 +8,13 @@ import os
 from werkzeug.utils import secure_filename
 from flask import current_app
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
 
 
 
 api_bp = Blueprint('api', __name__)
 bcrypt = Bcrypt()
+CORS(api_bp)
 
 #registro Usuarios
 @api_bp.route('/register', methods=['POST'])
