@@ -88,21 +88,20 @@ function CreateAlbum() {
                     style={{
                         display: 'flex',
                         flexWrap: 'wrap',
-                        gap: '10px', // Espaciado uniforme entre elementos
-                        justifyContent: 'center', // Asegurar que los elementos estén centrados
+                        gap: '10px', // Espaciado uniforme
+                        justifyContent: 'center',
                     }}
                 >
                     {photos.map((photo) => (
                         <div
-                            key={photo.id} // Identificador único para cada foto
+                            key={photo.id}
                             style={{
-                                marginBottom: '20px',
-                                textAlign: 'center',
-                                width: 'calc(25% - 10px)', // Mantener el ancho uniforme
                                 border: '1px solid #ddd',
                                 borderRadius: '5px',
-                                padding: '10px',
-                                boxSizing: 'border-box',
+                                overflow: 'hidden',
+                                width: '120px', // Dimensiones similares a ViewAlbums
+                                height: '120px',
+                                position: 'relative',
                             }}
                         >
                             {/* Checkbox para seleccionar/deseleccionar una foto */}
@@ -125,10 +124,8 @@ function CreateAlbum() {
                                 alt="Foto"
                                 style={{
                                     width: '100%',
-                                    height: '150px',
+                                    height: '100%',
                                     objectFit: 'cover',
-                                    borderRadius: '5px',
-                                    marginTop: '10px',
                                 }}
                             />
                         </div>
