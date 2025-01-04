@@ -11,6 +11,7 @@ import Photos from "./pages/Photos";
 import CreateAlbum from './pages/CreateAlbum'; 
 import ViewAlbums from './pages/ViewAlbums';   
 import InfoPage from './pages/InfoPage';
+import ChangePassword from './pages/ChangePassword';
 
 const App = () => {
     return (
@@ -23,8 +24,8 @@ const App = () => {
                 <Route path="/photos" element={<Photos />} />
                 <Route path="/create-album" element={<CreateAlbum />} />
                 <Route path="/view-albums" element={<ViewAlbums />} />
-                <Route path="/WelcomePage" element={ <WelcomePage /> }
-                />
+                <Route path="/WelcomePage" element={ <WelcomePage /> } />
+                <Route path="/change-password" element={<ChangePassword />} />
             </Routes>
         </Router>
     );

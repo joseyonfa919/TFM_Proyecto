@@ -23,6 +23,10 @@ function Navbar() {
     }
   };
 
+  const handleNavigateToChangePassword = () => {
+    navigate('/change-password');
+  };
+
   return (
     <nav style={styles.navbar}>
       {/* Enlace de Inicio */}
@@ -50,6 +54,7 @@ function Navbar() {
                 <ul style={styles.menuList}>
                   <li style={styles.menuItem}>Mi Perfil</li>
                   <li style={styles.menuItem}>Configuración</li>
+                  <li style={styles.menuItem} onClick={handleNavigateToChangePassword}>Cambiar Contraseña</li>
                   <li style={styles.menuItem} onClick={handleLogout}>
                     Cerrar Sesión
                   </li>
