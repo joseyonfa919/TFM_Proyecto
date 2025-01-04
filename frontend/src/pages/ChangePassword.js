@@ -17,13 +17,14 @@ function ChangePassword() {
         }
 
         try {
+            console.log('Paso1:')
             const token = localStorage.getItem('token');
             if (!token) {
                 alert('No se encontró un token. Por favor, inicia sesión nuevamente.');
                 navigate('/login');
                 return;
             }
-
+            console.log('Paso2:',token)
             const response = await axios.post(
                 'http://127.0.0.1:5000/change-password',
                 {
@@ -37,7 +38,7 @@ function ChangePassword() {
                 }
             );
 
-            console.log('Respuesta del servidor:', response.data);
+            console.log('Paso3:', response.data);
 
             if (response.data.success) {
                 alert('Contraseña cambiada exitosamente');
