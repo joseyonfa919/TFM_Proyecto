@@ -1,49 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/Navbar'; // Componente de navegación
 
 function CreateAlbum() {
-    const [photos, setPhotos] = useState([]);
-    const [selectedPhotos, setSelectedPhotos] = useState([]);
-    const [albumName, setAlbumName] = useState('');
+    // Estados para manejar las fotos disponibles, las fotos seleccionadas y el nombre del álbum
+    const [photos, setPhotos] = useState([]); // Lista de fotos disponibles
+    const [selectedPhotos, setSelectedPhotos] = useState([]); // Lista de fotos seleccionadas para el álbum
+    const [albumName, setAlbumName] = useState(''); // Nombre del álbum
 
+    // Efecto para cargar las fotos disponibles al montar el componente
     useEffect(() => {
-        const userId = localStorage.getItem('user_id'); // Obtener user_id del localStorage
+        const userId = localStorage.getItem('user_id'); // Obtener el user_id desde localStorage
         if (!userId) {
             console.error('No se encontró user_id en localStorage');
             return;
         }
 
+        // Solicitud para obtener las fotos del usuario
         axios
             .get('http://127.0.0.1:5000/photos', { params: { user_id: userId } })
             .then((response) => {
-                setPhotos(response.data);
+                setPhotos(response.data); // Guardar las fotos en el estado
             })
             .catch((error) => {
                 console.error('Error al obtener las fotos:', error);
             });
     }, []);
 
+    // Función para manejar la creación de un álbum
     const handleCreateAlbum = async () => {
-        const userId = localStorage.getItem('user_id');
+        const userId = localStorage.getItem('user_id'); // Obtener el user_id desde localStorage
+
+        // Validar que el nombre del álbum no esté vacío
         if (!albumName.trim()) {
             alert('Por favor ingresa un nombre para el álbum.');
             return;
         }
 
+        // Validar que se haya seleccionado al menos una foto
         if (selectedPhotos.length === 0) {
             alert('Por favor selecciona al menos una foto para el álbum.');
             return;
         }
 
         try {
+            // Enviar solicitud POST para crear el álbum
             const response = await axios.post('http://127.0.0.1:5000/albums', {
                 user_id: userId,
-                name: albumName,
-                photo_ids: selectedPhotos,
+                name: albumName, // Nombre del álbum
+                photo_ids: selectedPhotos, // IDs de las fotos seleccionadas
             });
-            alert(response.data.message);
-            // Reiniciar formulario
+            alert(response.data.message); // Mostrar mensaje del servidor
+            // Reiniciar el formulario
             setAlbumName('');
             setSelectedPhotos([]);
         } catch (error) {
@@ -54,8 +62,9 @@ function CreateAlbum() {
 
     return (
         <div>
-            <Navbar />
+            <Navbar /> {/* Componente de navegación */}
             <h2 style={{ textAlign: 'center' }}>Crear un Álbum</h2>
+            {/* Campo para ingresar el nombre del álbum */}
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
                 <input
                     type="text"
@@ -72,6 +81,7 @@ function CreateAlbum() {
                     }}
                 />
             </div>
+            {/* Lista de fotos disponibles para selección */}
             <div>
                 <h3 style={{ textAlign: 'left' }}>Selecciona fotos:</h3>
                 <div
@@ -84,7 +94,7 @@ function CreateAlbum() {
                 >
                     {photos.map((photo) => (
                         <div
-                            key={photo.id}
+                            key={photo.id} // Identificador único para cada foto
                             style={{
                                 marginBottom: '20px',
                                 textAlign: 'center',
@@ -95,6 +105,7 @@ function CreateAlbum() {
                                 boxSizing: 'border-box',
                             }}
                         >
+                            {/* Checkbox para seleccionar/deseleccionar una foto */}
                             <input
                                 type="checkbox"
                                 value={photo.id}
@@ -103,11 +114,12 @@ function CreateAlbum() {
                                     const photoId = parseInt(e.target.value, 10);
                                     setSelectedPhotos((prev) =>
                                         e.target.checked
-                                            ? [...prev, photoId]
-                                            : prev.filter((id) => id !== photoId)
+                                            ? [...prev, photoId] // Agregar foto seleccionada
+                                            : prev.filter((id) => id !== photoId) // Remover foto seleccionada
                                     );
                                 }}
                             />
+                            {/* Imagen de vista previa */}
                             <img
                                 src={`http://127.0.0.1:5000${photo.file_path}`}
                                 alt="Foto"
@@ -123,6 +135,7 @@ function CreateAlbum() {
                     ))}
                 </div>
             </div>
+            {/* Botón para crear el álbum */}
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                 <button
                     onClick={handleCreateAlbum}

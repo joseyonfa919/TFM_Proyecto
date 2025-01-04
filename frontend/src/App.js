@@ -1,30 +1,29 @@
 import React from "react";
-import './index.css'; // Para estilos globales
+import './index.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import WelcomePage from "./pages/WelcomePage";
-//import Home from "./pages/Home";
-//import ProtectedRoute from "./components/ProtectedRoute";
 import Register from './pages/Register';
 import Upload from './pages/Upload';
 import Photos from "./pages/Photos";
 import CreateAlbum from './pages/CreateAlbum'; 
-import ViewAlbums from './pages/ViewAlbums';   
+import ViewAlbums from './pages/ViewAlbums';
 import InfoPage from './pages/InfoPage';
+import SharedAlbum from './pages/SharedAlbum'; 
 
 const App = () => {
     return (
         <Router>
             <Routes>
                 <Route path="/" element={<InfoPage />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/upload" element={<Upload />} />
-                <Route path="/photos" element={<Photos />} />
-                <Route path="/create-album" element={<CreateAlbum />} />
-                <Route path="/view-albums" element={<ViewAlbums />} />
-                <Route path="/WelcomePage" element={ <WelcomePage /> }
-                />
+                <Route path="/login" element={<Login />} /> {/* Ruta para iniciar sesion */}
+                <Route path="/register" element={<Register />} /> {/* Ruta para registrarse */}
+                <Route path="/upload" element={<Upload />} /> {/* Ruta para subir fotos subidas */}
+                <Route path="/photos" element={<Photos />} /> {/* Ruta para ver fotos */}
+                <Route path="/create-album" element={<CreateAlbum />} /> {/* Ruta para crear álbum  */}
+                <Route path="/view-albums" element={<ViewAlbums />} /> {/* Ruta para ver álbum subidos */}
+                <Route path="/WelcomePage" element={<WelcomePage />} /> {/* Ruta para pagina inicial */}
+                <Route path="/shared/:token" element={<SharedAlbum />} /> {/* Ruta para álbum compartido */}
             </Routes>
         </Router>
     );

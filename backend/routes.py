@@ -8,6 +8,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask import current_app
 from flask_bcrypt import Bcrypt
+import uuid
 
 
 
@@ -260,3 +261,20 @@ def delete_albums():
     except Exception as e:
         print(f"Error al eliminar álbumes: {e}", flush=True)
         return jsonify({"message": "Error al eliminar álbumes", "error": str(e)}), 500
+    
+
+@api_bp.route('/albums/share', methods=['POST'])
+def share_album():
+    data = request.json
+    album_id = data.get('album_id')
+    user_id = data.get('user_id')
+
+    if not album_id or not user_id:
+        return jsonify({"message": "Faltan parámetros."}), 400
+
+    # Generar un identificador único para compartir
+    share_token = str(uuid.uuid4())
+
+    # Aquí podrías guardar el enlace en la base de datos
+    # Por ahora, solo devolvemos el token
+    return jsonify({"share_link": f"http://localhost:3000/shared/{share_token}"}), 200
