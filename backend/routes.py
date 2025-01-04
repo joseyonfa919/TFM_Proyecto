@@ -293,3 +293,36 @@ def share_album():
     # Aquí podrías guardar el enlace en la base de datos
     # Por ahora, solo devolvemos el token
     return jsonify({"share_link": f"http://localhost:3000/shared/{share_token}"}), 200
+
+@api_bp.route('/change-password', methods=['POST'])  # Cambiado de PUT a POST
+@jwt_required()
+def change_password():
+    try:
+        # Verificar token y obtener usuario autenticado
+        user_id = get_jwt_identity()
+        if not user_id:
+            return jsonify({"message": "Token inválido o no proporcionado"}), 401
+        print(f"Usuario autenticado: {user_id}", flush=True)
+        # Obtener los datos del cuerpo de la solicitud
+        data = request.get_json()
+        print(f"Datos recibidos: {data}", flush=True)
+        current_password = data.get('current_password')
+        new_password = data.get('new_password')
+        if not current_password or not new_password:
+            return jsonify({"message": "La contraseña actual y la nueva contraseña son obligatorias"}), 400
+        # Verificar que el usuario existe
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"message": "Usuario no encontrado"}), 404
+        print(f"Usuario encontrado: {user.email}", flush=True)
+        # Verificar la contraseña actual
+        if not check_password_hash(user.password, current_password):
+            return jsonify({"message": "La contraseña actual es incorrecta"}), 401
+        # Hashear la nueva contraseña y actualizar en la base de datos
+        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        user.password = hashed_password
+        db.session.commit()
+        return jsonify({"message": "Contraseña cambiada con éxito"}), 200
+    except Exception as e:
+        print(f"Error en el backend: {e}", flush=True)
+        return jsonify({"message": "Error al cambiar la contraseña", "error": str(e)}), 500
