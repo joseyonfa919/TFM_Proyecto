@@ -11,6 +11,8 @@ import ViewAlbums from './pages/ViewAlbums';
 import InfoPage from './pages/InfoPage';
 import SharedAlbum from './pages/SharedAlbum'; 
 import ChangePassword from './pages/ChangePassword';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 const App = () => {
     return (
@@ -25,7 +27,9 @@ const App = () => {
                 <Route path="/view-albums" element={<ViewAlbums />} /> {/* Ruta para ver álbum subidos */}
                 <Route path="/WelcomePage" element={<WelcomePage />} /> {/* Ruta para pagina inicial */}
                 <Route path="/shared/:token" element={<SharedAlbum />} /> {/* Ruta para álbum compartido */}
-                <Route path="/change-password" element={<ChangePassword />} /> {/* Ruta para recuperar la contraseña */}
+                <Route path="/change-password" element={<ChangePassword />} /> {/* Ruta para cambiar la contraseña */}
+                <Route path="/forgot-password" element={<ForgotPassword />} /> {/* Ruta para contraseña olvidada */}
+                <Route path="/reset-password/:token" element={<ResetPassword />} /> {/* Ruta para reestablecer la contraseña */}
             </Routes>
         </Router>
     );

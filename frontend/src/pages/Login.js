@@ -65,6 +65,22 @@ function Login() {
                 <button onClick={handleLogin} style={{ padding: '8px 16px', cursor: 'pointer' }}>
                     Iniciar Sesión
                 </button>
+                <br />
+                {/* Nuevo botón para redirigir a la recuperación de contraseña */}
+                <button
+                    onClick={() => navigate('/forgot-password')}
+                    style={{
+                        marginTop: '10px',
+                        padding: '8px 16px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: 'blue',
+                        textDecoration: 'underline',
+                        cursor: 'pointer'
+                    }}
+                >
+                    ¿Olvidaste tu contraseña?
+                </button>
             </div>
         </>
     );

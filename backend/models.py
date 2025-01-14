@@ -2,6 +2,8 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask import current_app
 from flask_bcrypt import Bcrypt
+from datetime import datetime, timedelta
+import uuid
 
 
 db = SQLAlchemy()
@@ -17,6 +19,13 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    reset_token = db.Column(db.String(200), nullable=True)  # Token para restablecimiento de contraseña
+    reset_token_expiration = db.Column(db.DateTime, nullable=True)  # Fecha de expiración del token
+
+    def generate_reset_token(self):
+        self.reset_token = str(uuid.uuid4())  # Genera un token único
+        self.reset_token_expiration = datetime.utcnow() + timedelta(hours=1)  # Expira en 1 hora
+        db.session.commit()
 
     # Relación con las imágenes
     images = db.relationship('Image', back_populates='user', lazy=True)

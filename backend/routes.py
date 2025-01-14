@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 import uuid
 import bcrypt
 from flask import Blueprint, request, jsonify, send_from_directory
@@ -9,7 +9,9 @@ import os
 from werkzeug.utils import secure_filename
 from flask import current_app
 from flask_bcrypt import Bcrypt
-
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 
 api_bp = Blueprint('api', __name__)
@@ -82,13 +84,13 @@ def login():
     
 
 #Recuperar contraseña
-@api_bp.route('/forgot-password', methods=['POST'])
-def forgot_password():
-    data = request.get_json()
-    user = User.query.filter_by(email=data['email']).first()
-    if not user:
-        return jsonify({"message": "User not found"}), 404
-    return jsonify({"message": "Password reset instructions sent!"}), 200
+#@api_bp.route('/forgot-password', methods=['POST'])
+#def forgot_password():
+#    data = request.get_json()
+#    user = User.query.filter_by(email=data['email']).first()
+#    if not user:
+#        return jsonify({"message": "User not found"}), 404
+#    return jsonify({"message": "Password reset instructions sent!"}), 200
 
 
 #subir fotos
@@ -321,5 +323,104 @@ def change_password():
     except Exception as e:
         print(f"Error al cambiar contraseña: {e}")
         return jsonify({'error': 'Error interno del servidor'}), 500
+    
+def send_email(to_email, subject, body):
+    try:
+        sender_email = "recuerdosprototipo@gmail.com"  # Reemplázalo con tu correo
+        sender_password = "rnweattpnnzjibbc"  # Reemplázalo con tu contraseña
+        smtp_server = "smtp.gmail.com"
+        smtp_port = 587
 
+        # Configurar el mensaje
+        message = MIMEMultipart()
+        message["From"] = sender_email
+        message["To"] = to_email
+        message["Subject"] = subject
+        message.attach(MIMEText(body, "plain"))
 
+        # Conectar al servidor de correo
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()  # Habilitar encriptación TLS
+        server.login(sender_email, sender_password)
+
+        # Enviar el correo
+        server.sendmail(sender_email, to_email, message.as_string())
+        server.quit()
+
+        print("Correo enviado exitosamente")
+        return True
+    except Exception as e:
+        print(f"Error al enviar el correo: {e}")
+        return False
+    
+@api_bp.route('/forgot-password', methods=['POST'])
+def forgot_password():
+    try:
+        # Obtener email del cuerpo de la solicitud
+        data = request.get_json()
+        email = data.get('email')
+
+        if not email:
+            return jsonify({"message": "El correo electrónico es obligatorio"}), 400
+
+        # Verificar si el usuario existe
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            return jsonify({"message": "El usuario no existe"}), 404
+
+        # Generar un token único y fecha de expiración
+        reset_token = str(uuid.uuid4())
+        expiration_time = datetime.utcnow() + timedelta(hours=1)  # El token expira en 1 hora
+
+        # Almacenar el token y la fecha de expiración en el usuario
+        user.reset_token = reset_token
+        user.reset_token_expiration = expiration_time
+        db.session.commit()
+
+        # Crear enlace de restablecimiento de contraseña
+        reset_link = f"http://localhost:3000/reset-password/{reset_token}"
+
+        # Enviar el enlace por correo
+        subject = "Recuperación de contraseña"
+        body = f"""Hola {user.name},\n\n
+        Haz clic en el siguiente enlace para restablecer tu contraseña:\n{reset_link}\n\n
+        Este enlace es válido por 1 hora. Si no solicitaste esto, ignora este correo."""
+        email_sent = send_email(email, subject, body)
+
+        if not email_sent:
+            return jsonify({"message": "Error al enviar el correo"}), 500
+
+        return jsonify({"message": "Instrucciones para restablecer la contraseña enviadas al correo proporcionado"}), 200
+    except Exception as e:
+        print(f"Error en la recuperación de contraseña: {e}")
+        return jsonify({"message": "Error interno del servidor"}), 500
+    
+@api_bp.route('/reset-password', methods=['POST'])
+def reset_password():
+    try:
+        data = request.get_json()
+        reset_token = data.get('token')
+        new_password = data.get('new_password')
+
+        if not reset_token or not new_password:
+            return jsonify({'error': 'El token y la nueva contraseña son obligatorios'}), 400
+
+        # Buscar al usuario por el token
+        user = User.query.filter_by(reset_token=reset_token).first()
+        if not user:
+            return jsonify({'error': 'Token inválido o usuario no encontrado'}), 404
+
+        # Verificar que el token no haya expirado
+        if user.reset_token_expiration < datetime.utcnow():
+            return jsonify({'error': 'El token ha expirado'}), 400
+
+        # Actualizar la contraseña y eliminar el token
+        user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        user.reset_token = None  # Eliminar el token después de usarlo
+        user.reset_token_expiration = None
+        db.session.commit()
+
+        return jsonify({'message': 'Contraseña restablecida correctamente'}), 200
+    except Exception as e:
+        print(f"Error en reset_password: {e}")
+        return jsonify({'error': 'Error interno del servidor'}), 500
