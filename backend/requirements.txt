@@ -5,6 +5,14 @@ psycopg2-binary
 flask_bcrypt
 flask_jwt_extended
 flask_migrate
+openai
+transformers 
+torch 
+scikit_learn
+pillow
+
 #react-icons
 
-#instalar en el frontend //  npm install bootstrap
+#instalar en el frontend 
+#npm install bootstrap
+#npm install react-spinners

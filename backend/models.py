@@ -89,3 +89,24 @@ class Image(db.Model):
 
     # Relación con el usuario
     user = db.relationship('User', back_populates='images')
+
+
+class Timeline(db.Model):
+    __tablename__ = 'timelines'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    events = db.relationship('Event', back_populates='timeline', lazy=True)
+
+class Event(db.Model):
+    __tablename__ = 'events'
+
+    id = db.Column(db.Integer, primary_key=True)
+    timeline_id = db.Column(db.Integer, db.ForeignKey('timelines.id'), nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    description = db.Column(db.String(255), nullable=False)
+
+    timeline = db.relationship('Timeline', back_populates='events')

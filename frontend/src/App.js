@@ -11,8 +11,15 @@ import ViewAlbums from './pages/ViewAlbums';
 import InfoPage from './pages/InfoPage';
 import SharedAlbum from './pages/SharedAlbum'; 
 import ChangePassword from './pages/ChangePassword';
+import ManualOrganization from './pages/ManualOrganization';
+import AIOrganization from './pages/AIOrganization';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+<<<<<<< Updated upstream
+
+=======
+
+>>>>>>> Stashed changes
 
 const App = () => {
     return (
@@ -30,6 +37,17 @@ const App = () => {
                 <Route path="/change-password" element={<ChangePassword />} /> {/* Ruta para cambiar la contraseña */}
                 <Route path="/forgot-password" element={<ForgotPassword />} /> {/* Ruta para contraseña olvidada */}
                 <Route path="/reset-password/:token" element={<ResetPassword />} /> {/* Ruta para reestablecer la contraseña */}
+                <Route path="/change-password" element={<ChangePassword />} /> {/* Ruta para recuperar la contraseña */}
+                <Route path="/organize-manual" element={<ManualOrganization />} />
+<<<<<<< Updated upstream
+                <Route path="/change-password" element={<ChangePassword />} /> {/* Ruta para cambiar la contraseña */}
+                <Route path="/forgot-password" element={<ForgotPassword />} /> {/* Ruta para contraseña olvidada */}
+                <Route path="/reset-password/:token" element={<ResetPassword />} /> {/* Ruta para reestablecer la contraseña */}
+=======
+                <Route path="/change-password" element={<ChangePassword />} /> {/* Ruta para recuperar la contraseña */}
+                <Route path="/organize-manual" element={<ManualOrganization />} />
+                <Route path="/organize-ai" element={<AIOrganization />} />
+>>>>>>> Stashed changes
             </Routes>
         </Router>
     );

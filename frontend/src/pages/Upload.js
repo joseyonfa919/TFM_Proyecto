@@ -66,10 +66,11 @@ function Upload() {
     <div>
       <Navbar /> {/* Componente de navegación */}
       <div style={{ textAlign: 'center', marginTop: '50px' }}>
-        <h2>Subir Foto</h2>
+        <h2>Subir Foto o Video</h2>
         {/* Input para seleccionar un archivo */}
         <input
           type="file"
+          accept="image/*,video/*" // Permitir imágenes y videos
           ref={fileInputRef} // Asignar referencia al input
           onChange={handleFileChange} // Llamar a handleFileChange al seleccionar un archivo
         />

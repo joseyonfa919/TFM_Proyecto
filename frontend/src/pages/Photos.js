@@ -65,14 +65,24 @@ function Photos() {
         }
     };
 
+    // Función para enviar fotos seleccionadas a la organización por IA
+    const handleSendToAI = () => {
+        if (selectedPhotos.length === 0) {
+            alert("Por favor selecciona al menos una foto.");
+            return;
+        }
+        localStorage.setItem('selected_photos', JSON.stringify(selectedPhotos));
+        window.location.href = '/organize-ai';
+    };
+
     return (
         <div>
             <Navbar /> {/* Componente de navegación */}
             <h1 style={{ textAlign: 'center' }}>Tus Fotos Subidas</h1>
-            {/* Botón para eliminar fotos seleccionadas */}
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                {/* Botón para eliminar fotos seleccionadas */}
                 <button
-                    onClick={handleDeletePhotos} // Llama a handleDeletePhotos al hacer clic
+                    onClick={handleDeletePhotos}
                     style={{
                         padding: '10px 20px',
                         fontSize: '16px',
@@ -81,18 +91,35 @@ function Photos() {
                         border: 'none',
                         borderRadius: '5px',
                         cursor: 'pointer',
+                        marginRight: '10px',
                     }}
                 >
                     Eliminar Fotos Seleccionadas
                 </button>
+
+                {/* Botón para enviar fotos a organización por IA */}
+                <button
+                    onClick={handleSendToAI}
+                    style={{
+                        padding: '10px 20px',
+                        fontSize: '16px',
+                        backgroundColor: '#4CAF50',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                    }}
+                >
+                    Organizar con IA
+                </button>
             </div>
+
             {/* Mostrar mensaje de carga o las fotos */}
             {loading ? (
                 <p style={{ textAlign: 'center' }}>Cargando fotos...</p>
             ) : photos.length === 0 ? (
                 <p style={{ textAlign: 'center' }}>No tienes fotos cargadas.</p>
             ) : (
-                // Mostrar las fotos en un contenedor flexible
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
                     {photos.map((photo) => (
                         <div key={photo.id} style={{ margin: '10px', textAlign: 'center' }}>
@@ -104,8 +131,8 @@ function Photos() {
                                     const photoId = parseInt(e.target.value, 10);
                                     setSelectedPhotos((prev) =>
                                         e.target.checked
-                                            ? [...prev, photoId] // Agregar foto seleccionada
-                                            : prev.filter((id) => id !== photoId) // Remover foto seleccionada
+                                            ? [...prev, photoId]
+                                            : prev.filter((id) => id !== photoId)
                                     );
                                 }}
                             />
@@ -115,7 +142,6 @@ function Photos() {
                                 alt="Foto subida"
                                 style={{ width: '200px', height: 'auto', borderRadius: '10px' }}
                             />
-                            {/* Fecha de subida */}
                             <p>Subida el: {new Date(photo.uploaded_at).toLocaleString()}</p>
                         </div>
                     ))}
