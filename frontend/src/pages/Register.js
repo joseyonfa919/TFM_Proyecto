@@ -1,7 +1,8 @@
-import React, { useState } from 'react'; // Importar React y el hook useState para manejar estados
+import React, { useState, useEffect } from 'react'; // Importar React y el hook useState para manejar estados
 import axios from 'axios'; // Biblioteca para realizar solicitudes HTTP
 import { useNavigate } from 'react-router-dom'; // Hook para redirigir entre rutas
 import Navbar from '../components/Navbar'; // Componente de navegación
+
 
 // Componente funcional para el registro de nuevos usuarios
 function Register() {
@@ -11,6 +12,12 @@ function Register() {
   const [password, setPassword] = useState(''); // Estado para la contraseña
   const navigate = useNavigate(); // Hook para manejar la redirección de rutas
 
+    // Este efecto asegura que los campos siempre estén vacíos al cargar la página
+    useEffect(() => {
+      setName('');
+      setEmail('');
+      setPassword('');
+    }, []);
   // Función para manejar el registro de usuarios
   const handleRegister = async () => {
     try {

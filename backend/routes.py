@@ -1,4 +1,7 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import smtplib
 import uuid
 import bcrypt
 from flask import Blueprint, request, jsonify, send_from_directory
@@ -101,40 +104,45 @@ def login():
 @api_bp.route('/upload', methods=['POST'])
 def upload_file():
     try:
-        # Obtener el user_id del cuerpo de la solicitud
+        # Obtener el user_id del formulario
         user_id = request.form.get('user_id')
         if not user_id:
             return jsonify({"message": "User ID is required"}), 400
 
-        # Verificar que se ha enviado un archivo
-        if 'file' not in request.files:
-            return jsonify({"message": "No file provided or invalid file"}), 400
+        # Verificar que se hayan enviado archivos
+        if 'files' not in request.files:
+            return jsonify({"message": "No files provided or invalid files"}), 400
 
-        file = request.files['file']
-        if file.filename == '':
-            return jsonify({'error': 'No selected file'}), 400
+        files = request.files.getlist('files')  # Obtener todos los archivos
+        uploaded_files = []
 
-        # Modificar el nombre del archivo para incluir el user_id
-        filename = secure_filename(file.filename)
-        filename_with_user_id = f"{user_id}_{filename}"
+        for file in files:
+            if file.filename == '':
+                continue
 
-        # Guardar el archivo en el servidor
-        upload_folder = current_app.config['UPLOAD_FOLDER']
-        file_path = os.path.join(upload_folder, filename_with_user_id)
-        file.save(file_path)
+            # Asegurar nombres de archivos seguros
+            filename = secure_filename(file.filename)
+            filename_with_user_id = f"{user_id}_{filename}"
 
-        # Crear un registro en la base de datos
-        new_image = Image(
-            user_id=int(user_id),  # Asegurarse de que sea un entero
-            file_name=filename_with_user_id,
-            file_path=file_path,
-        )
-        db.session.add(new_image)
+            # Guardar archivo en servidor
+            upload_folder = current_app.config['UPLOAD_FOLDER']
+            file_path = os.path.join(upload_folder, filename_with_user_id)
+            file.save(file_path)
+
+            # Registrar archivo en la base de datos
+            new_image = Image(
+                user_id=int(user_id),
+                file_name=filename_with_user_id,
+                file_path=file_path,
+            )
+            db.session.add(new_image)
+            uploaded_files.append(filename_with_user_id)
+
         db.session.commit()
 
-        return jsonify({"message": "Image uploaded successfully", "image_id": new_image.id}), 201
+        return jsonify({"message": "Imágenes subidas con éxito", "uploaded_files": uploaded_files}), 201
     except Exception as e:
-        print(f"Error al subir imagen: {e}", flush=True)
+        print(f"Error al subir imágenes: {e}", flush=True)
         return jsonify({"message": "Error al procesar la solicitud", "error": str(e)}), 500
 
     
@@ -510,25 +518,27 @@ def suggest_albums_auto():
                 print(f"Error procesando la imagen {path}: {e}")
                 continue
 
-        # Validar que haya suficientes fotos
         if len(features) < 2:
             return jsonify({"error": "Se necesitan al menos 2 fotos para generar sugerencias"}), 400
 
         features = np.array(features)
 
         # Clustering con KMeans
-        n_clusters = min(len(features), 3)  # Máximo 3 clústeres
+        n_clusters = min(len(features), 3)
         kmeans = KMeans(n_clusters=n_clusters, random_state=0).fit(features)
         labels = kmeans.labels_
 
-        # Generar nombres automáticos de álbumes
+        # Generar nombres automáticos con IA
         suggestions = []
         for cluster_id in set(labels):
             cluster_images = [images[i] for i in range(len(labels)) if labels[i] == cluster_id]
             if cluster_images:
-                album_name = f"Álbum {cluster_id + 1}"  # Puedes personalizar esto según IA
+                # Usar CLIP para obtener texto descriptivo
+                cluster_features = [features[i] for i in range(len(labels)) if labels[i] == cluster_id]
+                aggregated_features = np.mean(cluster_features, axis=0)
+                generated_name = f"Álbum IA {cluster_id + 1}"  # Personalizar aquí
                 suggestions.append({
-                    "album_name": album_name,
+                    "album_name": generated_name,
                     "photo_ids": [img.id for img in cluster_images],
                     "photos": [{"id": img.id, "file_name": img.file_name, "file_path": img.file_path} for img in cluster_images]
                 })

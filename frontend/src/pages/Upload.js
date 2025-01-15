@@ -1,93 +1,133 @@
-import React, { useState, useRef } from 'react'; // Importar React, hooks useState y useRef
-import axios from 'axios'; // Biblioteca para realizar solicitudes HTTP
-import Navbar from "../components/Navbar"; // Componente de navegación
+import React, { useState } from 'react';
+import axios from 'axios';
+import Navbar from '../components/Navbar';
 
-// Componente funcional para manejar la subida de imágenes
 function Upload() {
-  // Estados para manejar el archivo seleccionado, el estado de carga y errores
-  const [file, setFile] = useState(null); // Estado para almacenar el archivo seleccionado
-  const [loading, setLoading] = useState(false); // Estado para indicar si se está cargando
-  const [error, setError] = useState(null); // Estado para almacenar mensajes de error
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [previews, setPreviews] = useState([]);
+    const [isUploading, setIsUploading] = useState(false);
 
-  const fileInputRef = useRef(); // Referencia al input de archivo para controlarlo directamente
+    const handleFileChange = (event) => {
+        const files = Array.from(event.target.files);
+        setSelectedFiles(files);
 
-  // Función para manejar el cambio en el input de archivo
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]); // Guardar el archivo seleccionado en el estado
-    setError(null); // Limpiar errores anteriores
-  };
+        // Generar previsualizaciones
+        const filePreviews = files.map((file) => URL.createObjectURL(file));
+        setPreviews(filePreviews);
+    };
 
-  // Función para manejar la subida del archivo
-  const handleUpload = async () => {
-    if (!file) {
-      // Mostrar error si no se ha seleccionado un archivo
-      setError("Por favor, selecciona un archivo.");
-      return;
-    }
+    const handleRemoveFile = (index) => {
+        const updatedFiles = [...selectedFiles];
+        const updatedPreviews = [...previews];
 
-    const userId = localStorage.getItem("user_id"); // Obtener el ID del usuario desde localStorage
-    if (!userId) {
-      // Mostrar error si no se encuentra el ID del usuario
-      setError("No se encontró el ID del usuario en localStorage.");
-      return;
-    }
+        updatedFiles.splice(index, 1);
+        updatedPreviews.splice(index, 1);
 
-    // Crear un objeto FormData para enviar el archivo y el user_id al backend
-    const formData = new FormData();
-    formData.append('file', file); // Añadir el archivo
-    formData.append('user_id', userId); // Añadir el user_id
+        setSelectedFiles(updatedFiles);
+        setPreviews(updatedPreviews);
 
-    try {
-      setLoading(true); // Activar el estado de carga
-      // Realizar la solicitud POST al backend para subir el archivo
-      const response = await axios.post("http://127.0.0.1:5000/upload", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // Establecer encabezado de contenido
-        },
-      });
+        // Actualizar el conteo de archivos en el input
+        document.querySelector('input[type="file"]').value = null;
+    };
 
-      alert('Imagen subida con éxito'); // Notificar al usuario que la imagen se subió con éxito
-      console.log(response.data); // Mostrar la respuesta del backend en la consola
+    const handleUpload = async () => {
+        if (selectedFiles.length === 0) {
+            alert('Por favor, selecciona al menos un archivo.');
+            return;
+        }
 
-      // Restablecer el archivo seleccionado después de la subida exitosa
-      setFile(null);
-      fileInputRef.current.value = ""; // Limpiar el valor del input de archivo
+        const userId = localStorage.getItem('user_id');
+        if (!userId) {
+            alert('No se encontró el ID del usuario. Por favor inicia sesión nuevamente.');
+            return;
+        }
 
-    } catch (error) {
-      // Manejar errores en la solicitud
-      console.error(error.response ? error.response.data : error.message); // Mostrar el error en consola
-      setError(error.response?.data?.message || "Error al subir la imagen."); // Mostrar mensaje de error al usuario
-    } finally {
-      setLoading(false); // Desactivar el estado de carga
-    }
-  };
+        const formData = new FormData();
+        selectedFiles.forEach((file) => {
+            formData.append('files', file);
+        });
+        formData.append('user_id', userId);
 
-  return (
-    <div>
-      <Navbar /> {/* Componente de navegación */}
-      <div style={{ textAlign: 'center', marginTop: '50px' }}>
-        <h2>Subir Foto o Video</h2>
-        {/* Input para seleccionar un archivo */}
-        <input
-          type="file"
-          accept="image/*,video/*" // Permitir imágenes y videos
-          ref={fileInputRef} // Asignar referencia al input
-          onChange={handleFileChange} // Llamar a handleFileChange al seleccionar un archivo
-        />
-        <br />
-        {/* Mostrar mensaje de error si existe */}
-        {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
-        {/* Botón para subir el archivo */}
-        <button
-          onClick={handleUpload} // Llamar a handleUpload al hacer clic
-          style={{ marginTop: '10px', padding: '8px 16px' }}
-          disabled={loading} // Deshabilitar el botón si está en estado de carga
-        >
-          {loading ? "Subiendo..." : "Subir Imagen"} {/* Mostrar texto según el estado de carga */}
-        </button>
-      </div>
-    </div>
-  );
+        setIsUploading(true);
+        try {
+            const response = await axios.post('http://127.0.0.1:5000/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            alert(response.data.message);
+            setSelectedFiles([]);
+            setPreviews([]);
+        } catch (error) {
+            console.error('Error al subir las imágenes:', error);
+            alert('Error al subir las imágenes.');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    return (
+        <div>
+            <Navbar />
+            <h2 style={{ textAlign: 'center' }}>Subir Fotos o Videos</h2>
+            <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                <input
+                    type="file"
+                    multiple
+                    onChange={handleFileChange}
+                    style={{ display: 'block', margin: '10px auto' }}
+                />
+                <p style={{ textAlign: 'center' }}>{selectedFiles.length} archivo(s)</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px', marginTop: '20px' }}>
+                    {previews.map((preview, index) => (
+                        <div key={index} style={{ width: '100px', textAlign: 'center', position: 'relative' }}>
+                            <img
+                                src={preview}
+                                alt={`Preview ${index}`}
+                                style={{ width: '100%', height: '100px', objectFit: 'cover', borderRadius: '5px' }}
+                            />
+                            <button
+                                onClick={() => handleRemoveFile(index)}
+                                style={{
+                                    position: 'absolute',
+                                    top: '5px',
+                                    right: '5px',
+                                    backgroundColor: 'red',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '50%',
+                                    cursor: 'pointer',
+                                    width: '20px',
+                                    height: '20px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                &times;
+                            </button>
+                        </div>
+                    ))}
+                </div>
+                <button
+                    onClick={handleUpload}
+                    disabled={isUploading}
+                    style={{
+                        padding: '10px 20px',
+                        fontSize: '16px',
+                        backgroundColor: isUploading ? '#ccc' : '#4CAF50',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: isUploading ? 'not-allowed' : 'pointer',
+                        marginTop: '20px',
+                    }}
+                >
+                    {isUploading ? 'Subiendo...' : 'Subir Imágenes'}
+                </button>
+            </div>
+        </div>
+    );
 }
 
-export default Upload; // Exportar el componente para usarlo en otras partes del proyecto
+export default Upload;
