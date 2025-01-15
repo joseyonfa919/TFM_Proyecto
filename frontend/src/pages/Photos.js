@@ -97,21 +97,7 @@ function Photos() {
                     Eliminar Fotos Seleccionadas
                 </button>
 
-                {/* Botón para enviar fotos a organización por IA */}
-                <button
-                    onClick={handleSendToAI}
-                    style={{
-                        padding: '10px 20px',
-                        fontSize: '16px',
-                        backgroundColor: '#4CAF50',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                    }}
-                >
-                    Organizar con IA
-                </button>
+
             </div>
 
             {/* Mostrar mensaje de carga o las fotos */}

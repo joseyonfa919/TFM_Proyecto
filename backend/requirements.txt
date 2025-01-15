@@ -10,6 +10,7 @@ transformers
 torch 
 scikit_learn
 pillow
+SpeechRecognition
 
 #react-icons
 

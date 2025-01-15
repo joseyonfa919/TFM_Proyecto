@@ -7,7 +7,7 @@ import bcrypt
 from flask import Blueprint, request, jsonify, send_from_directory
 from flask_bcrypt import check_password_hash
 from flask_jwt_extended import create_access_token,jwt_required, get_jwt_identity,verify_jwt_in_request
-from models import db, User, Image, Album
+from models import Event, Timeline, db, User, Image, Album
 import os
 from werkzeug.utils import secure_filename
 from flask import current_app
@@ -17,12 +17,17 @@ from sklearn.cluster import KMeans
 from PIL import Image as PILImage
 import torch
 import numpy as np
-from transformers import CLIPProcessor, CLIPModel
-
+from transformers import CLIPProcessor, CLIPModel,pipeline
+from utils.multimodal_utils import VoiceHandler, TextHandler
 
 
 api_bp = Blueprint('api', __name__)
 bcrypt = Bcrypt()
+
+voice_handler = VoiceHandler()
+text_handler = TextHandler()
+
+description_generator = pipeline("text-generation", model="gpt-2")
 
 #registro Usuarios
 @api_bp.route('/register', methods=['POST'])
@@ -634,3 +639,80 @@ def reset_password():
     except Exception as e:
         print(f"Error en reset_password: {e}")
         return jsonify({'error': 'Error interno del servidor'}), 500
+    
+
+@api_bp.route('/process-text', methods=['POST'])
+def process_text():
+    try:
+        data = request.get_json()
+        input_text = data.get("text", "")
+        if not input_text:
+            return jsonify({"error": "El texto es requerido"}), 400
+        response = text_handler.process_text(input_text)
+        return jsonify({"response": response}), 200
+    except Exception as e:
+        return jsonify({"error": f"Error procesando texto: {e}"}), 500
+
+@api_bp.route('/process-voice', methods=['POST'])
+def process_voice():
+    try:
+        if 'audio' not in request.files:
+            return jsonify({"error": "Archivo de audio no encontrado"}), 400
+        audio_file = request.files['audio']
+        response = voice_handler.recognize_voice(audio_file)
+        return jsonify({"response": response}), 200
+    except Exception as e:
+        return jsonify({"error": f"Error procesando voz: {e}"}), 500
+    
+@api_bp.route('/timelines/create', methods=['POST'])
+def create_timeline():
+    try:
+        data = request.get_json()
+        user_id = data.get('user_id')
+        name = data.get('name', 'Mi Cronología')
+        events = data.get('events', [])
+
+        if not user_id or not events:
+            return jsonify({"error": "User ID y eventos son obligatorios"}), 400
+
+        # Crear la cronología
+        timeline = Timeline(name=name, user_id=user_id)
+        db.session.add(timeline)
+        db.session.commit()
+
+        # Añadir eventos
+        for event in events:
+            new_event = Event(
+                timeline_id=timeline.id,
+                photo_id=event.get('photo_id'),
+                description=event.get('description'),
+                date=datetime.strptime(event.get('date'), '%Y-%m-%d')
+            )
+            db.session.add(new_event)
+        
+        db.session.commit()
+        return jsonify({"message": "Cronología creada exitosamente", "timeline_id": timeline.id}), 201
+
+    except Exception as e:
+        print(f"Error creando la cronología: {e}")
+        return jsonify({"error": "Error interno"}), 500
+
+
+@api_bp.route('/timelines/describe', methods=['POST'])
+def describe_event():
+    try:
+        data = request.get_json()
+        photo_id = data.get('photo_id')
+        keywords = data.get('keywords', [])
+
+        if not photo_id or not keywords:
+            return jsonify({"error": "Photo ID y palabras clave son obligatorios"}), 400
+
+        # Generar narrativa
+        prompt = f"Genera una descripción sobre un evento relacionado con {' '.join(keywords)}."
+        description = description_generator(prompt, max_length=50)[0]['generated_text']
+
+        return jsonify({"description": description}), 200
+    except Exception as e:
+        print(f"Error generando descripción: {e}")
+        return jsonify({"error": "Error interno"}), 500

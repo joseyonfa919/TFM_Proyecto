@@ -12,9 +12,10 @@ import InfoPage from './pages/InfoPage';
 import SharedAlbum from './pages/SharedAlbum'; 
 import ChangePassword from './pages/ChangePassword';
 import ManualOrganization from './pages/ManualOrganization';
-import AIOrganization from './pages/AIOrganization';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import MultimodalInteraction from "./components/MultimodalInteraction";
+import Timeline from "./components/Timeline";
 
 
 
@@ -40,7 +41,8 @@ const App = () => {
                 <Route path="/forgot-password" element={<ForgotPassword />} /> {/* Ruta para contraseña olvidada */}
                 <Route path="/reset-password/:token" element={<ResetPassword />} /> {/* Ruta para reestablecer la contraseña */}
                 <Route path="/change-password" element={<ChangePassword />} /> {/* Ruta para recuperar la contraseña */}
-                
+                <Route path="/multimodal" element={<MultimodalInteraction />} />
+                <Route path="/timeline" element={<Timeline />} />
             </Routes>
         </Router>
     );

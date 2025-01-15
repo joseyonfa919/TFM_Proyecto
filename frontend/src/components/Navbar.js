@@ -43,6 +43,8 @@ function Navbar() {
           <Link to="/Photos" style={styles.link}>Ver Foto</Link>
           <Link to="/create-album" style={styles.link}>Subir Álbum</Link>
           <Link to="/view-albums" style={styles.link}>Ver Álbum</Link>
+          <Link to="/multimodal" style={styles.link}>Interacción Multimodal</Link> {/* Nuevo enlace */}
+          <Link to="/timeline" style={styles.link}>Cronología</Link> {/* Nuevo enlace */}
 
 
           {/* Menú desplegable con ícono de perfil */}
