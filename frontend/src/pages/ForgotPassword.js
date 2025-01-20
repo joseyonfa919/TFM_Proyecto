@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Navbar from '../components/Navbar'; // Componente de navegación  
 
 function ForgotPassword() {
     const [email, setEmail] = useState('');
@@ -17,6 +18,7 @@ function ForgotPassword() {
     };
 
     return (
+        <div><Navbar /> {/* Renderiza el componente de barra de navegación. */}
         <div style={{ textAlign: 'center', marginTop: '50px' }}>
             <h2>Recuperación de Contraseña</h2>
             <form onSubmit={handleForgotPassword}>
@@ -33,6 +35,7 @@ function ForgotPassword() {
                 </button>
             </form>
             {message && <p>{message}</p>}
+        </div>
         </div>
     );
 }

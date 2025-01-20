@@ -1,8 +1,11 @@
 from datetime import datetime, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from platform import processor
+from pyexpat import model
 import smtplib
 import uuid
+import PIL
 import bcrypt
 from flask import Blueprint, request, jsonify, send_from_directory
 from flask_bcrypt import check_password_hash
@@ -19,6 +22,10 @@ import torch
 import numpy as np
 from transformers import CLIPProcessor, CLIPModel,pipeline
 from utils.multimodal_utils import VoiceHandler, TextHandler
+from utils.ai_utils import process_images_with_ai
+from utils.ai_utils import calculate_similarity_with_text
+
+
 
 
 api_bp = Blueprint('api', __name__)
@@ -27,7 +34,13 @@ bcrypt = Bcrypt()
 voice_handler = VoiceHandler()
 text_handler = TextHandler()
 
-description_generator = pipeline("text-generation", model="gpt-2")
+description_generator = pipeline("text-generation", model="gpt2")
+
+# Cargar modelos CLIP
+clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+
+PHOTO_DIR = "uploads"
 
 #registro Usuarios
 @api_bp.route('/register', methods=['POST'])
@@ -645,24 +658,78 @@ def reset_password():
 def process_text():
     try:
         data = request.get_json()
-        input_text = data.get("text", "")
+        input_text = data.get("text", "").lower()
+
         if not input_text:
-            return jsonify({"error": "El texto es requerido"}), 400
-        response = text_handler.process_text(input_text)
-        return jsonify({"response": response}), 200
+            return jsonify({"message": "El texto está vacío."}), 400
+
+        photos = []
+        for photo_file in os.listdir(PHOTO_DIR):
+            photo_path = os.path.join(PHOTO_DIR, photo_file)
+            try:
+                similarity = calculate_similarity_with_text(model, processor, input_text, photo_path)
+                if similarity > 0.5:  # Umbral de similitud
+                    photos.append({"url": f"/uploads/{photo_file}", "score": similarity})
+            except Exception as e:
+                print(f"Error procesando la imagen {photo_file}: {e}")
+
+        if photos:
+            return jsonify({"photos": photos}), 200
+        return jsonify({"message": "No se encontraron fotos relacionadas."}), 200
     except Exception as e:
-        return jsonify({"error": f"Error procesando texto: {e}"}), 500
+        print(f"Error procesando texto: {e}")
+        return jsonify({"message": "Error procesando tu solicitud.", "error": str(e)}), 500
+    
+
 
 @api_bp.route('/process-voice', methods=['POST'])
 def process_voice():
     try:
         if 'audio' not in request.files:
             return jsonify({"error": "Archivo de audio no encontrado"}), 400
+
         audio_file = request.files['audio']
-        response = voice_handler.recognize_voice(audio_file)
-        return jsonify({"response": response}), 200
+        recognized_text = voice_handler.recognize_voice(audio_file)
+
+        if recognized_text:
+            photos = []
+            for photo_file in os.listdir(PHOTO_DIR):
+                photo_path = os.path.join(PHOTO_DIR, photo_file)
+                try:
+                    #image = Image.open(photo_path).convert("RGB")  # Cargar imagen como objeto PIL
+                    image = PILImage.open(photo_path).convert("RGB")
+                    if not isinstance(image, PIL.Image.Image):
+                        print(f"Archivo no compatible: {photo_file}")
+                        continue  # Saltar archivos no válidos
+                except Exception as e:
+                    print(f"Error cargando la imagen {photo_file}: {e}")
+                    continue
+
+                try:    
+                    similarity = calculate_similarity_with_text(
+                        clip_model,
+                        clip_processor, 
+                        recognized_text.lower(),
+                        photo_path
+                    )
+
+                    if similarity > 0.5:
+                        photos.append({
+                            "url": f"/uploads/{photo_file}",
+                            "name": photo_file,
+                            "score": similarity
+                        })
+                except Exception as e:
+                    print(f"Error procesando la imagen {photo_file}: {e}")
+
+            return jsonify({"photos": photos if photos else "No se encontraron fotos relacionadas."}), 200
+
+        return jsonify({"message": "No se pudo reconocer el texto del audio."}), 200
     except Exception as e:
-        return jsonify({"error": f"Error procesando voz: {e}"}), 500
+        print(f"Error procesando voz: {e}")
+        return jsonify({"error": "Error procesando voz.", "details": str(e)}), 500
+
+
     
 @api_bp.route('/timelines/create', methods=['POST'])
 def create_timeline():

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import Navbar from '../components/Navbar'; // Componente de navegación
 
 function ResetPassword() {
     const { token } = useParams(); // Obtén el token de la URL
@@ -22,6 +23,7 @@ function ResetPassword() {
     };
 
     return (
+        <div><Navbar /> {/* Renderiza el componente de barra de navegación. */}
         <div style={{ textAlign: 'center', marginTop: '50px' }}>
             <h2>Restablecer Contraseña</h2>
             <form onSubmit={handleResetPassword}>
@@ -38,6 +40,7 @@ function ResetPassword() {
                 </button>
             </form>
             {message && <p>{message}</p>}
+        </div>
         </div>
     );
 }
