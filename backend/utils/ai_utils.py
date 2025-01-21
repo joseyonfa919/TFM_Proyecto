@@ -44,24 +44,26 @@ def calculate_similarity_with_text(model, processor, input_text, image_path):
     Procesa una imagen y calcula su similitud con un texto usando CLIP.
     """
     try:
-        # Cargar la imagen como objeto PIL
+        # Cargar y procesar la imagen
         image = Image.open(image_path).convert("RGB")
+        image_inputs = processor(images=image, return_tensors="pt")
 
-        # Crear inputs usando el processor
-        inputs = processor(
-            texts=[input_text],  # Textos deben ser una lista
-            images=image,  # Imagen PIL
-            return_tensors="pt",  # Devolver tensores
-            padding=True
-        )
+        # Procesar el texto
+        text_inputs = processor(text=[input_text], return_tensors="pt")
 
-        # Calcular las características y la similitud
+        # Obtener características de texto e imagen
         with torch.no_grad():
-            text_features = model.get_text_features(**inputs)
-            image_features = model.get_image_features(**inputs)
+            text_features = model.get_text_features(
+                input_ids=text_inputs["input_ids"], attention_mask=text_inputs["attention_mask"]
+            )
+            image_features = model.get_image_features(pixel_values=image_inputs["pixel_values"])
+
+            # Calcular la similitud coseno
             similarity = torch.nn.functional.cosine_similarity(text_features, image_features)
 
         return similarity.item()
+
     except Exception as e:
         print(f"Error calculando similitud: {e}")
         raise
+

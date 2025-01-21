@@ -667,18 +667,22 @@ def process_text():
         for photo_file in os.listdir(PHOTO_DIR):
             photo_path = os.path.join(PHOTO_DIR, photo_file)
             try:
-                similarity = calculate_similarity_with_text(model, processor, input_text, photo_path)
-                if similarity > 0.5:  # Umbral de similitud
+                similarity = calculate_similarity_with_text(clip_model, clip_processor, input_text, photo_path)
+                if similarity > 0.5:  # Ajusta el umbral
                     photos.append({"url": f"/uploads/{photo_file}", "score": similarity})
             except Exception as e:
                 print(f"Error procesando la imagen {photo_file}: {e}")
 
         if photos:
             return jsonify({"photos": photos}), 200
-        return jsonify({"message": "No se encontraron fotos relacionadas."}), 200
+        else:
+            return jsonify({"message": "No se encontraron fotos relacionadas."}), 200
+
     except Exception as e:
         print(f"Error procesando texto: {e}")
-        return jsonify({"message": "Error procesando tu solicitud.", "error": str(e)}), 500
+        return jsonify({"error": "Error interno", "details": str(e)}), 500
+
+
     
 
 
@@ -696,38 +700,18 @@ def process_voice():
             for photo_file in os.listdir(PHOTO_DIR):
                 photo_path = os.path.join(PHOTO_DIR, photo_file)
                 try:
-                    #image = Image.open(photo_path).convert("RGB")  # Cargar imagen como objeto PIL
-                    image = PILImage.open(photo_path).convert("RGB")
-                    if not isinstance(image, PIL.Image.Image):
-                        print(f"Archivo no compatible: {photo_file}")
-                        continue  # Saltar archivos no válidos
-                except Exception as e:
-                    print(f"Error cargando la imagen {photo_file}: {e}")
-                    continue
-
-                try:    
-                    similarity = calculate_similarity_with_text(
-                        clip_model,
-                        clip_processor, 
-                        recognized_text.lower(),
-                        photo_path
-                    )
-
+                    similarity = calculate_similarity_with_text(model, processor, recognized_text.lower(), photo_path)
                     if similarity > 0.5:
-                        photos.append({
-                            "url": f"/uploads/{photo_file}",
-                            "name": photo_file,
-                            "score": similarity
-                        })
+                        photos.append({"url": f"/uploads/{photo_file}", "score": similarity})
                 except Exception as e:
                     print(f"Error procesando la imagen {photo_file}: {e}")
 
-            return jsonify({"photos": photos if photos else "No se encontraron fotos relacionadas."}), 200
-
+            return jsonify({"photos": photos}), 200 if photos else jsonify({"message": "No se encontraron fotos relacionadas."}), 200
         return jsonify({"message": "No se pudo reconocer el texto del audio."}), 200
     except Exception as e:
         print(f"Error procesando voz: {e}")
-        return jsonify({"error": "Error procesando voz.", "details": str(e)}), 500
+        return jsonify({"error": "Error interno", "details": str(e)}), 500
+
 
 
     

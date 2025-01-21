@@ -20,16 +20,10 @@ const MultimodalInteraction = () => {
     setLoading(true);
     try {
       const res = await axios.post("http://localhost:5000/process-text", { text });
-      if (res.status === 200) {
-        setResponse(res.data.photos || []);
-      } else {
-        setResponse([]);
-        alert("Error procesando tu solicitud. Intenta nuevamente.");
-      }
+      setResponse(res.data.photos || []);
     } catch (error) {
       console.error("Error enviando texto:", error);
-      setResponse([]);
-      alert("Error procesando tu solicitud. Verifica la conexión al servidor.");
+      alert("Error procesando tu solicitud.");
     } finally {
       setLoading(false);
     }
@@ -87,36 +81,26 @@ const MultimodalInteraction = () => {
 
   // Función para enviar el audio al backend
  // Manejador de envío de audio
-const handleAudioSubmit = async () => {
+ const handleAudioSubmit = async () => {
   if (!audioBlob && !uploadedAudio) {
-      alert("Por favor, grabe o cargue un archivo de audio primero.");
-      return;
+    alert("Por favor, grabe o cargue un archivo de audio primero.");
+    return;
   }
 
   const formData = new FormData();
-  if (audioBlob) {
-      formData.append("audio", audioBlob, "recorded_audio.webm");
-  } else if (uploadedAudio) {
-      formData.append("audio", uploadedAudio);
-  }
+  formData.append("audio", audioBlob || uploadedAudio);
 
   setLoading(true);
   try {
-      const res = await axios.post("http://localhost:5000/process-voice", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-      });
-      if (res.status === 200) {
-          setResponse(res.data.photos || []);
-      } else {
-          setResponse([]);
-          alert("Error procesando el audio.");
-      }
+    const res = await axios.post("http://localhost:5000/process-voice", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    setResponse(res.data.photos || []);
   } catch (error) {
-      console.error("Error enviando audio:", error);
-      setResponse([]);
-      alert("Error procesando tu solicitud. Verifica la conexión al servidor.");
+    console.error("Error enviando audio:", error);
+    alert("Error procesando tu solicitud.");
   } finally {
-      setLoading(false);
+    setLoading(false);
   }
 };
 
