@@ -657,32 +657,41 @@ def reset_password():
 @api_bp.route('/process-text', methods=['POST'])
 def process_text():
     try:
+        print("Iniciando procesamiento de texto...")
         data = request.get_json()
+        print(f"Datos recibidos: {data}")
+
         input_text = data.get("text", "").lower()
+        print(f"Texto procesado: {input_text}")
 
         if not input_text:
+            print("El texto está vacío. Respondiendo con error 400.")
             return jsonify({"message": "El texto está vacío."}), 400
 
         photos = []
+        print("Iniciando procesamiento de imágenes...")
         for photo_file in os.listdir(PHOTO_DIR):
             photo_path = os.path.join(PHOTO_DIR, photo_file)
+            print(f"Procesando imagen: {photo_file}")
             try:
                 similarity = calculate_similarity_with_text(clip_model, clip_processor, input_text, photo_path)
+                print(f"Similitud calculada para {photo_file}: {similarity}")
                 if similarity > 0.5:  # Ajusta el umbral
+                    print(f"Imagen {photo_file} agregada a resultados con similitud: {similarity}")
                     photos.append({"url": f"/uploads/{photo_file}", "score": similarity})
             except Exception as e:
                 print(f"Error procesando la imagen {photo_file}: {e}")
 
         if photos:
+            print(f"Imágenes encontradas: {photos}")
             return jsonify({"photos": photos}), 200
         else:
+            print("No se encontraron fotos relacionadas.")
             return jsonify({"message": "No se encontraron fotos relacionadas."}), 200
 
     except Exception as e:
         print(f"Error procesando texto: {e}")
         return jsonify({"error": "Error interno", "details": str(e)}), 500
-
-
     
 
 

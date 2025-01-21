@@ -17,9 +17,12 @@ const MultimodalInteraction = () => {
 
   // Función para manejar el envío de texto
   const handleTextSubmit = async () => {
+    console.log("Iniciando envío de texto...");
+    console.log(`Texto ingresado: ${text}`);
     setLoading(true);
     try {
       const res = await axios.post("http://localhost:5000/process-text", { text });
+      console.log("Respuesta recibida del servidor:", res.data);
       setResponse(res.data.photos || []);
     } catch (error) {
       console.error("Error enviando texto:", error);
@@ -31,19 +34,23 @@ const MultimodalInteraction = () => {
 
   // Función para iniciar grabación de audio
   const startRecording = async () => {
+    console.log("Iniciando grabación de audio...");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorderRef.current = new MediaRecorder(stream);
 
       mediaRecorderRef.current.ondataavailable = (event) => {
+        console.log("Fragmento de audio disponible.");
         setAudioChunks((prev) => [...prev, event.data]);
       };
 
       mediaRecorderRef.current.onstop = () => {
+        console.log("Grabación detenida. Procesando audio...");
         const blob = new Blob(audioChunks, { type: "audio/webm" });
         setAudioBlob(blob);
         setAudioURL(URL.createObjectURL(blob));
         setAudioChunks([]);
+        console.log("Audio procesado y listo para enviar.");
       };
 
       mediaRecorderRef.current.start();
@@ -56,6 +63,7 @@ const MultimodalInteraction = () => {
 
   // Función para detener la grabación
   const stopRecording = () => {
+    console.log("Deteniendo grabación de audio...");
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       setRecording(false);
@@ -64,6 +72,7 @@ const MultimodalInteraction = () => {
 
   // Función para borrar la grabación actual
   const deleteRecording = () => {
+    console.log("Eliminando grabación actual...");
     setAudioBlob(null);
     setAudioURL(null);
     setAudioChunks([]);
@@ -73,6 +82,7 @@ const MultimodalInteraction = () => {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
+      console.log("Archivo de audio cargado:", file.name);
       setUploadedAudio(file);
       setAudioBlob(null); // Si se carga un archivo, descartamos el audio grabado
       setAudioURL(URL.createObjectURL(file));
@@ -80,30 +90,30 @@ const MultimodalInteraction = () => {
   };
 
   // Función para enviar el audio al backend
- // Manejador de envío de audio
- const handleAudioSubmit = async () => {
-  if (!audioBlob && !uploadedAudio) {
-    alert("Por favor, grabe o cargue un archivo de audio primero.");
-    return;
-  }
+  const handleAudioSubmit = async () => {
+    console.log("Iniciando envío de audio...");
+    if (!audioBlob && !uploadedAudio) {
+      alert("Por favor, grabe o cargue un archivo de audio primero.");
+      return;
+    }
 
-  const formData = new FormData();
-  formData.append("audio", audioBlob || uploadedAudio);
+    const formData = new FormData();
+    formData.append("audio", audioBlob || uploadedAudio);
 
-  setLoading(true);
-  try {
-    const res = await axios.post("http://localhost:5000/process-voice", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    setResponse(res.data.photos || []);
-  } catch (error) {
-    console.error("Error enviando audio:", error);
-    alert("Error procesando tu solicitud.");
-  } finally {
-    setLoading(false);
-  }
-};
-
+    setLoading(true);
+    try {
+      const res = await axios.post("http://localhost:5000/process-voice", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log("Respuesta recibida del servidor:", res.data);
+      setResponse(res.data.photos || []);
+    } catch (error) {
+      console.error("Error enviando audio:", error);
+      alert("Error procesando tu solicitud.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -116,7 +126,10 @@ const MultimodalInteraction = () => {
           <textarea
             placeholder="Escribe algo..."
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e) => {
+              console.log("Texto cambiado:", e.target.value);
+              setText(e.target.value);
+            }}
             className="text-input"
           />
           <button onClick={handleTextSubmit} className="submit-button" disabled={loading}>
