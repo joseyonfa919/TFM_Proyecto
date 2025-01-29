@@ -10,6 +10,7 @@ function Register() {
   const [name, setName] = useState(''); // Estado para el nombre del usuario
   const [email, setEmail] = useState(''); // Estado para el correo electrónico
   const [password, setPassword] = useState(''); // Estado para la contraseña
+  const [consent, setConsent] = useState(false);
   const navigate = useNavigate(); // Hook para manejar la redirección de rutas
 
     // Este efecto asegura que los campos siempre estén vacíos al cargar la página
@@ -17,6 +18,7 @@ function Register() {
       setName('');
       setEmail('');
       setPassword('');
+      setConsent(false);
     }, []);
   // Función para manejar el registro de usuarios
   const handleRegister = async () => {
@@ -71,8 +73,30 @@ function Register() {
           style={{ margin: '10px', padding: '8px' }}
         />
         <br />
+        {/* Checkbox de consentimiento */}
+        <div style={{ margin: '10px' }}>
+          <input
+            type="checkbox"
+            id="consent"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+            style={{ marginRight: '8px' }}
+          />
+          <label htmlFor="consent">
+            Acepto los términos, condiciones y el uso de mis datos personales.
+          </label>
+        </div>
         {/* Botón para enviar el formulario de registro */}
-        <button onClick={handleRegister} style={{ padding: '8px 16px', cursor: 'pointer' }}>
+        <button
+          onClick={handleRegister}
+          disabled={!consent} // Deshabilitar el botón si no está marcado el checkbox
+          style={{
+            padding: '8px 16px',
+            cursor: consent ? 'pointer' : 'not-allowed',
+            backgroundColor: consent ? '#4CAF50' : '#ccc',
+            color: consent ? '#fff' : '#666',
+          }}
+        >
           Registrarse
         </button>
       </div>
