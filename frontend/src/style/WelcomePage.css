@@ -1,9 +1,125 @@
 .welcome-container {
+    max-width: 800px;
+    margin: 50px auto;
     text-align: center;
-    margin-top: 50px;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.welcome-container h1 {
-    font-size: 36px;
-    color: #007bff;
+.welcome-title { 
+    font-size: 4rem;
+    font-weight: bold;
+    color: #ffffff; /* Color blanco para mayor contraste */
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7); /* Sombra negra para mejorar legibilidad */
 }
+
+
+.welcome-subtitle {
+    font-size: 1.2rem;
+    color: #ece7e7;
+    margin-bottom: 20px;
+}
+
+.quick-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-main {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-main:hover {
+    background-color: #388E3C;
+}
+
+body {
+    background: linear-gradient( #8ebcdd, #bbdefb);
+    min-height: 100vh;
+}
+/*
+body {
+    background: linear-gradient(to right, #f7f7f7, #e3f2fd);
+    min-height: 100vh;
+}
+/*
+body {
+    background-image: url('/images/camara.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+/*
+body {
+    background-image: url('/assets/bg-pattern.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+}
+*/
+
+.quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-main {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-main:hover {
+    background-color: #388E3C;
+    transform: scale(1.05);
+}
+
+/*
+body {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.9)), 
+                url('/images/camara.png'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: white; 
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.9)), 
+                url('/images/camara.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: white; 
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+*/

@@ -1,117 +1,116 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
+import Recorder from "recorder-js";
 import "../style/MultimodalInteraction.css";
 
 const MultimodalInteraction = () => {
   const [text, setText] = useState("");
   const [response, setResponse] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const mediaRecorderRef = useRef(null);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioURL, setAudioURL] = useState(null);
   const [uploadedAudio, setUploadedAudio] = useState(null);
-  const [recording, setRecording] = useState(false);
-  const [audioChunks, setAudioChunks] = useState([]);
-  const mediaRecorderRef = useRef(null);
-  const audioRef = useRef(null);
+  const audioContextRef = useRef(null);
+  const recorderRef = useRef(null);
 
-  // Función para manejar el envío de texto
-  const handleTextSubmit = async () => {
-    console.log("Iniciando envío de texto...");
-    console.log(`Texto ingresado: ${text}`);
-    setLoading(true);
+  // Inicializar grabadora con `recorder-js`
+  const initializeRecorder = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/process-text", { text });
-      console.log("Respuesta recibida del servidor:", res.data);
-      setResponse(res.data.photos || []);
-    } catch (error) {
-      console.error("Error enviando texto:", error);
-      alert("Error procesando tu solicitud.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Función para iniciar grabación de audio
-  const startRecording = async () => {
-    console.log("Iniciando grabación de audio...");
-    try {
+      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorderRef.current = new MediaRecorder(stream);
-
-      mediaRecorderRef.current.ondataavailable = (event) => {
-        console.log("Fragmento de audio disponible.");
-        setAudioChunks((prev) => [...prev, event.data]);
-      };
-
-      mediaRecorderRef.current.onstop = () => {
-        console.log("Grabación detenida. Procesando audio...");
-        const blob = new Blob(audioChunks, { type: "audio/webm" });
-        setAudioBlob(blob);
-        setAudioURL(URL.createObjectURL(blob));
-        setAudioChunks([]);
-        console.log("Audio procesado y listo para enviar.");
-      };
-
-      mediaRecorderRef.current.start();
-      setRecording(true);
+      recorderRef.current = new Recorder(audioContextRef.current);
+      recorderRef.current.init(stream);
     } catch (error) {
-      console.error("Error al acceder al micrófono:", error);
+      console.error("Error inicializando la grabadora:", error);
       alert("No se pudo acceder al micrófono. Verifica los permisos.");
     }
   };
 
-  // Función para detener la grabación
-  const stopRecording = () => {
-    console.log("Deteniendo grabación de audio...");
-    if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop();
-      setRecording(false);
+  // Iniciar grabación
+  const startRecording = async () => {
+    if (!recorderRef.current) {
+      await initializeRecorder();
     }
+    recorderRef.current.start();
+    setRecording(true);
   };
 
-  // Función para borrar la grabación actual
+  // Detener grabación y guardar el audio en WAV
+  const stopRecording = async () => {
+    if (!recorderRef.current) return;
+    const { blob } = await recorderRef.current.stop();
+    setAudioBlob(blob);
+    setAudioURL(URL.createObjectURL(blob));
+    setUploadedAudio(null);
+    setRecording(false);
+  };
+
+  // Eliminar el audio grabado o subido
   const deleteRecording = () => {
-    console.log("Eliminando grabación actual...");
     setAudioBlob(null);
     setAudioURL(null);
-    setAudioChunks([]);
+    setUploadedAudio(null);
   };
 
-  // Función para manejar la subida de un archivo de audio
+  // Manejo de archivos subidos
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      console.log("Archivo de audio cargado:", file.name);
       setUploadedAudio(file);
-      setAudioBlob(null); // Si se carga un archivo, descartamos el audio grabado
+      setAudioBlob(null); // Si se sube un archivo, se limpia la grabación
       setAudioURL(URL.createObjectURL(file));
     }
   };
 
-  // Función para enviar el audio al backend
+  // Enviar texto al backend
+  const handleTextSubmit = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.post("http://localhost:5000/process-text", { text });
+      setResponse(res.data.photos || []);
+    } catch (error) {
+      console.error("Error enviando texto:", error);
+      alert("Error procesando el texto.");
+    } finally {
+      setLoading(false);
+      setText("");
+    }
+  };
+
+  // Enviar audio al backend
   const handleAudioSubmit = async () => {
-    console.log("Iniciando envío de audio...");
     if (!audioBlob && !uploadedAudio) {
-      alert("Por favor, grabe o cargue un archivo de audio primero.");
+      alert("Por favor, grabe o cargue un archivo de audio antes de enviarlo.");
+      return;
+    }
+
+    const userId = localStorage.getItem("user_id");
+    if (!userId) {
+      alert("No se encontró el ID del usuario. Inicia sesión nuevamente.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("audio", audioBlob || uploadedAudio);
+    formData.append("audio", audioBlob || uploadedAudio, uploadedAudio ? uploadedAudio.name : "audio.wav");
+    formData.append("user_id", userId);
 
     setLoading(true);
     try {
+      console.log("Enviando audio con user_id:", userId);
       const res = await axios.post("http://localhost:5000/process-voice", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log("Respuesta recibida del servidor:", res.data);
+      console.log("Respuesta del backend:", res.data);
       setResponse(res.data.photos || []);
     } catch (error) {
-      console.error("Error enviando audio:", error);
-      alert("Error procesando tu solicitud.");
+      console.error("Error enviando el audio:", error);
+      alert("Error procesando el audio.");
     } finally {
       setLoading(false);
+      deleteRecording();
     }
   };
 
@@ -119,17 +118,14 @@ const MultimodalInteraction = () => {
     <>
       <Navbar />
       <div className="multimodal-container">
-        <h2>Interacción Multimodal</h2>
+        <h2>Acciones con Voz y Texto</h2>
 
-        {/* Sección de texto */}
+        {/* Entrada de texto */}
         <div className="input-section">
           <textarea
             placeholder="Escribe algo..."
             value={text}
-            onChange={(e) => {
-              console.log("Texto cambiado:", e.target.value);
-              setText(e.target.value);
-            }}
+            onChange={(e) => setText(e.target.value)}
             className="text-input"
           />
           <button onClick={handleTextSubmit} className="submit-button" disabled={loading}>
@@ -137,16 +133,14 @@ const MultimodalInteraction = () => {
           </button>
         </div>
 
-        {/* Sección de audio */}
+        {/* Grabación de audio */}
         <div className="audio-section">
-          {/* Controles de grabación */}
           <div className="recording-controls">
-            {!recording && (
+            {!recording ? (
               <button onClick={startRecording} className="record-button">
                 Grabar Audio
               </button>
-            )}
-            {recording && (
+            ) : (
               <button onClick={stopRecording} className="stop-button">
                 Detener Grabación
               </button>
@@ -156,7 +150,7 @@ const MultimodalInteraction = () => {
           {/* Reproductor de audio */}
           {audioURL && (
             <div className="audio-preview">
-              <audio controls src={audioURL} ref={audioRef}></audio>
+              <audio controls src={audioURL}></audio>
               <button onClick={deleteRecording} className="delete-button">
                 Eliminar Audio
               </button>
@@ -168,13 +162,7 @@ const MultimodalInteraction = () => {
             <label htmlFor="file-upload" className="file-upload-label">
               Subir Archivo de Audio
             </label>
-            <input
-              type="file"
-              id="file-upload"
-              accept="audio/*"
-              onChange={handleFileUpload}
-              className="file-upload-input"
-            />
+            <input type="file" id="file-upload" accept="audio/*" onChange={handleFileUpload} className="file-upload-input" />
           </div>
 
           {/* Botón para enviar audio */}
@@ -185,7 +173,7 @@ const MultimodalInteraction = () => {
 
         {/* Sección de respuesta */}
         <div className="response-section">
-          <h4>Respuesta:</h4>
+          <h4>Resultado:</h4>
           {response.length > 0 ? (
             <div className="photo-gallery">
               {response.map((photo, index) => (
