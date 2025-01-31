@@ -6,6 +6,7 @@ from models import db, bcrypt
 from routes import api_bp
 from config import Config
 import os
+from config import UPLOAD_FOLDER, TEMP_AUDIO_DIR
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -17,6 +18,8 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}},
 
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
 
 JWTManager(app)
 db.init_app(app)
@@ -36,6 +39,7 @@ with app.app_context():
 # Crear el directorio de subida si no existe
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):

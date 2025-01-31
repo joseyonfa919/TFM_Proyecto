@@ -11,9 +11,22 @@ torch
 scikit_learn
 pillow
 SpeechRecognition
+spacy
+pydub
+soundfile 
+numpy
+
+
+
+#python -m spacy download en_core_web_sm
+#python -m spacy download es_core_news_sm
+
 
 #react-icons
 
 #instalar en el frontend 
 #npm install bootstrap
 #npm install react-spinners
+#npm install recorder-js
+#npm install audiorecorder
+#npm install framer-motion

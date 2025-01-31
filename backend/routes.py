@@ -15,7 +15,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask import current_app
 from flask_bcrypt import Bcrypt
-from utils.ai_utils import process_images_with_ai, cluster_images
+from utils.ai_utils import preprocess_text, process_images_with_ai, cluster_images
 from sklearn.cluster import KMeans
 from PIL import Image as PILImage
 import torch
@@ -24,6 +24,12 @@ from transformers import CLIPProcessor, CLIPModel,pipeline
 from utils.multimodal_utils import VoiceHandler, TextHandler
 from utils.ai_utils import process_images_with_ai
 from utils.ai_utils import calculate_similarity_with_text
+from config import TEMP_AUDIO_DIR
+import speech_recognition as sr
+from pydub import AudioSegment
+import soundfile as sf
+import numpy as np
+import io
 
 
 
@@ -39,6 +45,10 @@ description_generator = pipeline("text-generation", model="gpt2")
 # Cargar modelos CLIP
 clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
 clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+
+# Definir el directorio para guardar archivos de audio temporalmente
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TEMP_AUDIO_DIR = os.path.join(BASE_DIR, 'temp_audio')
 
 PHOTO_DIR = "uploads"
 
@@ -657,69 +667,73 @@ def reset_password():
 @api_bp.route('/process-text', methods=['POST'])
 def process_text():
     try:
-        print("Iniciando procesamiento de texto...")
         data = request.get_json()
-        print(f"Datos recibidos: {data}")
-
         input_text = data.get("text", "").lower()
-        print(f"Texto procesado: {input_text}")
+        print(f"Text received: {input_text}")
 
         if not input_text:
-            print("El texto está vacío. Respondiendo con error 400.")
             return jsonify({"message": "El texto está vacío."}), 400
 
         photos = []
-        print("Iniciando procesamiento de imágenes...")
         for photo_file in os.listdir(PHOTO_DIR):
             photo_path = os.path.join(PHOTO_DIR, photo_file)
-            print(f"Procesando imagen: {photo_file}")
             try:
                 similarity = calculate_similarity_with_text(clip_model, clip_processor, input_text, photo_path)
-                print(f"Similitud calculada para {photo_file}: {similarity}")
-                if similarity > 0.5:  # Ajusta el umbral
-                    print(f"Imagen {photo_file} agregada a resultados con similitud: {similarity}")
-                    photos.append({"url": f"/uploads/{photo_file}", "score": similarity})
+                print(f"Similarity calculated for {photo_file}: {similarity}")
+                if similarity > 0.3:  # Adjust the threshold as needed
+                    #photos.append({"url": f"/uploads/{photo_file}", "name": photo_file, "score": similarity})
+                    photos.append({"url": f"/uploads/{os.path.basename(photo_path)}", "name": photo_file, "score": similarity})
+                    
             except Exception as e:
-                print(f"Error procesando la imagen {photo_file}: {e}")
+                print(f"Error processing image {photo_file}: {e}")
 
         if photos:
-            print(f"Imágenes encontradas: {photos}")
             return jsonify({"photos": photos}), 200
         else:
-            print("No se encontraron fotos relacionadas.")
             return jsonify({"message": "No se encontraron fotos relacionadas."}), 200
 
     except Exception as e:
-        print(f"Error procesando texto: {e}")
+        print(f"Error processing text: {e}")
         return jsonify({"error": "Error interno", "details": str(e)}), 500
+
     
 
 
 @api_bp.route('/process-voice', methods=['POST'])
 def process_voice():
     try:
-        if 'audio' not in request.files:
-            return jsonify({"error": "Archivo de audio no encontrado"}), 400
+        print("Solicitud recibida en /process-voice")
+
+        if 'audio' not in request.files or 'user_id' not in request.form:
+            print("Faltan datos: archivo de audio o user_id")
+            return jsonify({"error": "Faltan datos (audio o user_id)."}), 400
 
         audio_file = request.files['audio']
-        recognized_text = voice_handler.recognize_voice(audio_file)
+        user_id = request.form['user_id']
+        print(f"Archivo recibido: {audio_file.filename}, User ID: {user_id}")
 
-        if recognized_text:
-            photos = []
-            for photo_file in os.listdir(PHOTO_DIR):
-                photo_path = os.path.join(PHOTO_DIR, photo_file)
-                try:
-                    similarity = calculate_similarity_with_text(model, processor, recognized_text.lower(), photo_path)
-                    if similarity > 0.5:
-                        photos.append({"url": f"/uploads/{photo_file}", "score": similarity})
-                except Exception as e:
-                    print(f"Error procesando la imagen {photo_file}: {e}")
+        if not os.path.exists(TEMP_AUDIO_DIR):
+            os.makedirs(TEMP_AUDIO_DIR)
 
-            return jsonify({"photos": photos}), 200 if photos else jsonify({"message": "No se encontraron fotos relacionadas."}), 200
-        return jsonify({"message": "No se pudo reconocer el texto del audio."}), 200
+        wav_path = os.path.join(TEMP_AUDIO_DIR, f"{user_id}_audio.wav")
+        audio_file.save(wav_path)
+        print(f"Audio guardado en: {wav_path}")
+
+        recognizer = sr.Recognizer()
+        with sr.AudioFile(wav_path) as source:
+            print("Cargando audio para transcripción...")
+            audio_data = recognizer.record(source)
+            try:
+                transcription = recognizer.recognize_google(audio_data, language="es-ES")
+                print(f"Transcripción obtenida: {transcription}")
+            except Exception as e:
+                print(f"Error en la transcripción: {e}")
+                transcription = "No se pudo transcribir el audio."
+
+        return jsonify({"message": "Audio procesado con éxito", "transcription": transcription}), 200
     except Exception as e:
-        print(f"Error procesando voz: {e}")
-        return jsonify({"error": "Error interno", "details": str(e)}), 500
+        print(f"Error procesando el audio: {e}")
+        return jsonify({"error": "Error interno procesando el audio", "details": str(e)}), 500
 
 
 
@@ -758,6 +772,66 @@ def create_timeline():
         return jsonify({"error": "Error interno"}), 500
 
 
+@api_bp.route('/timelines', methods=['GET'])
+def get_timelines():
+    try:
+        user_id = request.args.get('user_id')
+        if not user_id:
+            return jsonify({"error": "User ID es obligatorio"}), 400
+
+        timelines = Timeline.query.filter_by(user_id=user_id).all()
+        timeline_list = [
+            {
+                "id": timeline.id,
+                "name": timeline.name,
+                "created_at": timeline.created_at.strftime('%Y-%m-%d') if timeline.created_at else None,
+                "events": sorted(
+                    [
+                        {
+                            "id": event.id,
+                            "photo_path": f"/uploads/{os.path.basename(event.image.file_path)}" if event.image else None,
+                            "description": event.description,
+                            "date": event.date.strftime('%Y-%m-%d')
+                        } 
+                        for event in timeline.events
+                    ], 
+                    key=lambda x: x["date"]  # 🔴 Ordenar por fecha ascendente
+                )
+            }
+            for timeline in timelines
+        ]
+
+        return jsonify({"timelines": timeline_list}), 200
+    except Exception as e:
+        print(f"Error obteniendo cronologías: {e}")
+        return jsonify({"error": "Error interno"}), 500
+
+
+
+
+@api_bp.route('/timelines/delete', methods=['POST'])
+def delete_timeline():
+    try:
+        data = request.get_json()
+        timeline_id = data.get('timeline_id')
+
+        if not timeline_id:
+            return jsonify({"error": "Timeline ID es obligatorio"}), 400
+
+        timeline = Timeline.query.get(timeline_id)
+        if not timeline:
+            return jsonify({"error": "Cronología no encontrada"}), 404
+
+        db.session.delete(timeline)
+        db.session.commit()
+
+        return jsonify({"message": "Cronología eliminada con éxito"}), 200
+    except Exception as e:
+        print(f"Error eliminando cronología: {e}")
+        return jsonify({"error": "Error interno"}), 500
+
+
+
 @api_bp.route('/timelines/describe', methods=['POST'])
 def describe_event():
     try:
@@ -776,3 +850,12 @@ def describe_event():
     except Exception as e:
         print(f"Error generando descripción: {e}")
         return jsonify({"error": "Error interno"}), 500
+    
+
+@api_bp.route('/uploads/<filename>')
+def serve_uploaded_file(filename):
+    try:
+        return send_from_directory("uploads", filename)
+    except Exception as e:
+        print(f"Error al servir la imagen: {e}", flush=True)
+        return jsonify({"error": "No se pudo cargar la imagen"}), 500

@@ -97,16 +97,23 @@ class Timeline(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
-    events = db.relationship('Event', back_populates='timeline', lazy=True)
+    # Relación con eventos
+    events = db.relationship('Event', back_populates='timeline', lazy=True, cascade="all, delete-orphan")
+
 
 class Event(db.Model):
     __tablename__ = 'events'
 
     id = db.Column(db.Integer, primary_key=True)
     timeline_id = db.Column(db.Integer, db.ForeignKey('timelines.id'), nullable=False)
+    photo_id = db.Column(db.Integer, db.ForeignKey('images.id'), nullable=True)  # Asociación con una imagen
     date = db.Column(db.DateTime, nullable=False)
     description = db.Column(db.String(255), nullable=False)
 
+    # Relación con la cronología
     timeline = db.relationship('Timeline', back_populates='events')
+
+    # Relación con la imagen
+    image = db.relationship('Image', lazy=True)
