@@ -242,12 +242,15 @@ def create_album():
 @api_bp.route('/albums', methods=['GET'])
 def get_albums():
     user_id = request.args.get('user_id')
+    if not user_id:
+        return jsonify({"error": "User ID is required"}), 400
+
     albums = Album.query.filter_by(user_id=user_id).all()
     album_list = [
         {
             "id": album.id,
             "name": album.name,
-            "photos": [{"id": photo.id, "file_name": photo.file_name} for photo in album.photos]  # Agregar fotos
+            "photos": [{"id": photo.id, "file_name": photo.file_name} for photo in album.photos]  # Fotos por álbum
         }
         for album in albums
     ]
