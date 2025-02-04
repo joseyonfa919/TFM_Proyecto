@@ -6,6 +6,8 @@ import { ClipLoader } from 'react-spinners';
 function CreateAlbum() {
     const [photos, setPhotos] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
+    const [albumName, setAlbumName] = useState('');
+    const [selectedPhotos, setSelectedPhotos] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -73,6 +75,47 @@ function CreateAlbum() {
             alert('Error al crear el álbum sugerido.');
         }
     };
+    const handlePhotoSelection = (photoId) => {
+        setSelectedPhotos((prevSelected) => {
+            if (prevSelected.includes(photoId)) {
+                return prevSelected.filter((id) => id !== photoId);
+            } else {
+                return [...prevSelected, photoId];
+            }
+        });
+    };
+    
+    const handleCreateManualAlbum = async () => {
+        const userId = localStorage.getItem('user_id');
+        if (!userId) {
+            alert('No se encontró el ID del usuario. Inicia sesión nuevamente.');
+            return;
+        }
+
+        if (!albumName.trim()) {
+            alert('Por favor ingresa un nombre para el álbum.');
+            return;
+        }
+
+        if (selectedPhotos.length === 0) {
+            alert('Selecciona al menos una foto para el álbum.');
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://127.0.0.1:5000/albums', {
+                user_id: userId,
+                name: albumName,
+                photo_ids: selectedPhotos,
+            });
+            alert(`Álbum creado: ${response.data.message}`);
+            setAlbumName('');
+            setSelectedPhotos([]);
+        } catch (error) {
+            console.error('Error al crear el álbum:', error);
+            alert('Error al crear el álbum.');
+        }
+    };
 
     return (
         <div>
@@ -82,6 +125,8 @@ function CreateAlbum() {
                     <h2 style={{ textAlign: 'center', color: '#4CAF50' }}>Crear Álbum Manualmente</h2>
                     <input
                         type="text"
+                        value={albumName}
+                        onChange={(e) => setAlbumName(e.target.value)}
                         placeholder="Nombre del álbum"
                         style={{ width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
                     />
@@ -93,12 +138,17 @@ function CreateAlbum() {
                                     alt={photo.file_name}
                                     style={{ width: '100%', borderRadius: '5px' }}
                                 />
-                                <input type="checkbox" />
+                                <input
+                                    type="checkbox"
+                                    checked={selectedPhotos.includes(photo.id)}
+                                    onChange={() => handlePhotoSelection(photo.id)}
+                                />
                             </div>
                         ))}
                     </div>
                     <button
                         style={{ width: '100%', padding: '12px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+                        onClick={handleCreateManualAlbum}
                     >
                         Crear Álbum Manualmente
                     </button>

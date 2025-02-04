@@ -1,0 +1,103 @@
+/* Estilos generales */
+.album-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Título de la página */
+.page-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Estilos para la lista de álbumes */
+.album-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.album-list .btn-main {
+    background-color: #27ae60;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    transition: background 0.3s ease-in-out;
+}
+
+.album-list .btn-main:hover {
+    background-color: #1e8449;
+}
+
+/* Sección de selección de fotos */
+.photo-selection {
+    margin-top: 20px;
+}
+
+.album-title {
+    font-size: 1.5rem;
+    color: #34495e;
+    margin-bottom: 15px;
+}
+
+/* Grid de fotos */
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.photo-item {
+    position: relative;
+    text-align: center;
+}
+
+.photo-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.photo-item img:hover {
+    transform: scale(1.1);
+}
+
+/* Checkbox para selección de fotos */
+.photo-item input[type="checkbox"] {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 18px;
+    height: 18px;
+}
+
+/* Botón de creación de cronología */
+.btn-main {
+    background-color: #2980b9;
+    color: white;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.btn-main:hover {
+    background-color: #1c5a89;
+}

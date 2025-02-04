@@ -66,14 +66,14 @@ function Photos() {
     };
 
     // Función para enviar fotos seleccionadas a la organización por IA
-    const handleSendToAI = () => {
+    /*const handleSendToAI = () => {
         if (selectedPhotos.length === 0) {
             alert("Por favor selecciona al menos una foto.");
             return;
         }
         localStorage.setItem('selected_photos', JSON.stringify(selectedPhotos));
         window.location.href = '/organize-ai';
-    };
+    };*/
 
     return (
         <div>

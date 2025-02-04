@@ -241,30 +241,17 @@ def create_album():
 # Obtener álbumes del usuario autenticado
 @api_bp.route('/albums', methods=['GET'])
 def get_albums():
-    try:
-        user_id = request.args.get('user_id')  # Obtener el user_id del parámetro de consulta
-        if not user_id:
-            return jsonify({"message": "User ID is required"}), 400
-
-        albums = Album.query.filter_by(user_id=int(user_id)).all()
-
-        album_list = [
-            {
-                "id": album.id,
-                "name": album.name,
-                "photos": [
-                    {
-                        "id": photo.id,
-                        "file_name": photo.file_name,
-                        "file_path": os.path.basename(photo.file_path)
-                    } for photo in album.photos
-                ]
-            } for album in albums
-        ]
-        return jsonify(album_list), 200
-    except Exception as e:
-        print(f"Error al obtener los álbumes: {e}", flush=True)
-        return jsonify({"message": "Error al obtener los álbumes", "error": str(e)}), 500
+    user_id = request.args.get('user_id')
+    albums = Album.query.filter_by(user_id=user_id).all()
+    album_list = [
+        {
+            "id": album.id,
+            "name": album.name,
+            "photos": [{"id": photo.id, "file_name": photo.file_name} for photo in album.photos]  # Agregar fotos
+        }
+        for album in albums
+    ]
+    return jsonify(album_list)
     
 @api_bp.route('/photos/delete', methods=['POST'])
 def delete_photos():
@@ -859,3 +846,73 @@ def serve_uploaded_file(filename):
     except Exception as e:
         print(f"Error al servir la imagen: {e}", flush=True)
         return jsonify({"error": "No se pudo cargar la imagen"}), 500
+
+
+@api_bp.route('/timelines/create_from_album', methods=['POST'])
+def create_timeline_from_album():
+    try:
+        data = request.get_json()
+        user_id = data.get('user_id')
+        album_id = data.get('album_id')
+        photo_ids = data.get('photo_ids', [])  # Lista de fotos seleccionadas
+
+        if not user_id or not album_id or not photo_ids:
+            return jsonify({"error": "Faltan parámetros o fotos no seleccionadas"}), 400
+
+        # Obtener el álbum
+        album = Album.query.filter_by(id=album_id, user_id=user_id).first()
+        if not album:
+            return jsonify({"error": "Álbum no encontrado"}), 404
+
+        # Crear la nueva cronología
+        new_timeline = Timeline(name=f"Cronología de {album.name}", user_id=user_id)
+        db.session.add(new_timeline)
+        db.session.commit()
+
+        # Asociar las fotos seleccionadas a la cronología
+        for photo_id in photo_ids:
+            photo = Image.query.filter_by(id=photo_id, album_id=album_id).first()
+            if photo:
+                new_event = Event(
+                    timeline_id=new_timeline.id,
+                    photo_path=photo.file_path,
+                    date=photo.upload_date,
+                    description=f"Imagen de {album.name}"
+                )
+                db.session.add(new_event)
+
+        db.session.commit()
+
+        return jsonify({"message": "Cronología creada con éxito", "timeline_id": new_timeline.id}), 201
+
+    except Exception as e:
+        print(f"Error creando la cronología: {e}")
+        return jsonify({"error": "Error interno"}), 500
+
+
+@api_bp.route('/timelines/albums', methods=['GET'])
+def get_albums_for_timelines():
+    try:
+        user_id = request.args.get('user_id')
+        if not user_id:
+            return jsonify({"error": "User ID es obligatorio"}), 400
+
+        albums = Album.query.filter_by(user_id=int(user_id)).all()
+        album_list = [
+            {
+                "id": album.id,
+                "name": album.name,
+                "photos": [
+                    {
+                        "id": photo.id,
+                        "file_name": photo.file_name,
+                        "file_path": f"/uploads/{os.path.basename(photo.file_path)}"
+                    } for photo in album.photos
+                ]
+            } for album in albums
+        ]
+
+        return jsonify(album_list), 200
+    except Exception as e:
+        print(f"Error obteniendo álbumes para cronología: {e}")
+        return jsonify({"error": "Error interno"}), 500

@@ -9,7 +9,7 @@ const MultimodalInteraction = () => {
   const [response, setResponse] = useState([]);
   const [loading, setLoading] = useState(false);
   const [recording, setRecording] = useState(false);
-  const mediaRecorderRef = useRef(null);
+  //const mediaRecorderRef = useRef(null);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioURL, setAudioURL] = useState(null);
   const [uploadedAudio, setUploadedAudio] = useState(null);
