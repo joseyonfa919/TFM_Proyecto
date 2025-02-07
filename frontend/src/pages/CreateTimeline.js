@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from '../components/Navbar';
 import { useNavigate } from "react-router-dom";
+import '../style/CreateAlbum.css';
 
 function CreateTimeline() {
     const [timelineName, setTimelineName] = useState("");
@@ -84,7 +85,7 @@ function CreateTimeline() {
         <div>
             <Navbar />
             <div style={{ padding: "20px" }}>
-                <h2 style={{ textAlign: "center", color: "#4CAF50" }}>Crear Cronología</h2>
+                <h2 style={{ textAlign: "center", color: "black" }}>Crear Cronología</h2>
 
                 <input
                     type="text"

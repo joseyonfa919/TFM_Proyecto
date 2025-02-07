@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import { ClipLoader } from 'react-spinners';
+import '../style/CreateAlbum.css';
 
 function CreateAlbum() {
     const [photos, setPhotos] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
     const [albumName, setAlbumName] = useState('');
     const [selectedPhotos, setSelectedPhotos] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -26,6 +28,20 @@ function CreateAlbum() {
                 console.error('Error al obtener las fotos:', error);
             });
     }, []);
+
+    const filteredPhotos = photos.filter(photo =>
+        photo.file_name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const handlePhotoSelection = (photoId) => {
+        setSelectedPhotos((prevSelected) => {
+            if (prevSelected.includes(photoId)) {
+                return prevSelected.filter((id) => id !== photoId);
+            } else {
+                return [...prevSelected, photoId];
+            }
+        });
+    };
 
     const handleAutoSuggestAlbums = async () => {
         const userId = localStorage.getItem('user_id');
@@ -49,169 +65,73 @@ function CreateAlbum() {
         }
     };
 
-    const handleCreateSuggestedAlbum = async (suggestion) => {
-        const userId = localStorage.getItem('user_id');
-        if (!userId) {
-            alert('No se encontró el ID del usuario. Por favor inicia sesión nuevamente.');
-            return;
-        }
-
-        if (!suggestion.album_name.trim()) {
-            alert('Por favor ingresa un nombre para el álbum sugerido.');
-            return;
-        }
-
-        try {
-            const response = await axios.post('http://127.0.0.1:5000/albums', {
-                user_id: userId,
-                name: suggestion.album_name,
-                photo_ids: suggestion.photo_ids,
-            });
-
-            alert(`Álbum creado: ${response.data.message}`);
-            setSuggestions([]);
-        } catch (error) {
-            console.error('Error al crear el álbum sugerido:', error);
-            alert('Error al crear el álbum sugerido.');
-        }
-    };
-    const handlePhotoSelection = (photoId) => {
-        setSelectedPhotos((prevSelected) => {
-            if (prevSelected.includes(photoId)) {
-                return prevSelected.filter((id) => id !== photoId);
-            } else {
-                return [...prevSelected, photoId];
-            }
-        });
-    };
-
-    const handleCreateManualAlbum = async () => {
-        const userId = localStorage.getItem('user_id');
-        if (!userId) {
-            alert('No se encontró el ID del usuario. Inicia sesión nuevamente.');
-            return;
-        }
-
-        if (!albumName.trim()) {
-            alert('Por favor ingresa un nombre para el álbum.');
-            return;
-        }
-
-        if (selectedPhotos.length === 0) {
-            alert('Selecciona al menos una foto para el álbum.');
-            return;
-        }
-
-        try {
-            const response = await axios.post('http://127.0.0.1:5000/albums', {
-                user_id: userId,
-                name: albumName,
-                photo_ids: selectedPhotos,
-            });
-            alert(`Álbum creado: ${response.data.message}`);
-            setAlbumName('');
-            setSelectedPhotos([]);
-        } catch (error) {
-            console.error('Error al crear el álbum:', error);
-            alert('Error al crear el álbum.');
-        }
-    };
-
     return (
-        <div>
+        <div className="album-container">
             <Navbar />
-            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '20px' }}>
-                <div style={{ width: '48%' }}>
-                    <h2 style={{ textAlign: 'center', color: '#4CAF50' }}>Crear Álbum Manualmente</h2>
+            <div className="album-sections">
+                <div className="album-manual">
+                    <h2 style={{ color: 'black' }}> 📂 Crear Álbum Manualmente</h2>
                     <input
                         type="text"
                         value={albumName}
                         onChange={(e) => setAlbumName(e.target.value)}
-                        placeholder="Nombre del álbum"
-                        style={{ width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+                        placeholder="Escribe el nombre de tu álbum..."
+                        className="album-input"
                     />
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '10px' }}>
-                        {photos.map((photo) => (
-                            <div key={photo.id} style={{ width: 'calc(25% - 10px)', textAlign: 'center' }}>
-                                <img
-                                    src={`http://127.0.0.1:5000/uploads/${photo.file_name}`}
-                                    alt={photo.file_name}
-                                    style={{ width: '175px', height: '175px', objectFit: 'cover', borderRadius: '5px' }}
-                                />
+                    <input
+                        type="text"
+                        placeholder="🔍 Buscar fotos..."
+                        className="search-bar"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <div className="photo-grid">
+                        {filteredPhotos.map((photo) => (
+                            <div key={photo.id} className="photo-card">
+                                <img src={`http://127.0.0.1:5000/uploads/${photo.file_name}`} alt={photo.file_name} className="photo-image" />
                                 <input
                                     type="checkbox"
+                                    className="photo-checkbox"
                                     checked={selectedPhotos.includes(photo.id)}
                                     onChange={() => handlePhotoSelection(photo.id)}
                                 />
                             </div>
                         ))}
                     </div>
-                    <button
-                        style={{ width: '100%', padding: '12px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
-                        onClick={handleCreateManualAlbum}
-                    >
-                        Crear Álbum Manualmente
-                    </button>
+                    <button className="btn-album" onClick={handleAutoSuggestAlbums}>📂 Crear Álbum Manualmente</button>
                 </div>
 
-                <div style={{ width: '48%' }}>
-                    <h2 style={{ textAlign: 'center', color: '#4CAF50' }}>Crear Álbumes con IA</h2>
-                    <button
-                        onClick={handleAutoSuggestAlbums}
-                        style={{ width: '100%', padding: '12px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', marginBottom: '20px' }}
-                    >
-                        Generar Álbumes Automáticos
-                    </button>
+                <div className="album-ai">
+                    <h2 style={{ color: 'black' }}>🤖 Crear Álbumes con IA</h2>
+                    <button className="btn-ai" onClick={handleAutoSuggestAlbums}>⚡ Generar Álbumes Automáticos</button>
 
                     {isLoading ? (
-                        <div style={{ textAlign: 'center' }}>
+                        <div className="loading-container">
                             <ClipLoader color="#007bff" size={50} />
                             <p>Procesando...</p>
                         </div>
                     ) : (
-                        <div>
+                        <div className="suggestions-container">
                             {suggestions.map((suggestion, index) => (
-                                <div key={index} style={{ border: '1px solid #ccc', borderRadius: '5px', padding: '10px', marginBottom: '10px' }}>
+                                <div key={index} className="suggestion-card">
                                     <input
                                         type="text"
                                         value={suggestion.album_name}
+                                        className="album-input"
                                         onChange={(e) => {
                                             const updatedSuggestions = [...suggestions];
                                             updatedSuggestions[index].album_name = e.target.value;
                                             setSuggestions(updatedSuggestions);
                                         }}
-                                        style={{ width: '100%', padding: '8px', marginBottom: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
                                     />
-                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                                    <div className="photo-grid">
                                         {suggestion.photos.map((photo) => (
-                                            <div key={photo.id} style={{ width: 'calc(25% - 10px)', textAlign: 'center' }}>
-                                                <img
-                                                    src={`http://127.0.0.1:5000/uploads/${photo.file_name}`}
-                                                    alt={photo.file_name}
-                                                    style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '5px' }}
-                                                />
-                                                <input
-                                                    type="checkbox"
-                                                    checked={suggestion.photo_ids.includes(photo.id)}
-                                                    onChange={(e) => {
-                                                        const updatedSuggestions = [...suggestions];
-                                                        if (e.target.checked) {
-                                                            updatedSuggestions[index].photo_ids.push(photo.id);
-                                                        } else {
-                                                            updatedSuggestions[index].photo_ids = updatedSuggestions[index].photo_ids.filter((id) => id !== photo.id);
-                                                        }
-                                                        setSuggestions(updatedSuggestions);
-                                                    }}
-                                                />
+                                            <div key={photo.id} className="photo-card">
+                                                <img src={`http://127.0.0.1:5000/uploads/${photo.file_name}`} alt={photo.file_name} className="photo-image" />
                                             </div>
                                         ))}
                                     </div>
-                                    <button
-                                        onClick={() => handleCreateSuggestedAlbum(suggestion)}
-                                        style={{ marginTop: '10px', width: '100%', padding: '10px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
-                                    >
-                                        Crear Álbum
-                                    </button>
+                                    <button className="btn-album">📂 Crear Álbum</button>
                                 </div>
                             ))}
                         </div>

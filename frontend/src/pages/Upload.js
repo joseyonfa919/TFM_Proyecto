@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { FaUpload, FaTrash, FaFileImage } from 'react-icons/fa';
+import '../style/Upload.css';
 
 function Upload() {
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -25,9 +27,6 @@ function Upload() {
 
         setSelectedFiles(updatedFiles);
         setPreviews(updatedPreviews);
-
-        // Actualizar el conteo de archivos en el input
-        document.querySelector('input[type="file"]').value = null;
     };
 
     const handleUpload = async () => {
@@ -67,65 +66,34 @@ function Upload() {
     };
 
     return (
-        <div>
+        <div className="upload-container">
             <Navbar />
-            <h2 style={{ textAlign: 'center' }}>Subir Fotos o Videos</h2>
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <h2 className="upload-title">📤 Subir Fotos o Videos</h2>
+            <div className="upload-box" onClick={() => document.getElementById('file-input').click()}>
+                <FaFileImage size={40} color="#666" />
+                <p>Arrastra aquí tus fotos o videos o haz clic para seleccionarlos</p>
                 <input
+                    id="file-input"
                     type="file"
                     multiple
                     onChange={handleFileChange}
-                    style={{ display: 'block', margin: '10px auto' }}
+                    style={{ display: 'none' }}
                 />
-                <p style={{ textAlign: 'center' }}>{selectedFiles.length} archivo(s)</p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px', marginTop: '20px' }}>
-                    {previews.map((preview, index) => (
-                        <div key={index} style={{ width: '100px', textAlign: 'center', position: 'relative' }}>
-                            <img
-                                src={preview}
-                                alt={`Preview ${index}`}
-                                style={{ width: '100%', height: '100px', objectFit: 'cover', borderRadius: '5px' }}
-                            />
-                            <button
-                                onClick={() => handleRemoveFile(index)}
-                                style={{
-                                    position: 'absolute',
-                                    top: '5px',
-                                    right: '5px',
-                                    backgroundColor: 'red',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '50%',
-                                    cursor: 'pointer',
-                                    width: '20px',
-                                    height: '20px',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                &times;
-                            </button>
-                        </div>
-                    ))}
-                </div>
-                <button
-                    onClick={handleUpload}
-                    disabled={isUploading}
-                    style={{
-                        padding: '10px 20px',
-                        fontSize: '16px',
-                        backgroundColor: isUploading ? '#ccc' : '#4CAF50',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '5px',
-                        cursor: isUploading ? 'not-allowed' : 'pointer',
-                        marginTop: '20px',
-                    }}
-                >
-                    {isUploading ? 'Subiendo...' : 'Subir Imágenes'}
-                </button>
             </div>
+            <p className="file-count">{selectedFiles.length} archivo(s) seleccionado(s)</p>
+            <div className="preview-container">
+                {previews.map((preview, index) => (
+                    <div key={index} className="preview-box">
+                        <img src={preview} alt={`Preview ${index}`} className="preview-image" />
+                        <button className="remove-button" onClick={() => handleRemoveFile(index)}>
+                            <FaTrash />
+                        </button>
+                    </div>
+                ))}
+            </div>
+            <button className="upload-button" onClick={handleUpload} disabled={isUploading}>
+                {isUploading ? 'Subiendo...' : '📤 Subir Imágenes'}
+            </button>
         </div>
     );
 }

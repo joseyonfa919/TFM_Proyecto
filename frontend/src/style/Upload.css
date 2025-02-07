@@ -1,0 +1,114 @@
+.upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(to bottom, #4a90e2, #8ebcdd);
+    min-height: 100vh;
+}
+
+.upload-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+}
+
+.upload-box {
+    width: 80%;
+    max-width: 500px;
+    height: 200px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 20px 0;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+}
+
+.upload-box:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-color: #007bff;
+}
+
+.file-count {
+    font-size: 1rem;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.upload-formats {
+    font-size: 1rem;
+    color: white;
+    margin-top: 5px;
+}
+
+.preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.preview-box {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+}
+
+.upload-button {
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.upload-button:hover {
+    background-color: #0056b3;
+}
+
+.upload-box::after {
+    content: "Formatos permitidos: JPG, PNG, MP4";
+    font-size: 0.9rem;
+    color: #555;
+    position: absolute;
+    bottom: 10px;
+}

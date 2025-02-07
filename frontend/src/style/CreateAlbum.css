@@ -1,0 +1,89 @@
+.album-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    background: linear-gradient(to bottom, #4a90e2, #8ebcdd);
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+.album-sections {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 95%; /* Aumentar el ancho total */
+    max-width: 1800px; /* Hacerlo más ancho */
+    gap: 20px;
+    margin-top: 20px;
+    align-items: flex-start;
+}
+
+.album-manual, .album-ai {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    flex: 1;
+    text-align: center;
+    min-width: 650px; /* Aumentar tamaño del contenedor */
+    max-width: 1200px; /* Limitar el ancho para que no sea demasiado grande */
+}
+
+.album-input, .search-bar {
+    width: 90%;
+    padding: 12px;
+    font-size: 1rem;
+    border: 2px solid #221e1e;
+    border-radius: 10px;
+    outline: none;
+    margin-bottom: 15px;
+}
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Aumentar tamaño de las imágenes */
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.photo-card {
+    position: relative;
+    background: white;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 150px; /* Hacer las imágenes un poco más grandes */
+}
+
+.photo-image {
+    width: 100%;
+    border-radius: 10px;
+    height: auto;
+    object-fit: cover;
+}
+
+.photo-checkbox {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    transform: scale(1.5); /* Hacer checkbox más grande */
+}
+
+.btn-album, .btn-ai {
+    padding: 14px 30px;
+    font-size: 1.3rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    margin-top: 15px;
+}
+
+.btn-album:hover, .btn-ai:hover {
+    background-color: #0056b3;
+}

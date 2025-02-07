@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import '../style/ViewAlbums.css';
 
 function ViewAlbums() {
     const [albums, setAlbums] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
     const userId = localStorage.getItem('user_id');
     const navigate = useNavigate();
 
@@ -41,35 +43,48 @@ function ViewAlbums() {
         }
     };
 
+    const filteredAlbums = albums.filter(album =>
+        album.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
-        <div>
+        <div className="albums-container">
             <Navbar />
-            <h2 style={{ textAlign: 'center', color: '#333' }}>Selecciona un Álbum para la Cronología</h2>
-            <div style={{ padding: '20px' }}>
-                {albums.length === 0 ? (
-                    <p>No hay álbumes disponibles</p>
+            <h2 className="title">Mis Álbumes</h2>
+            <div className="search-container">
+                <input 
+                    type="text" 
+                    placeholder="🔍 Buscar álbum..." 
+                    className="search-bar"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+            </div>
+            <div className="albums-list">
+                {filteredAlbums.length === 0 ? (
+                    <p className="no-albums">No hay álbumes disponibles</p>
                 ) : (
-                    albums.map(album => (
-                        <div key={album.id} style={{ marginBottom: '20px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
-                            <h3>{album.name}</h3>
+                    filteredAlbums.map(album => (
+                        <div key={album.id} className="album-card">
+                            <h3 className="album-title">{album.name}</h3>
                             <button 
                                 onClick={() => handleDeleteAlbum(album.id)}
-                                style={{ backgroundColor: 'red', color: 'white', border: 'none', padding: '5px 10px', cursor: 'pointer', marginBottom: '10px' }}
+                                className="delete-button"
                             >
-                                Eliminar Álbum
+                                🗑️ Eliminar Álbum
                             </button>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                            <div className="photo-grid">
                                 {album.photos && album.photos.length > 0 ? (
                                     album.photos.map(photo => (
                                         <img
                                             key={photo.id}
                                             src={`http://127.0.0.1:5000/uploads/${photo.file_name}`}
                                             alt={photo.file_name}
-                                            style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '5px' }}
+                                            className="photo-thumbnail"
                                         />
                                     ))
                                 ) : (
-                                    <p>No hay fotos en este álbum</p>
+                                    <p className="no-photos">No hay fotos en este álbum</p>
                                 )}
                             </div>
                         </div>
