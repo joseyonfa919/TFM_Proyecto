@@ -1,34 +1,40 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Navbar from "../components/Navbar";
+import Navbar from '../components/Navbar';
+import { useNavigate } from "react-router-dom";
 
-const CreateTimeline = () => {
-    const [name, setName] = useState("");
+function CreateTimeline() {
+    const [timelineName, setTimelineName] = useState("");
     const [albums, setAlbums] = useState([]);
     const [selectedAlbum, setSelectedAlbum] = useState(null);
     const [events, setEvents] = useState([]);
-    const userId = localStorage.getItem("user_id");
+    const [userId, setUserId] = useState(localStorage.getItem("user_id"));
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if (!userId) {
-            alert("Inicia sesión primero.");
-            return;
-        }
-        axios.get(`http://127.0.0.1:5000/albums?user_id=${userId}`)
-            .then(response => setAlbums(response.data))
-            .catch(error => console.error("Error al obtener álbumes:", error));
+        const fetchAlbums = async () => {
+            try {
+                const response = await axios.get("http://127.0.0.1:5000/albums", {
+                    params: { user_id: userId },
+                });
+                setAlbums(response.data);
+            } catch (error) {
+                console.error("Error al obtener los álbumes:", error);
+            }
+        };
+
+        fetchAlbums();
     }, [userId]);
 
-    const handleSelectAlbum = (albumId) => {
+    const handleAlbumSelection = (albumId) => {
         setSelectedAlbum(albumId);
-        setEvents([]); // Resetear eventos al cambiar de álbum
     };
 
-    const addEvent = () => {
-        setEvents([...events, { photos: [], description: "", date: "" }]);
+    const handleAddEvent = () => {
+        setEvents([...events, { date: "", description: "", selectedPhotos: [] }]);
     };
 
-    const removeEvent = (index) => {
+    const handleRemoveEvent = (index) => {
         const updatedEvents = [...events];
         updatedEvents.splice(index, 1);
         setEvents(updatedEvents);
@@ -40,36 +46,34 @@ const CreateTimeline = () => {
         setEvents(updatedEvents);
     };
 
-    const handlePhotoSelect = (eventIndex, photoId) => {
+    const handlePhotoSelection = (eventIndex, photo) => {
         const updatedEvents = [...events];
-        if (!updatedEvents[eventIndex]) return;
-        
-        const eventPhotos = updatedEvents[eventIndex].photos.includes(photoId)
-            ? updatedEvents[eventIndex].photos.filter(id => id !== photoId)
-            : [...updatedEvents[eventIndex].photos, photoId];
-        
-        updatedEvents[eventIndex].photos = eventPhotos;
+        const selectedPhotos = updatedEvents[eventIndex].selectedPhotos || [];
+        const isSelected = selectedPhotos.some((p) => p.id === photo.id);
+
+        if (isSelected) {
+            updatedEvents[eventIndex].selectedPhotos = selectedPhotos.filter((p) => p.id !== photo.id);
+        } else {
+            updatedEvents[eventIndex].selectedPhotos = [...selectedPhotos, photo];
+        }
+
         setEvents(updatedEvents);
     };
 
     const handleSubmit = async () => {
-        if (!name.trim() || events.length === 0) {
-            alert("El nombre y al menos un evento son obligatorios.");
-            return;
-        }
-
         const timelineData = {
+            name: timelineName,
             user_id: userId,
-            name,
-            album_id: selectedAlbum,
-            events,
+            events: events.map(event => ({
+                date: event.date,
+                description: event.description,
+                photo_ids: event.selectedPhotos.map(photo => photo.id) // Asegurar que se envían como lista
+            }))
         };
-
+    
         try {
-            const response = await axios.post("http://127.0.0.1:5000/timelines/create", timelineData);
-            alert(response.data.message);
-            setName("");
-            setEvents([]);
+            const response = await axios.post('http://127.0.0.1:5000/timelines/create', timelineData);
+            alert("Cronología creada exitosamente");
         } catch (error) {
             console.error("Error al crear la cronología:", error);
             alert("Error al crear la cronología.");
@@ -79,92 +83,93 @@ const CreateTimeline = () => {
     return (
         <div>
             <Navbar />
-            <div style={styles.container}>
-                <h2 style={styles.title}>Crear Cronología</h2>
+            <div style={{ padding: "20px" }}>
+                <h2 style={{ textAlign: "center", color: "#4CAF50" }}>Crear Cronología</h2>
+
                 <input
                     type="text"
+                    value={timelineName}
+                    onChange={(e) => setTimelineName(e.target.value)}
                     placeholder="Nombre de la cronología"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    style={styles.input}
+                    style={{ width: "100%", padding: "10px", marginBottom: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
                 />
-                <div>
+
+                <div style={{ marginBottom: "20px" }}>
                     <label>Selecciona un álbum:</label>
-                    <select onChange={(e) => handleSelectAlbum(e.target.value)}>
-                        <option value="">-- Escoge un álbum --</option>
-                        {albums.map(album => (
-                            <option key={album.id} value={album.id}>{album.name}</option>
+                    <select onChange={(e) => handleAlbumSelection(e.target.value)} style={{ width: "100%", padding: "10px" }}>
+                        <option value="">Selecciona un álbum</option>
+                        {albums.map((album) => (
+                            <option key={album.id} value={album.id}>
+                                {album.name}
+                            </option>
                         ))}
                     </select>
                 </div>
-                {selectedAlbum && (
-                    <div>
-                        {events.map((event, eventIndex) => (
-                            <div key={eventIndex} style={styles.eventCard}>
-                                <h3>Evento {eventIndex + 1}</h3>
-                                <input
-                                    type="date"
-                                    onChange={(e) => handleEventChange(eventIndex, "date", e.target.value)}
-                                    style={styles.input}
+
+                
+
+                {events.map((event, index) => (
+                    <div key={index} style={{ marginTop: "20px", padding: "15px", border: "1px solid #ccc", borderRadius: "5px" }}>
+                        <h3>Evento {index + 1}</h3>
+                        <input
+                            type="date"
+                            value={event.date}
+                            onChange={(e) => handleEventChange(index, "date", e.target.value)}
+                            style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
+                        />
+                        <textarea
+                            value={event.description}
+                            onChange={(e) => handleEventChange(index, "description", e.target.value)}
+                            placeholder="Descripción del evento"
+                            style={{ width: "100%", padding: "10px", height: "60px", marginBottom: "10px" }}
+                        />
+
+                        <h4>Fotos seleccionadas para este evento:</h4>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                            {event.selectedPhotos.map((photo) => (
+                                <img
+                                    key={photo.id}
+                                    src={`http://127.0.0.1:5000/uploads/${photo.file_name}`}
+                                    alt={photo.file_name}
+                                    style={{ width: "100px", height: "100px", border: "2px solid green" }}
                                 />
-                                <textarea
-                                    placeholder="Descripción del evento"
-                                    onChange={(e) => handleEventChange(eventIndex, "description", e.target.value)}
-                                    style={styles.textarea}
-                                />
-                                <h4>Fotos seleccionadas para este evento:</h4>
-                                <div style={styles.photoSelector}>
-                                    {event.photos.length > 0 ? (
-                                        event.photos.map(photoId => (
-                                            <img
-                                                key={photoId}
-                                                src={`http://127.0.0.1:5000/uploads/${albums.find(album => album.id == selectedAlbum)?.photos.find(p => p.id == photoId)?.file_name}`}
-                                                alt="Foto seleccionada"
-                                                style={styles.thumbnail}
-                                            />
-                                        ))
-                                    ) : (
-                                        <p>No hay fotos seleccionadas</p>
-                                    )}
-                                </div>
-                                <h4>Selecciona fotos para este evento:</h4>
-                                <div style={styles.photoSelector}>
-                                    {albums.find(album => album.id == selectedAlbum)?.photos.map(photo => (
-                                        <div
-                                            key={photo.id}
-                                            style={{ 
-                                                ...styles.photoItem, 
-                                                border: event.photos.includes(photo.id) ? "2px solid #007bff" : "none" 
-                                            }}
-                                            onClick={() => handlePhotoSelect(eventIndex, photo.id)}
-                                        >
-                                            <img src={`http://127.0.0.1:5000/uploads/${photo.file_name}`} alt={photo.file_name} style={styles.thumbnail} />
-                                        </div>
-                                    ))}
-                                </div>
-                                <button onClick={() => removeEvent(eventIndex)} style={styles.deleteButton}>❌ Eliminar Evento</button>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
+
+                        <h4>Selecciona fotos para este evento:</h4>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                            {albums
+                                .find((album) => album.id.toString() === selectedAlbum.toString())
+                                ?.photos.map((photo) => (
+                                    <img
+                                        key={photo.id}
+                                        src={`http://127.0.0.1:5000/uploads/${photo.file_name}`}
+                                        alt={photo.file_name}
+                                        style={{ width: "100px", height: "100px", cursor: "pointer", border: "2px solid #ccc" }}
+                                        onClick={() => handlePhotoSelection(index, photo)}
+                                    />
+                                ))}
+                        </div>
+
+                        <button
+                            onClick={() => handleRemoveEvent(index)}
+                            style={{ backgroundColor: "red", color: "white", padding: "10px", borderRadius: "5px", marginTop: "10px" }}
+                        >
+                            Eliminar Evento
+                        </button>
                     </div>
-                )}
-                <button onClick={addEvent} style={styles.addButton}>+ Agregar Evento</button>
-                <button onClick={handleSubmit} style={styles.submitButton}>Crear Cronología</button>
+                ))}
+
+                <button onClick={handleAddEvent} style={{ backgroundColor: "#007bff", color: "white", padding: "10px", borderRadius: "5px", marginTop: "20px" }}>
+                    + Agregar Evento
+                </button>
+
+                <button onClick={handleSubmit} style={{ backgroundColor: "#4CAF50", color: "white", padding: "10px", borderRadius: "5px", marginTop: "20px" }}>
+                    Crear Cronología
+                </button>
             </div>
         </div>
     );
-};
-const styles = {
-    container: { textAlign: "center", padding: "20px" },
-    title: { color: "#4CAF50" },
-    input: { padding: "10px", margin: "10px", width: "60%", borderRadius: "5px", border: "1px solid #ccc" },
-    textarea: { padding: "10px", margin: "10px", width: "60%", height: "50px", borderRadius: "5px", border: "1px solid #ccc" },
-    addButton: { backgroundColor: "#007bff", color: "white", padding: "10px", margin: "10px", border: "none", borderRadius: "5px", cursor: "pointer" },
-    deleteButton: { backgroundColor: "#ff4d4d", color: "white", padding: "8px", margin: "10px", border: "none", borderRadius: "5px", cursor: "pointer" },
-    submitButton: { backgroundColor: "#4CAF50", color: "white", padding: "12px 20px", border: "none", borderRadius: "5px", cursor: "pointer" },
-    eventCard: { border: "1px solid #ccc", padding: "10px", margin: "10px auto", width: "60%", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0,0,0,0.1)", textAlign: "center" },
-    photoSelector: { display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "10px", marginTop: "10px" },
-    photoItem: { cursor: "pointer", textAlign: "center", padding: "5px", border: "1px solid #ccc", borderRadius: "5px", width: "120px", backgroundColor: "#f9f9f9" },
-    thumbnail: { width: "100px", height: "100px", objectFit: "cover", borderRadius: "5px" },
-};
+}
 
 export default CreateTimeline;

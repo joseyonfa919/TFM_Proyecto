@@ -83,12 +83,15 @@ class Image(db.Model):
     file_path = db.Column(db.String(500), nullable=False)
     uploaded_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
-    # Relación con el álbum
+    # Relación con el álbum (se mantiene)
     album_id = db.Column(db.Integer, db.ForeignKey('albums.id'), nullable=True)
     album = db.relationship('Album', back_populates='photos', lazy=True)
 
-    # Relación con el usuario
+    # Relación con el usuario (se mantiene)
     user = db.relationship('User', back_populates='images')
+
+    # Nueva relación con evento (Permitir múltiples imágenes en un evento)
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=True)
 
 
 class Timeline(db.Model):
@@ -108,12 +111,11 @@ class Event(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     timeline_id = db.Column(db.Integer, db.ForeignKey('timelines.id'), nullable=False)
-    photo_id = db.Column(db.Integer, db.ForeignKey('images.id'), nullable=True)  # Asociación con una imagen
     date = db.Column(db.DateTime, nullable=False)
     description = db.Column(db.String(255), nullable=False)
 
-    # Relación con la cronología
+    # Relación con la cronología (se mantiene)
     timeline = db.relationship('Timeline', back_populates='events')
 
-    # Relación con la imagen
-    image = db.relationship('Image', lazy=True)
+    # Relación con imágenes (permite múltiples imágenes por evento)
+    images = db.relationship('Image', backref='event', lazy=True)

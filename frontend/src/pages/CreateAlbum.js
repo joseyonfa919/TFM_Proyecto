@@ -84,7 +84,7 @@ function CreateAlbum() {
             }
         });
     };
-    
+
     const handleCreateManualAlbum = async () => {
         const userId = localStorage.getItem('user_id');
         if (!userId) {
@@ -136,7 +136,7 @@ function CreateAlbum() {
                                 <img
                                     src={`http://127.0.0.1:5000/uploads/${photo.file_name}`}
                                     alt={photo.file_name}
-                                    style={{ width: '100%', borderRadius: '5px' }}
+                                    style={{ width: '175px', height: '175px', objectFit: 'cover', borderRadius: '5px' }}
                                 />
                                 <input
                                     type="checkbox"
@@ -188,7 +188,7 @@ function CreateAlbum() {
                                                 <img
                                                     src={`http://127.0.0.1:5000/uploads/${photo.file_name}`}
                                                     alt={photo.file_name}
-                                                    style={{ width: '100%', borderRadius: '5px' }}
+                                                    style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '5px' }}
                                                 />
                                                 <input
                                                     type="checkbox"

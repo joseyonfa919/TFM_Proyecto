@@ -29,7 +29,7 @@ const Timeline = () => {
 
     const handleDeleteTimeline = (timelineId) => {
         if (window.confirm("¿Estás seguro de que deseas eliminar esta cronología? Esta acción no se puede deshacer.")) {
-            axios.delete(`http://127.0.0.1:5000/timelines/${timelineId}`)
+            axios.post(`http://127.0.0.1:5000/timelines/delete`, { timeline_id: timelineId })
                 .then(() => {
                     setTimelines(timelines.filter(timeline => timeline.id !== timelineId));
                     alert("Cronología eliminada correctamente.");
@@ -73,7 +73,7 @@ const Timeline = () => {
                                                     event.photos.map((photo) => (
                                                         <img
                                                             key={photo.id}
-                                                            src={`http://127.0.0.1:5000/uploads/${photo.file_name}`}
+                                                            src={`http://127.0.0.1:5000${photo.file_path}`}
                                                             alt={photo.file_name || "Imagen"}
                                                             className="photo-preview"
                                                             onError={(e) => e.target.src = "https://via.placeholder.com/100"}
@@ -89,6 +89,7 @@ const Timeline = () => {
                             ) : (
                                 <p>No hay eventos en esta cronología.</p>
                             )}
+
                         </div>
                     ))
                 )}

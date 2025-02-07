@@ -748,18 +748,30 @@ def create_timeline():
         for event in events:
             new_event = Event(
                 timeline_id=timeline.id,
-                photo_id=event.get('photo_id'),
                 description=event.get('description'),
                 date=datetime.strptime(event.get('date'), '%Y-%m-%d')
             )
             db.session.add(new_event)
-        
-        db.session.commit()
+            db.session.commit()
+
+            # Asociar imágenes al evento
+            photo_ids = event.get('photo_ids', [])  
+            for photo_id in photo_ids:
+                photo = Image.query.get(photo_id)
+                if photo:
+                    new_event.images.append(photo)  # Se establece la relación correctamente
+
+            db.session.commit()  
+
         return jsonify({"message": "Cronología creada exitosamente", "timeline_id": timeline.id}), 201
 
     except Exception as e:
         print(f"Error creando la cronología: {e}")
         return jsonify({"error": "Error interno"}), 500
+
+
+
+
 
 
 @api_bp.route('/timelines', methods=['GET'])
@@ -770,31 +782,41 @@ def get_timelines():
             return jsonify({"error": "User ID es obligatorio"}), 400
 
         timelines = Timeline.query.filter_by(user_id=user_id).all()
-        timeline_list = [
-            {
+        timeline_list = []
+
+        for timeline in timelines:
+            events_list = []
+            for event in timeline.events:
+                photo_list = [
+                    {
+                        "id": photo.id,
+                        "file_name": photo.file_name,
+                        "file_path": f"/uploads/{photo.file_name}"
+                    }
+                    for photo in event.images  # Ahora se recuperan múltiples imágenes
+                ]
+
+                events_list.append({
+                    "id": event.id,
+                    "description": event.description,
+                    "date": event.date.strftime('%Y-%m-%d') if event.date else None,
+                    "photos": photo_list  # Enviar la lista de imágenes
+                })
+
+            timeline_list.append({
                 "id": timeline.id,
                 "name": timeline.name,
                 "created_at": timeline.created_at.strftime('%Y-%m-%d') if timeline.created_at else None,
-                "events": sorted(
-                    [
-                        {
-                            "id": event.id,
-                            "photo_path": f"/uploads/{os.path.basename(event.image.file_path)}" if event.image else None,
-                            "description": event.description,
-                            "date": event.date.strftime('%Y-%m-%d')
-                        } 
-                        for event in timeline.events
-                    ], 
-                    key=lambda x: x["date"]  # 🔴 Ordenar por fecha ascendente
-                )
-            }
-            for timeline in timelines
-        ]
+                "events": sorted(events_list, key=lambda x: x["date"] if x["date"] else "")
+            })
 
         return jsonify({"timelines": timeline_list}), 200
     except Exception as e:
         print(f"Error obteniendo cronologías: {e}")
         return jsonify({"error": "Error interno"}), 500
+
+
+
 
 
 
