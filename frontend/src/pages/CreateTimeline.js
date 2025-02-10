@@ -8,7 +8,8 @@ function CreateTimeline() {
     const [albums, setAlbums] = useState([]);
     const [selectedAlbum, setSelectedAlbum] = useState(null);
     const [events, setEvents] = useState([]);
-    const userId = useState(localStorage.getItem("user_id"));
+    const userId = localStorage.getItem("user_id");
+
 
     useEffect(() => {
         const fetchAlbums = async () => {
