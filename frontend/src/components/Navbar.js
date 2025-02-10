@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaUserCircle, FaHome, FaUpload, FaPhotoVideo, FaBook, FaMicrophone } from 'react-icons/fa';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { FaUserCircle, FaHome } from 'react-icons/fa';
+import '../style/Navbar.css';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -14,117 +16,66 @@ function Navbar() {
     navigate('/');
   };
 
-  const handleHomeClick = () => {
-    navigate(token ? '/WelcomePage' : '/');
-  };
-
   const handleNavigateToChangePassword = () => {
     navigate('/change-password');
   };
+  
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
 
   return (
     <>
-      <nav style={styles.navbar}>
-        <span onClick={handleHomeClick} style={styles.navItem}>
-          <FaHome style={styles.icon} /> Inicio
-        </span>
-        {token ? (
-          <>
-            <Link to="/upload" style={styles.navItem}><FaUpload style={styles.icon} /> Guardar Foto</Link>
-            <Link to="/Photos" style={styles.navItem}><FaPhotoVideo style={styles.icon} /> Mis Fotos</Link>
-            <Link to="/create-album" style={styles.navItem}><FaBook style={styles.icon} /> Crear Álbum</Link>
-            <Link to="/view-albums" style={styles.navItem}><FaBook style={styles.icon} /> Mis Álbumes</Link>
-            <Link to="/multimodal" style={styles.navItem}><FaMicrophone style={styles.icon} /> Interacción por Voz</Link>
-            <Link to="/create-timeline" style={styles.navItem}><FaBook style={styles.icon} /> Crear Recuerdo</Link>
-            <Link to="/timeline" style={styles.navItem}><FaBook style={styles.icon} /> Mis Recuerdos</Link>
-            
-            <div style={styles.profileContainer}>
-              <FaUserCircle size={35} style={styles.profileIcon} onClick={() => setIsOpen(!isOpen)} />
+      <div>
+        <div className="navbar">
+          {/* Opción de inicio alineada con las demás */}
+          <Link to={token ? "/WelcomePage" : "/"} className="nav-item">
+            <FaHome className="icon" /> Inicio
+          </Link>
+
+          {/* Contenedor de enlaces de navegación */}
+
+          {isAuthPage ? (
+            <>
+              <Link to="/login" className="nav-item">🔑 Iniciar Sesión</Link>
+              <Link to="/register" className="nav-item">📝 Registrarse</Link>
+            </>
+          ) : token ? (
+            <>
+              <Link to="/upload" className="nav-item">📤 Guardar Foto</Link>
+              <Link to="/Photos" className="nav-item">🖼️ Mis Fotos</Link>
+              <Link to="/create-album" className="nav-item">📁 Crear Álbum</Link>
+              <Link to="/view-albums" className="nav-item">📚 Mis Álbumes</Link>
+              <Link to="/multimodal" className="nav-item">🗣️ Interacción por Voz</Link>
+              <Link to="/create-timeline" className="nav-item">📜 Crear Recuerdo</Link>
+              <Link to="/timeline" className="nav-item">📑 Mis Recuerdos</Link>
+            </>
+          ) : null}
+
+
+          {token && (
+            <div className="profile-container">
+              {/* Icono del perfil */}
+              <FaUserCircle size={30} className="profile-icon" onClick={() => setIsOpen(!isOpen)} />
+
+              {/* Menú desplegable */}
               {isOpen && (
-                <div style={styles.dropdown}>
-                  <ul style={styles.menuList}>
-                    <li style={styles.menuItem}>Mi Perfil</li>
-                    <li style={styles.menuItem}>Configuración</li>
-                    <li style={styles.menuItem} onClick={handleNavigateToChangePassword}>Cambiar Contraseña</li>
-                    <li style={styles.menuItem} onClick={handleLogout}>Cerrar Sesión</li>
+                <div className="dropdown">
+                  <ul className="menu-list">
+                    <li className="menu-item">Mi Perfil</li>
+                    <li className="menu-item">Configuración</li>
+                    <li className="menu-item" onClick={handleNavigateToChangePassword}>🔑 Cambiar Contraseña</li>
+                    <li className="menu-item" onClick={handleLogout}>Cerrar Sesión</li>
                   </ul>
                 </div>
               )}
             </div>
-          </>
-        ) : (
-          <>
-            <Link to="/login" style={styles.navItem}>Iniciar Sesión</Link>
-            <Link to="/register" style={styles.navItem}>Registrarse</Link>
-          </>
-        )}
-      </nav>
-      <div style={styles.contentPadding}></div>
+          )}
+
+          )
+        </div>
+
+      </div>
     </>
   );
 }
-
-const styles = {
-  navbar: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: '#222',
-    padding: '15px 20px',
-    color: 'white',
-    fontSize: '18px',
-    position: 'fixed',
-    width: '100%',
-    top: 0,
-    zIndex: 1000,
-    height: '60px',
-  },
-  contentPadding: {
-    marginTop: '80px', // Espacio para que el contenido no quede detrás de la barra
-  },
-  navItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    color: 'white',
-    textDecoration: 'none',
-    fontSize: '18px',
-    cursor: 'pointer',
-    padding: '10px',
-    borderRadius: '5px',
-    transition: 'background 0.3s',
-  },
-  icon: {
-    fontSize: '20px',
-  },
-  profileContainer: {
-    position: 'relative',
-    cursor: 'pointer',
-  },
-  profileIcon: {
-    color: 'white',
-  },
-  dropdown: {
-    position: 'absolute',
-    top: '45px',
-    right: '0',
-    backgroundColor: '#444',
-    color: 'white',
-    borderRadius: '5px',
-    boxShadow: '0px 4px 6px rgba(0,0,0,0.1)',
-    zIndex: 10,
-  },
-  menuList: {
-    listStyle: 'none',
-    margin: 0,
-    padding: '10px 0',
-  },
-  menuItem: {
-    padding: '10px 15px',
-    cursor: 'pointer',
-    fontSize: '16px',
-    transition: 'background 0.3s',
-  },
-};
 
 export default Navbar;

@@ -1,44 +1,37 @@
-import React, { useState, useEffect } from 'react'; // Importar React y el hook useState para manejar estados
-import axios from 'axios'; // Biblioteca para realizar solicitudes HTTP
-import { useNavigate } from 'react-router-dom'; // Hook para redirigir entre rutas
-import Navbar from '../components/Navbar'; // Componente de navegación
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+import '../style/Register.css';
 
-
-// Componente funcional para el registro de nuevos usuarios
 function Register() {
-  // Estados para manejar los datos del formulario de registro
-  const [name, setName] = useState(''); // Estado para el nombre del usuario
-  const [email, setEmail] = useState(''); // Estado para el correo electrónico
-  const [password, setPassword] = useState(''); // Estado para la contraseña
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [consent, setConsent] = useState(false);
-  const navigate = useNavigate(); // Hook para manejar la redirección de rutas
+  const navigate = useNavigate();
 
-    // Este efecto asegura que los campos siempre estén vacíos al cargar la página
-    useEffect(() => {
-      setName('');
-      setEmail('');
-      setPassword('');
-      setConsent(false);
-    }, []);
-  // Función para manejar el registro de usuarios
+  useEffect(() => {
+    setName('');
+    setEmail('');
+    setPassword('');
+    setConsent(false);
+  }, []);
+
   const handleRegister = async () => {
     try {
-      console.log({ name, email, password }); // Imprimir los datos del usuario en la consola para depuración
-      // Realizar una solicitud POST al servidor para registrar un nuevo usuario
+      console.log({ name, email, password });
       const response = await axios.post('http://127.0.0.1:5000/register', {
-        name, // Enviar el nombre del usuario
-        email, // Enviar el correo electrónico
-        password, // Enviar la contraseña
+        name,
+        email,
+        password,
       });
-      alert(response.data.message); // Mostrar el mensaje recibido del servidor
-      navigate('/login'); // Redirigir al usuario a la página de inicio de sesión
+      alert(response.data.message);
+      navigate('/login');
     } catch (error) {
-      // Manejar errores en la solicitud
       if (error.response && error.response.data.message) {
-        // Mostrar el mensaje de error enviado por el servidor
         alert(error.response.data.message);
       } else {
-        // Mostrar un mensaje genérico en caso de un error desconocido
         alert('Error desconocido al registrar el usuario.');
       }
     }
@@ -46,62 +39,50 @@ function Register() {
 
   return (
     <>
-      <Navbar /> {/* Componente de navegación */}
-      <div style={{ textAlign: 'center', marginTop: '50px' }}>
-        <h2>Registro de Usuario</h2>
-        {/* Campo de entrada para el nombre del usuario */}
+      <Navbar />
+      <div className="register-container">
+      <div className="register-box">
+        <h2 className="register-title">Registro de Usuario</h2>
         <input
           type="text"
           placeholder="Nombre"
-          onChange={(e) => setName(e.target.value)} // Actualizar el estado del nombre
-          style={{ margin: '10px', padding: '8px' }}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
-        <br />
-        {/* Campo de entrada para el correo electrónico */}
         <input
           type="email"
           placeholder="Email"
-          onChange={(e) => setEmail(e.target.value)} // Actualizar el estado del correo electrónico
-          style={{ margin: '10px', padding: '8px' }}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
-        <br />
-        {/* Campo de entrada para la contraseña */}
         <input
           type="password"
           placeholder="Contraseña"
-          onChange={(e) => setPassword(e.target.value)} // Actualizar el estado de la contraseña
-          style={{ margin: '10px', padding: '8px' }}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
-        <br />
-        {/* Checkbox de consentimiento */}
-        <div style={{ margin: '10px' }}>
+        <div className="terms-container">
           <input
             type="checkbox"
             id="consent"
             checked={consent}
             onChange={(e) => setConsent(e.target.checked)}
-            style={{ marginRight: '8px' }}
           />
           <label htmlFor="consent">
             Acepto los términos, condiciones y el uso de mis datos personales.
           </label>
         </div>
-        {/* Botón para enviar el formulario de registro */}
         <button
           onClick={handleRegister}
-          disabled={!consent} // Deshabilitar el botón si no está marcado el checkbox
-          style={{
-            padding: '8px 16px',
-            cursor: consent ? 'pointer' : 'not-allowed',
-            backgroundColor: consent ? '#4CAF50' : '#ccc',
-            color: consent ? '#fff' : '#666',
-          }}
+          disabled={!consent}
+          className={`register-button ${!consent ? 'disabled' : ''}`}
         >
           Registrarse
         </button>
+      </div>
       </div>
     </>
   );
 }
 
-export default Register; // Exportar el componente para usarlo en otras partes del proyecto
+export default Register;

@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
-import { FaUpload, FaTrash, FaFileImage } from 'react-icons/fa';
+import {  FaTrash, FaFileImage } from 'react-icons/fa';
 import '../style/Upload.css';
 
 function Upload() {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [previews, setPreviews] = useState([]);
     const [isUploading, setIsUploading] = useState(false);
-
     const handleFileChange = (event) => {
         const files = Array.from(event.target.files);
         setSelectedFiles(files);
@@ -66,8 +65,10 @@ function Upload() {
     };
 
     return (
+        <div>
+        <Navbar />
         <div className="upload-container">
-            <Navbar />
+            
             <h2 className="upload-title">📤 Subir Fotos o Videos</h2>
             <div className="upload-box" onClick={() => document.getElementById('file-input').click()}>
                 <FaFileImage size={40} color="#666" />
@@ -94,6 +95,7 @@ function Upload() {
             <button className="upload-button" onClick={handleUpload} disabled={isUploading}>
                 {isUploading ? 'Subiendo...' : '📤 Subir Imágenes'}
             </button>
+        </div>
         </div>
     );
 }

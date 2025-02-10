@@ -1,0 +1,75 @@
+/* Mantén el fondo de la página sin afectar la barra de navegación */
+body {
+    background: linear-gradient(to bottom, #4A90E2, #A1C4FD);
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Asegurar que el contenedor del formulario no afecte la barra */
+.register-container {
+    display: flex;
+    justify-content: center; /* Centrado horizontal */
+    align-items: center; /* Centrado vertical */
+    height: 90vh; /* Ocupar toda la altura de la pantalla */
+}
+
+/* Mantener los inputs y botones con su propio diseño */
+.register-container input {
+    width: 100%;
+    padding: 12px;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.register-box {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 500px;
+}
+
+.register-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.register-button:hover {
+    background-color: #357ABD;
+}
+
+/* Asegurar que la barra de navegación no se vea afectada */
+.navbar {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    background: black; /* O el color que necesites */
+    padding: 10px 0;
+    z-index: 1000; /* Asegura que esté por encima del contenido */
+}
+
+.register-title {
+    
+    color: black; /* O el color que necesites */
+
+}
+
+/* Ajustar el diseño para que el formulario no se monte sobre la barra */
+@media (max-width: 768px) {
+    .register-container {
+        width: 95%;
+        margin-top: 100px;  /* Ajustar margen para evitar que la barra lo tape */
+    }
+}

@@ -66,76 +66,79 @@ function CreateAlbum() {
     };
 
     return (
-        <div className="album-container">
+        <div>
             <Navbar />
-            <div className="album-sections">
-                <div className="album-manual">
-                    <h2 style={{ color: 'black' }}> 📂 Crear Álbum Manualmente</h2>
-                    <input
-                        type="text"
-                        value={albumName}
-                        onChange={(e) => setAlbumName(e.target.value)}
-                        placeholder="Escribe el nombre de tu álbum..."
-                        className="album-input"
-                    />
-                    <input
-                        type="text"
-                        placeholder="🔍 Buscar fotos..."
-                        className="search-bar"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <div className="photo-grid">
-                        {filteredPhotos.map((photo) => (
-                            <div key={photo.id} className="photo-card">
-                                <img src={`http://127.0.0.1:5000/uploads/${photo.file_name}`} alt={photo.file_name} className="photo-image" />
-                                <input
-                                    type="checkbox"
-                                    className="photo-checkbox"
-                                    checked={selectedPhotos.includes(photo.id)}
-                                    onChange={() => handlePhotoSelection(photo.id)}
-                                />
-                            </div>
-                        ))}
-                    </div>
-                    <button className="btn-album" onClick={handleAutoSuggestAlbums}>📂 Crear Álbum Manualmente</button>
-                </div>
+            <div className="album-container">
 
-                <div className="album-ai">
-                    <h2 style={{ color: 'black' }}>🤖 Crear Álbumes con IA</h2>
-                    <button className="btn-ai" onClick={handleAutoSuggestAlbums}>⚡ Generar Álbumes Automáticos</button>
-
-                    {isLoading ? (
-                        <div className="loading-container">
-                            <ClipLoader color="#007bff" size={50} />
-                            <p>Procesando...</p>
-                        </div>
-                    ) : (
-                        <div className="suggestions-container">
-                            {suggestions.map((suggestion, index) => (
-                                <div key={index} className="suggestion-card">
+                <div className="album-sections">
+                    <div className="album-manual">
+                        <h2 style={{ color: 'black' }}> 📂 Crear Álbum Manualmente</h2>
+                        <input
+                            type="text"
+                            value={albumName}
+                            onChange={(e) => setAlbumName(e.target.value)}
+                            placeholder="Escribe el nombre de tu álbum..."
+                            className="album-input"
+                        />
+                        <input
+                            type="text"
+                            placeholder="🔍 Buscar fotos..."
+                            className="search-bar"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <div className="photo-grid">
+                            {filteredPhotos.map((photo) => (
+                                <div key={photo.id} className="photo-card">
+                                    <img src={`http://127.0.0.1:5000/uploads/${photo.file_name}`} alt={photo.file_name} className="photo-image" />
                                     <input
-                                        type="text"
-                                        value={suggestion.album_name}
-                                        className="album-input"
-                                        onChange={(e) => {
-                                            const updatedSuggestions = [...suggestions];
-                                            updatedSuggestions[index].album_name = e.target.value;
-                                            setSuggestions(updatedSuggestions);
-                                        }}
+                                        type="checkbox"
+                                        className="photo-checkbox"
+                                        checked={selectedPhotos.includes(photo.id)}
+                                        onChange={() => handlePhotoSelection(photo.id)}
                                     />
-                                    <div className="photo-grid">
-                                        {suggestion.photos.map((photo) => (
-                                            <div key={photo.id} className="photo-card">
-                                                <img src={`http://127.0.0.1:5000/uploads/${photo.file_name}`} alt={photo.file_name} className="photo-image" />
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <button className="btn-album">📂 Crear Álbum</button>
                                 </div>
                             ))}
                         </div>
-                    )}
+                        <button className="btn-album" onClick={handleAutoSuggestAlbums}>📂 Crear Álbum Manualmente</button>
+                    </div>
+
+                    <div className="album-ai">
+                        <h2 style={{ color: 'black' }}>🤖 Crear Álbumes con IA</h2>
+                        <button className="btn-ai" onClick={handleAutoSuggestAlbums}>⚡ Generar Álbumes Automáticos</button>
+
+                        {isLoading ? (
+                            <div className="loading-container">
+                                <ClipLoader color="#007bff" size={50} />
+                                <p>Procesando...</p>
+                            </div>
+                        ) : (
+                            <div className="suggestions-container">
+                                {suggestions.map((suggestion, index) => (
+                                    <div key={index} className="suggestion-card">
+                                        <input
+                                            type="text"
+                                            value={suggestion.album_name}
+                                            className="album-input"
+                                            onChange={(e) => {
+                                                const updatedSuggestions = [...suggestions];
+                                                updatedSuggestions[index].album_name = e.target.value;
+                                                setSuggestions(updatedSuggestions);
+                                            }}
+                                        />
+                                        <div className="photo-grid">
+                                            {suggestion.photos.map((photo) => (
+                                                <div key={photo.id} className="photo-card">
+                                                    <img src={`http://127.0.0.1:5000/uploads/${photo.file_name}`} alt={photo.file_name} className="photo-image" />
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <button className="btn-album">📂 Crear Álbum</button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

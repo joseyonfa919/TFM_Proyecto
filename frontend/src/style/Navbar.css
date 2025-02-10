@@ -1,0 +1,123 @@
+.navbar a {
+    color: white !important;
+    /* Asegura que los enlaces se mantengan en blanco */
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding:  10px;
+    border-radius: 5px;
+    transition: background 0.3s ease, color 0.3s ease;
+
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #1a1a1a;
+    padding: 5px 10px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    height: 50px;
+    /* Fijar altura */
+}
+
+/* Al pasar el cursor */
+.navbar a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #f0f0f0;
+    /* Asegura que el color no cambie */
+}
+
+/* Contenedor de enlaces en la barra */
+.nav-links {
+    display: flex;
+    /* Coloca los elementos en una fila */
+    flex-direction: row;
+    /* Asegura que se mantengan en línea */
+    flex-wrap: nowrap;
+    /* Evita que se desplacen a una segunda línea */
+    justify-content: center;
+    /* Centra los elementos horizontalmente */
+    align-items: center;
+    /* Centra los elementos verticalmente */
+    gap: 20px;
+    /* Espaciado entre enlaces */
+    overflow: hidden;
+    /* Evita desbordamientos */
+}
+
+.navbar ul {
+
+    align-items: center;
+    gap: 15px;
+    list-style: none;
+    flex-wrap: nowrap;
+}
+
+/* Contenedor del perfil de usuario */
+.profile-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Icono del perfil */
+.profile-icon {
+    color: white;
+    transition: color 0.3s ease;
+    /* Transición suave al pasar el mouse */
+}
+
+.profile-icon:hover {
+    color: #ddd;
+    /* Cambia el color al pasar el cursor */
+}
+
+
+
+.dropdown {
+    position: absolute;
+    top: 100px; /* Ajusta la distancia hacia abajo */
+    right: 30px; /* Mantiene el menú alineado a la derecha */
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    min-width: 220px;
+    z-index: 1000;
+}
+
+main {
+    padding-top: 80px; /* Ajusta según la altura de la navbar */
+}
+/* Estilos del menú desplegable */
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Estilos de los elementos dentro del menú */
+.menu-item {
+    padding: 10px 15px;
+    text-decoration: none;
+    color: black;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.menu-item:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+body {
+    padding-top: 60px;
+    /* Ajusta este valor según la altura real de tu navbar */
+}

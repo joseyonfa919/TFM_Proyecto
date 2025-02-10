@@ -41,33 +41,36 @@ const Timeline = () => {
         }
     };
 
-    if (loading) return <p>Cargando cronologías...</p>;
-    if (error) return <p>{error}</p>;
+    if (loading) return <p className="loading-text">Cargando cronologías...</p>;
+    if (error) return <p className="error-text">{error}</p>;
 
     return (
         <div>
             <Navbar />
             <div className="timeline-container">
-                <h2 className="title">Mis Cronologías</h2>
+                <h2 className="timeline-title">Mis Cronologías</h2>
                 {timelines.length === 0 ? (
-                    <p>No hay cronologías disponibles.</p>
+                    <p className="no-timelines-text">No hay cronologías disponibles.</p>
                 ) : (
                     timelines.map((timeline) => (
                         <div key={timeline.id} className="timeline-card">
-                            <h3>{timeline.name}</h3>
-                            <p><strong>Fecha de Creación:</strong> {new Date(timeline.created_at).toLocaleDateString()}</p>
+                            <h3 className="timeline-name">{timeline.name}</h3>
+                            <p className="timeline-date"><strong>Fecha de Creación:</strong> {new Date(timeline.created_at).toLocaleDateString()}</p>
                             <button 
                                 onClick={() => handleDeleteTimeline(timeline.id)}
-                                style={{ backgroundColor: 'red', color: 'white', border: 'none', padding: '5px 10px', cursor: 'pointer', marginBottom: '10px' }}
+                                className="delete-timeline-button"
                             >
                                 Eliminar Cronología
                             </button>
-                            <h4>Eventos:</h4>
+                            <h4 className="events-title">Eventos:</h4>
                             {timeline.events && timeline.events.length > 0 ? (
-                                <ul>
+                                <ul className="events-list">
                                     {timeline.events.map((event, index) => (
-                                        <li key={index}>
-                                            <strong>{event.date ? new Date(event.date).toLocaleDateString() : "Sin fecha"}:</strong> {event.description}
+                                        <li key={index} className="event-item">
+                                            <strong className="event-date">
+                                                {event.date ? new Date(event.date).toLocaleDateString() : "Sin fecha"}:
+                                            </strong> 
+                                            <span className="event-description">{event.description}</span>
                                             <div className="photo-grid">
                                                 {event.photos && event.photos.length > 0 ? (
                                                     event.photos.map((photo) => (
@@ -80,16 +83,15 @@ const Timeline = () => {
                                                         />
                                                     ))
                                                 ) : (
-                                                    <p>No hay fotos en este evento.</p>
+                                                    <p className="no-photos-text">No hay fotos en este evento.</p>
                                                 )}
                                             </div>
                                         </li>
                                     ))}
                                 </ul>
                             ) : (
-                                <p>No hay eventos en esta cronología.</p>
+                                <p className="no-events-text">No hay eventos en esta cronología.</p>
                             )}
-
                         </div>
                     ))
                 )}

@@ -60,46 +60,49 @@ function Photos() {
     );
 
     return (
-        <div className="photos-container">
+        <div>
             <Navbar />
-            <h1 className="title">📷 Tus Fotos Subidas</h1>
-            <div className="top-actions">
-                <input
-                    type="text"
-                    placeholder="🔍 Buscar fotos..."
-                    className="search-bar"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <button className="delete-button" onClick={handleDeletePhotos}>🗑️ Eliminar Seleccionadas</button>
-            </div>
-            {loading ? (
-                <p className="loading-text">Cargando fotos...</p>
-            ) : filteredPhotos.length === 0 ? (
-                <p className="loading-text">No se encontraron fotos.</p>
-            ) : (
-                <div className="photo-grid">
-                    {filteredPhotos.map((photo) => (
-                        <div key={photo.id} className="photo-card">
-                            <input
-                                type="checkbox"
-                                className="photo-checkbox"
-                                value={photo.id}
-                                onChange={(e) => {
-                                    const photoId = parseInt(e.target.value, 10);
-                                    setSelectedPhotos((prev) =>
-                                        e.target.checked
-                                            ? [...prev, photoId]
-                                            : prev.filter((id) => id !== photoId)
-                                    );
-                                }}
-                            />
-                            <img src={`http://127.0.0.1:5000${photo.file_path}`} alt="Foto subida" className="photo-image" />
-                            <p className="photo-date">📅 {new Date(photo.uploaded_at).toLocaleDateString()}</p>
-                        </div>
-                    ))}
+            <div className="photos-container">
+
+                <h1 className="title">📷 Tus Fotos Subidas</h1>
+                <div className="top-actions">
+                    <input
+                        type="text"
+                        placeholder="🔍 Buscar fotos..."
+                        className="search-bar"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <button className="delete-button" onClick={handleDeletePhotos}>🗑️ Eliminar Seleccionadas</button>
                 </div>
-            )}
+                {loading ? (
+                    <p className="loading-text">Cargando fotos...</p>
+                ) : filteredPhotos.length === 0 ? (
+                    <p className="loading-text">No se encontraron fotos.</p>
+                ) : (
+                    <div className="photo-grid">
+                        {filteredPhotos.map((photo) => (
+                            <div key={photo.id} className="photo-card">
+                                <input
+                                    type="checkbox"
+                                    className="photo-checkbox"
+                                    value={photo.id}
+                                    onChange={(e) => {
+                                        const photoId = parseInt(e.target.value, 10);
+                                        setSelectedPhotos((prev) =>
+                                            e.target.checked
+                                                ? [...prev, photoId]
+                                                : prev.filter((id) => id !== photoId)
+                                        );
+                                    }}
+                                />
+                                <img src={`http://127.0.0.1:5000${photo.file_path}`} alt="Foto subida" className="photo-image" />
+                                <p className="photo-date">📅 {new Date(photo.uploaded_at).toLocaleDateString()}</p>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
