@@ -60,8 +60,6 @@ function Navbar() {
               {isOpen && (
                 <div className="dropdown">
                   <ul className="menu-list">
-                    <li className="menu-item">Mi Perfil</li>
-                    <li className="menu-item">Configuración</li>
                     <li className="menu-item" onClick={handleNavigateToChangePassword}>🔑 Cambiar Contraseña</li>
                     <li className="menu-item" onClick={handleLogout}>Cerrar Sesión</li>
                   </ul>

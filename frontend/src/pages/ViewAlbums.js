@@ -41,15 +41,18 @@ function ViewAlbums() {
 
     const handleDeleteAlbum = (albumId) => {
         if (window.confirm('¿Estás seguro de que deseas eliminar este álbum? Esta acción no se puede deshacer.')) {
-            axios.delete(`http://127.0.0.1:5000/albums/${albumId}`)
-                .then(() => {
-                    setAlbums(albums.filter(album => album.id !== albumId));
-                    alert('Álbum eliminado correctamente.');
-                })
-                .catch(error => {
-                    console.error('Error al eliminar el álbum:', error);
-                    alert('Hubo un error al eliminar el álbum.');
-                });
+            axios.post('http://127.0.0.1:5000/albums/delete', {
+                user_id: localStorage.getItem('user_id'),
+                album_ids: [albumId]  // La API espera una lista de álbumes
+            })
+            .then(() => {
+                setAlbums(albums.filter(album => album.id !== albumId));
+                alert('Álbum eliminado correctamente.');
+            })
+            .catch(error => {
+                console.error('Error al eliminar el álbum:', error);
+                alert('Hubo un error al eliminar el álbum.');
+            });
         }
     };
 

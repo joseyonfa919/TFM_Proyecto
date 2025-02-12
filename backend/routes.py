@@ -670,7 +670,7 @@ def process_text():
             try:
                 similarity = calculate_similarity_with_text(clip_model, clip_processor, input_text, photo_path)
                 print(f"Similarity calculated for {photo_file}: {similarity}")
-                if similarity > 0.3:  # Adjust the threshold as needed
+                if similarity > 0.2:  # Adjust the threshold as needed
                     #photos.append({"url": f"/uploads/{photo_file}", "name": photo_file, "score": similarity})
                     photos.append({"url": f"/uploads/{os.path.basename(photo_path)}", "name": photo_file, "score": similarity})
                     

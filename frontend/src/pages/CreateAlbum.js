@@ -33,6 +33,38 @@ function CreateAlbum() {
         photo.file_name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    const handleCreateManualAlbum = async () => {
+        const userId = localStorage.getItem('user_id');
+        if (!userId) {
+            alert('No se encontró el ID del usuario. Inicia sesión nuevamente.');
+            return;
+        }
+
+        if (!albumName.trim()) {
+            alert('Por favor ingresa un nombre para el álbum.');
+            return;
+        }
+
+        if (selectedPhotos.length === 0) {
+            alert('Selecciona al menos una foto para el álbum.');
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://127.0.0.1:5000/albums', {
+                user_id: userId,
+                name: albumName,
+                photo_ids: selectedPhotos,
+            });
+            alert(`Álbum creado: ${response.data.message}`);
+            setAlbumName('');
+            setSelectedPhotos([]);
+        } catch (error) {
+            console.error('Error al crear el álbum:', error);
+            alert('Error al crear el álbum.');
+        }
+    };
+
     const handlePhotoSelection = (photoId) => {
         setSelectedPhotos((prevSelected) => {
             if (prevSelected.includes(photoId)) {
@@ -42,6 +74,33 @@ function CreateAlbum() {
             }
         });
     };
+
+    const handleCreateSuggestedAlbum = async (index) => {
+        const userId = localStorage.getItem('user_id');
+        if (!userId) {
+            alert('No se encontró el ID del usuario. Inicia sesión nuevamente.');
+            return;
+        }
+    
+        const suggestion = suggestions[index]; // Obtener la sugerencia correspondiente
+    
+        try {
+                await axios.post('http://127.0.0.1:5000/albums', {
+                user_id: userId,
+                name: suggestion.album_name,
+                photo_ids: suggestion.photo_ids, // Lista de IDs de las fotos
+            });
+    
+            alert(`Álbum "${suggestion.album_name}" creado con éxito.`);
+
+            setSuggestions([]);
+            setAlbumName('');
+        } catch (error) {
+            console.error('Error al crear el álbum sugerido:', error);
+            alert('Error al crear el álbum.');
+        }
+    };
+    
 
     const handleAutoSuggestAlbums = async () => {
         const userId = localStorage.getItem('user_id');
@@ -100,7 +159,7 @@ function CreateAlbum() {
                                 </div>
                             ))}
                         </div>
-                        <button className="btn-album" onClick={handleAutoSuggestAlbums}>📂 Crear Álbum Manualmente</button>
+                        <button className="btn-album" onClick={handleCreateManualAlbum}>📂 Crear Álbum Manualmente</button>
                     </div>
 
                     <div className="album-ai">
@@ -133,7 +192,7 @@ function CreateAlbum() {
                                                 </div>
                                             ))}
                                         </div>
-                                        <button className="btn-album">📂 Crear Álbum</button>
+                                        <button className="btn-album" onClick={() => handleCreateSuggestedAlbum(index)}>📂 Crear Álbum</button>
                                     </div>
                                 ))}
                             </div>
