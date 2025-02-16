@@ -1,16 +1,11 @@
 /* Mantén el fondo de la página sin afectar la barra de navegación */
-body {
-    background: linear-gradient(to bottom, #4A90E2, #A1C4FD);
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-}
 
 /* Asegurar que el contenedor del formulario no afecte la barra */
 .register-container {
     display: flex;
-    justify-content: center; /* Centrado horizontal */
-    align-items: center; /* Centrado vertical */
-    height: 90vh; /* Ocupar toda la altura de la pantalla */
+    justify-content: center;
+    align-items: center;
+    height: 85vh; /* Ajustar altura */
 }
 
 /* Mantener los inputs y botones con su propio diseño */
@@ -24,26 +19,24 @@ body {
     border-radius: 6px;
     font-size: 16px;
 }
-
 .register-box {
     background: white;
-    padding: 30px;
-    border-radius: 10px;
+    padding: 20px; /* Reducir padding */
+    border-radius: 8px; /* Redondear bordes */
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 500px;
+    width: 400px; /* Reducir el ancho */
 }
-
 .register-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #4A90E2;
+    background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 6px;
-    font-size: 16px;
+    padding: 8px 15px; /* Reducir padding */
+    font-size: 14px; /* Reducir tamaño de fuente */
     cursor: pointer;
+    border-radius: 5px;
     transition: background 0.3s ease;
+    margin-top: 10px; /* Menos espacio antes del botón */
 }
 
 .register-button:hover {
@@ -52,17 +45,20 @@ body {
 
 /* Asegurar que la barra de navegación no se vea afectada */
 .navbar {
-    position: fixed;
-    width: 100%;
-    top: 0;
-    background: black; /* O el color que necesites */
-    padding: 10px 0;
-    z-index: 1000; /* Asegura que esté por encima del contenido */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #222;
+    /* Mismo color en todas las páginas */
+    padding: 10px 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+
 .register-title {
-    
-    color: black; /* O el color que necesites */
+
+    color: black;
+    /* O el color que necesites */
 
 }
 
@@ -70,6 +66,71 @@ body {
 @media (max-width: 768px) {
     .register-container {
         width: 95%;
-        margin-top: 100px;  /* Ajustar margen para evitar que la barra lo tape */
+        margin-top: 100px;
+        /* Ajustar margen para evitar que la barra lo tape */
     }
+}
+
+.register-button.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Mensaje de error */
+.error-message {
+    color: red;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Asterisco rojo para campos obligatorios */
+.required {
+    color: red;
+    font-weight: bold;
+}
+
+/* Contenedor de cada input */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+/* Etiquetas de los campos */
+.input-label {
+    font-size: 13px; /* Tamaño más compacto */
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+
+/* Ajustar los inputs y márgenes */
+.register-input {
+    width: 100%;
+    padding: 10px; /* Reducir padding */
+    margin: 5px 0; /* Menos espacio entre campos */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px; /* Reducir tamaño de fuente */
+}
+
+/* Borde rojo cuando hay un error */
+.input-error {
+    border: 2px solid red !important;
+    background-color: #ffe6e6;
+}
+
+/* Deshabilitar el botón si no se aceptan los términos */
+.register-button.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+.terms-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px; /* Reducir tamaño de texto */
+    margin-top: 5px;
 }
