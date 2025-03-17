@@ -1,15 +1,24 @@
+/* =========================== ESTILOS GENERALES DEL CONTENEDOR =========================== */
+
+/* Contenedor principal de la página de bienvenida */
 .welcome-container {
-    text-align: center;
-    margin-top: 20%;
-    font-family: Arial, sans-serif;
+    text-align: center; /* Centra el contenido */
+    margin-top: 20%; /* Ajusta la posición verticalmente */
+    font-family: Arial, sans-serif; /* Fuente estándar */
 }
 
+/* =========================== ESTILOS DEL TÍTULO =========================== */
+
+/* Estilos del título principal */
 h1 {
-    font-size: 2.5rem;
-    color: #333;
+    font-size: 2.5rem; /* Tamaño grande */
+    color: #333; /* Color oscuro */
 }
 
+/* =========================== ESTILOS DEL TEXTO DESCRIPTIVO =========================== */
+
+/* Estilos del párrafo informativo */
 p {
-    font-size: 1.2rem;
-    color: #666;
+    font-size: 1.2rem; /* Tamaño adecuado */
+    color: #666; /* Color gris oscuro */
 }

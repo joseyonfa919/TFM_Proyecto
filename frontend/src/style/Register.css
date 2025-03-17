@@ -1,136 +1,161 @@
+/* =========================== ESTILOS GENERALES DEL CONTENEDOR =========================== */
+
 /* Mantén el fondo de la página sin afectar la barra de navegación */
 
 /* Asegurar que el contenedor del formulario no afecte la barra */
 .register-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 85vh; /* Ajustar altura */
+    display: flex; /* Usa flexbox */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    height: 85vh; /* Ajustar altura para que no cubra toda la pantalla */
 }
+
+/* =========================== ESTILOS DE LOS CAMPOS DE ENTRADA =========================== */
 
 /* Mantener los inputs y botones con su propio diseño */
 .register-container input {
-    width: 100%;
-    padding: 12px;
-    justify-content: center;
-    align-items: center;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-}
-.register-box {
-    background: white;
-    padding: 20px; /* Reducir padding */
-    border-radius: 8px; /* Redondear bordes */
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 400px; /* Reducir el ancho */
-}
-.register-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 15px; /* Reducir padding */
-    font-size: 14px; /* Reducir tamaño de fuente */
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background 0.3s ease;
-    margin-top: 10px; /* Menos espacio antes del botón */
+    width: 100%; /* Ocupar todo el ancho disponible */
+    padding: 12px; /* Espaciado interno */
+    justify-content: center; /* Centra contenido */
+    align-items: center; /* Centra verticalmente */
+    margin: 10px 0; /* Espaciado entre los campos */
+    border: 1px solid #ccc; /* Borde gris claro */
+    border-radius: 6px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente adecuado */
 }
 
-.register-button:hover {
-    background-color: #357ABD;
+/* =========================== ESTILOS DE LA TARJETA DEL FORMULARIO =========================== */
+
+/* Caja donde se encuentra el formulario */
+.register-box {
+    background: white; /* Fondo blanco */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Sombra para resaltar */
+    text-align: center; /* Centrar contenido */
+    width: 400px; /* Ancho fijo */
 }
+
+/* =========================== ESTILOS DEL BOTÓN DE REGISTRO =========================== */
+
+/* Botón de registro */
+.register-button {
+    background-color: #007bff; /* Azul */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin bordes */
+    padding: 8px 15px; /* Espaciado interno */
+    font-size: 14px; /* Tamaño de fuente */
+    cursor: pointer; /* Cambia el cursor al pasar */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background 0.3s ease; /* Transición suave */
+    margin-top: 10px; /* Espaciado superior */
+}
+
+/* Cambia el color del botón cuando el usuario pasa el mouse */
+.register-button:hover {
+    background-color: #357ABD; /* Azul más oscuro */
+}
+
+/* =========================== ESTILOS DE LA BARRA DE NAVEGACIÓN =========================== */
 
 /* Asegurar que la barra de navegación no se vea afectada */
 .navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #222;
-    /* Mismo color en todas las páginas */
-    padding: 10px 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex; /* Usa flexbox */
+    align-items: center; /* Centra elementos verticalmente */
+    justify-content: space-between; /* Distribuye elementos */
+    background-color: #222; /* Color oscuro */
+    padding: 10px 20px; /* Espaciado interno */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para dar efecto elevado */
 }
 
+/* =========================== ESTILOS DEL TÍTULO =========================== */
 
+/* Estilos del título */
 .register-title {
-
-    color: black;
-    /* O el color que necesites */
-
+    color: black; /* Color de texto negro */
 }
+
+/* =========================== RESPONSIVE DESIGN PARA MÓVILES =========================== */
 
 /* Ajustar el diseño para que el formulario no se monte sobre la barra */
 @media (max-width: 768px) {
     .register-container {
-        width: 95%;
-        margin-top: 100px;
-        /* Ajustar margen para evitar que la barra lo tape */
+        width: 95%; /* Ajustar ancho */
+        margin-top: 100px; /* Evitar que la barra de navegación lo cubra */
     }
 }
 
+/* =========================== DESHABILITAR EL BOTÓN SI NO SE ACEPTAN LOS TÉRMINOS =========================== */
+
 .register-button.disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+    background-color: #ccc; /* Gris */
+    cursor: not-allowed; /* Indica que no es clickeable */
 }
+
+/* =========================== ESTILOS DEL MENSAJE DE ERROR =========================== */
 
 /* Mensaje de error */
 .error-message {
-    color: red;
-    font-size: 14px;
-    text-align: center;
-    margin-bottom: 10px;
+    color: red; /* Texto en rojo */
+    font-size: 14px; /* Tamaño de fuente */
+    text-align: center; /* Centrar texto */
+    margin-bottom: 10px; /* Espaciado inferior */
 }
 
-/* Asterisco rojo para campos obligatorios */
+/* =========================== ESTILOS PARA LOS CAMPOS OBLIGATORIOS =========================== */
+
+/* Asterisco rojo para indicar campos obligatorios */
 .required {
-    color: red;
-    font-weight: bold;
+    color: red; /* Color rojo */
+    font-weight: bold; /* Texto en negrita */
 }
+
+/* =========================== ESTILOS DEL CONTENEDOR DE LOS CAMPOS =========================== */
 
 /* Contenedor de cada input */
 .input-group {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    margin-bottom: 10px;
+    display: flex; /* Usa flexbox */
+    flex-direction: column; /* Organiza en columna */
+    text-align: left; /* Alinear etiquetas a la izquierda */
+    margin-bottom: 10px; /* Espaciado entre campos */
 }
+
+/* =========================== ESTILOS DE LAS ETIQUETAS =========================== */
 
 /* Etiquetas de los campos */
 .input-label {
-    font-size: 13px; /* Tamaño más compacto */
-    font-weight: bold;
-    margin-bottom: 3px;
+    font-size: 13px; /* Tamaño de fuente más compacto */
+    font-weight: bold; /* Texto en negrita */
+    margin-bottom: 3px; /* Espaciado inferior */
 }
 
+/* =========================== ESTILOS DE LOS CAMPOS DE ENTRADA =========================== */
 
 /* Ajustar los inputs y márgenes */
 .register-input {
-    width: 100%;
-    padding: 10px; /* Reducir padding */
-    margin: 5px 0; /* Menos espacio entre campos */
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    width: 100%; /* Ocupar todo el ancho disponible */
+    padding: 10px; /* Espaciado interno */
+    margin: 5px 0; /* Espaciado entre campos */
+    border: 1px solid #ccc; /* Borde gris claro */
+    border-radius: 5px; /* Bordes redondeados */
     font-size: 14px; /* Reducir tamaño de fuente */
 }
 
+/* =========================== ESTILOS PARA CAMPOS CON ERROR =========================== */
+
 /* Borde rojo cuando hay un error */
 .input-error {
-    border: 2px solid red !important;
-    background-color: #ffe6e6;
+    border: 2px solid red !important; /* Borde rojo */
+    background-color: #ffe6e6; /* Fondo ligeramente rosado */
 }
 
-/* Deshabilitar el botón si no se aceptan los términos */
-.register-button.disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
+/* =========================== ESTILOS PARA LOS TÉRMINOS Y CONDICIONES =========================== */
+
+/* Contenedor del checkbox de términos */
 .terms-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px; /* Reducir tamaño de texto */
-    margin-top: 5px;
+    display: flex; /* Usa flexbox */
+    align-items: center; /* Alinea verticalmente */
+    justify-content: center; /* Centra horizontalmente */
+    font-size: 12px; /* Tamaño de fuente reducido */
+    margin-top: 5px; /* Espaciado superior */
 }

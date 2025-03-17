@@ -15,7 +15,10 @@ spacy
 pydub
 soundfile 
 numpy
-
+whisper
+sentence-transformers
+nltk
+opencv-python
 
 
 #python -m spacy download en_core_web_sm

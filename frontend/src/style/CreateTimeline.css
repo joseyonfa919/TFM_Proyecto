@@ -1,143 +1,170 @@
+/* =========================== ESTILOS GENERALES DEL CONTENEDOR =========================== */
+
 /* Contenedor principal */
 .timeline-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 25px;
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 900px; /* Limita el ancho del contenedor */
+    margin: 40px auto; /* Centra el contenedor en la pantalla */
+    padding: 25px; /* Espaciado interno */
+    background-color: white; /* Fondo blanco */
+    border-radius: 12px; /* Bordes redondeados */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15); /* Sombra para efecto de elevación */
 }
 
-/* Título */
+/* =========================== ESTILOS DEL TÍTULO =========================== */
+
+/* Título principal */
 .timeline-title {
-    text-align: center;
-    font-size: 26px;
-    font-weight: bold;
-    color: #2c3e50;
-    margin-bottom: 20px;
+    text-align: center; /* Centra el texto */
+    font-size: 26px; /* Tamaño de fuente grande */
+    font-weight: bold; /* Texto en negrita */
+    color: #2c3e50; /* Color azul oscuro */
+    margin-bottom: 20px; /* Espaciado inferior */
 }
+
+/* =========================== ESTILOS DEL CONTENIDO =========================== */
 
 /* Contenedor de la cronología */
 .timeline-content {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    display: flex; /* Usa flexbox */
+    flex-direction: column; /* Alinea los elementos en columna */
+    gap: 20px; /* Espaciado entre los elementos */
 }
+
+/* =========================== ESTILOS DE LOS CAMPOS DE ENTRADA =========================== */
 
 /* Inputs y selects */
 .timeline-input,
 .timeline-select {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-    box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Ocupar todo el ancho disponible */
+    padding: 12px; /* Espaciado interno */
+    font-size: 1rem; /* Tamaño de fuente adecuado */
+    border: 2px solid #ccc; /* Borde gris claro */
+    border-radius: 8px; /* Bordes redondeados */
+    outline: none; /* Quitar contorno al hacer clic */
+    box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1); /* Efecto de profundidad en los campos */
 }
 
-/* Selección de álbum */
+/* =========================== SELECCIÓN DE ÁLBUM =========================== */
+
+/* Contenedor para la selección de álbum */
 .album-selection {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 15px;
+    display: flex; /* Usa flexbox */
+    flex-direction: column; /* Organiza en columna */
+    gap: 10px; /* Espaciado entre elementos */
+    margin-bottom: 15px; /* Espaciado inferior */
 }
 
-/* Galería de fotos */
+/* =========================== DISEÑO DE LA GALERÍA DE IMÁGENES =========================== */
+
+/* Contenedor de la galería de fotos */
 .photo-gallery {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 20px;
+    display: flex; /* Usa flexbox */
+    flex-wrap: wrap; /* Permite que las fotos se ajusten en varias líneas */
+    gap: 10px; /* Espaciado entre imágenes */
+    justify-content: center; /* Centrar imágenes */
+    margin-bottom: 20px; /* Espaciado inferior */
 }
+
+/* =========================== ESTILOS DE LAS MINIATURAS DE IMÁGENES =========================== */
 
 /* Estilos para las imágenes */
 .photo-thumbnail {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
+    width: 100px; /* Tamaño de la miniatura */
+    height: 100px; /* Altura fija */
+    object-fit: cover; /* Ajuste para que la imagen se vea correctamente */
+    border-radius: 6px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar sobre la imagen */
+    transition: transform 0.3s, box-shadow 0.3s; /* Transición suave */
 }
 
+/* Efecto hover para resaltar la imagen */
 .photo-thumbnail:hover {
-    transform: scale(1.1);
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transform: scale(1.1); /* Aumenta ligeramente el tamaño */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Agrega sombra para destacar */
 }
 
-/* Tarjetas de eventos */
+/* =========================== TARJETAS DE EVENTOS =========================== */
+
+/* Contenedor de cada evento */
 .event-card {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    background: #f8f9fa; /* Fondo gris claro */
+    padding: 15px; /* Espaciado interno */
+    border-radius: 10px; /* Bordes redondeados */
+    margin-bottom: 15px; /* Espaciado entre eventos */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para resaltar */
+    display: flex; /* Usa flexbox */
+    flex-direction: column; /* Organiza los elementos en columna */
+    gap: 12px; /* Espaciado entre elementos */
 }
 
-/* Inputs dentro de eventos */
+/* =========================== ESTILOS DE LOS CAMPOS DENTRO DE EVENTOS =========================== */
+
+/* Estilos de los inputs de los eventos */
 .event-name,
 .event-date,
 .event-description {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #bbb;
-    border-radius: 6px;
-    font-size: 15px;
-    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Ocupar todo el ancho disponible */
+    padding: 10px; /* Espaciado interno */
+    border: 1px solid #bbb; /* Borde gris */
+    border-radius: 6px; /* Bordes redondeados */
+    font-size: 15px; /* Tamaño de fuente */
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1); /* Efecto de profundidad */
 }
 
-/* Botones */
+/* =========================== BOTONES =========================== */
+
+/* Botón para agregar un evento y crear la cronología */
 .add-event, .create-timeline {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.2s;
+    width: 100%; /* Ocupar todo el ancho disponible */
+    padding: 12px; /* Espaciado interno */
+    border: none; /* Sin bordes */
+    border-radius: 6px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente */
+    cursor: pointer; /* Cambia el cursor al pasar */
+    font-weight: bold; /* Negrita */
+    transition: background-color 0.3s, transform 0.2s; /* Transición suave */
 }
 
+/* Botón de agregar evento */
 .add-event:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
+    background-color: #0056b3; /* Azul más oscuro */
+    transform: scale(1.05); /* Efecto de aumento */
 }
 
+/* Botón de crear cronología */
 .create-timeline {
-    background-color: #28a745;
-    color: white;
+    background-color: #28a745; /* Verde */
+    color: white; /* Texto blanco */
 }
 
+/* Efecto hover del botón de crear cronología */
 .create-timeline:hover {
-    background-color: #218838;
-    transform: scale(1.05);
+    background-color: #218838; /* Verde más oscuro */
+    transform: scale(1.05); /* Aumenta ligeramente */
 }
 
-/* Botón de eliminar evento */
+/* =========================== BOTÓN DE ELIMINAR EVENTO =========================== */
+
+/* Botón para eliminar un evento */
 .delete-event {
-    background-color: #dc3545;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+    background-color: #dc3545; /* Rojo */
+    color: white; /* Texto blanco */
+    padding: 10px; /* Espaciado interno */
+    border: none; /* Sin bordes */
+    border-radius: 6px; /* Bordes redondeados */
+    font-size: 14px; /* Tamaño de fuente */
+    cursor: pointer; /* Cambia el cursor al pasar */
+    transition: background-color 0.3s, transform 0.2s; /* Transición suave */
 }
 
+/* Efecto hover del botón de eliminar evento */
 .delete-event:hover {
-    background-color: #c82333;
-    transform: scale(1.05);
+    background-color: #c82333; /* Rojo más oscuro */
+    transform: scale(1.05); /* Efecto de aumento */
 }
 
-
+/* Efecto activo del botón */
 .add-event:active {
-    background-color: #003d80;
-    transform: scale(0.98);
+    background-color: #003d80; /* Azul oscuro */
+    transform: scale(0.98); /* Disminuye ligeramente */
 }

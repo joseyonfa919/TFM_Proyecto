@@ -1,42 +1,66 @@
+/* =========================== ESTILOS GENERALES DEL CONTENEDOR =========================== */
+
+/* Contenedor principal de la página de inicio */
 .home-container {
-    text-align: center;
-    margin-top: 20%;
+    text-align: center; /* Centra el contenido de la página */
+    margin-top: 20%; /* Ajusta el margen superior para centrar verticalmente */
 }
 
+/* =========================== ESTILOS DEL TÍTULO =========================== */
+
+/* Estilos del título principal */
 h1 {
-    font-size: 2.5rem;
-    color: #333;
+    font-size: 2.5rem; /* Tamaño grande para mayor impacto visual */
+    color: #333; /* Color de texto oscuro para mejor contraste */
 }
 
+/* =========================== ESTILOS DEL TEXTO DESCRIPTIVO =========================== */
+
+/* Estilos del párrafo descriptivo */
 p {
-    font-size: 1.2rem;
-    color: #666;
+    font-size: 1.2rem; /* Tamaño de fuente estándar */
+    color: #666; /* Color gris para suavizar el texto */
 }
 
+/* =========================== ESTILOS DEL CONTENEDOR DE BOTONES =========================== */
+
+/* Contenedor de los botones */
 .home-buttons {
-    margin-top: 20px;
+    margin-top: 20px; /* Espaciado superior para separar del texto */
 }
 
+/* =========================== ESTILOS DE LOS BOTONES =========================== */
+
+/* Estilos generales para los botones */
 .home-btn {
-    margin: 10px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    margin: 10px; /* Espaciado entre los botones */
+    padding: 10px 20px; /* Tamaño del botón */
+    font-size: 1rem; /* Tamaño de fuente adecuado */
+    border: none; /* Elimina bordes predeterminados */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar */
+    transition: background-color 0.3s ease; /* Transición suave en el color de fondo */
 }
 
+/* =========================== ESTILOS DEL BOTÓN DE INICIO DE SESIÓN =========================== */
+
+/* Botón de inicio de sesión con color azul */
 .login-btn {
-    background-color: #007bff;
-    color: white;
+    background-color: #007bff; /* Azul estándar */
+    color: white; /* Texto en blanco para mejor contraste */
 }
 
+/* =========================== ESTILOS DEL BOTÓN DE REGISTRO =========================== */
+
+/* Botón de registro con color verde */
 .register-btn {
-    background-color: #28a745;
-    color: white;
+    background-color: #28a745; /* Verde estándar */
+    color: white; /* Texto en blanco */
 }
 
+/* =========================== EFECTO HOVER EN LOS BOTONES =========================== */
+
+/* Opacidad reducida al pasar el mouse sobre los botones */
 .home-btn:hover {
-    opacity: 0.9;
+    opacity: 0.9; /* Reduce la opacidad ligeramente para indicar interactividad */
 }

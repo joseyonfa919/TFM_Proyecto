@@ -1,114 +1,143 @@
+/* =========================== ESTILOS GENERALES DEL CONTENEDOR =========================== */
+
+/* Contenedor principal de la página de carga de archivos */
 .upload-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 20px;
-    background: linear-gradient(to bottom, #4a90e2, #8ebcdd);
-    min-height: 100vh;
+    display: flex; /* Usa flexbox para organizar los elementos */
+    flex-direction: column; /* Organiza en columna */
+    align-items: center; /* Centra horizontalmente */
+    justify-content: center; /* Centra verticalmente */
+    text-align: center; /* Alinea el texto al centro */
+    padding: 20px; /* Espaciado interno */
+    background: linear-gradient(to bottom, #4a90e2, #8ebcdd); /* Degradado azul */
+    min-height: 100vh; /* Ocupa toda la altura de la pantalla */
 }
 
+/* =========================== ESTILOS DEL TÍTULO =========================== */
+
+/* Estilos del título principal */
 .upload-title {
-    font-size: 2rem;
-    font-weight: bold;
-    color: white;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    font-size: 2rem; /* Tamaño grande */
+    font-weight: bold; /* Negrita */
+    color: white; /* Texto en blanco */
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5); /* Sombra para mejor visibilidad */
 }
 
+/* =========================== CAJA DE CARGA DE ARCHIVOS =========================== */
+
+/* Contenedor donde se arrastran los archivos */
 .upload-box {
-    width: 80%;
-    max-width: 500px;
-    height: 200px;
-    border: 2px dashed #ccc;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    margin: 20px 0;
-    transition: all 0.3s ease-in-out;
-    position: relative;
+    width: 80%; /* Ocupar el 80% del ancho */
+    max-width: 500px; /* Ancho máximo */
+    height: 200px; /* Altura fija */
+    border: 2px dashed #ccc; /* Borde punteado gris */
+    border-radius: 10px; /* Bordes redondeados */
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con opacidad */
+    display: flex; /* Usa flexbox */
+    flex-direction: column; /* Organiza en columna */
+    align-items: center; /* Centra horizontalmente */
+    justify-content: center; /* Centra verticalmente */
+    cursor: pointer; /* Cambia el cursor al pasar */
+    margin: 20px 0; /* Espaciado superior e inferior */
+    transition: all 0.3s ease-in-out; /* Transición suave */
+    position: relative; /* Posición relativa para efectos */
 }
 
+/* Cambio de color al pasar el mouse sobre la caja de carga */
 .upload-box:hover {
-    background-color: rgba(255, 255, 255, 0.9);
-    border-color: #007bff;
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo más claro */
+    border-color: #007bff; /* Azul más intenso */
 }
 
+/* =========================== ESTILOS DE LOS TEXTOS =========================== */
+
+/* Muestra la cantidad de archivos seleccionados */
 .file-count {
-    font-size: 1rem;
-    color: white;
-    margin-bottom: 15px;
+    font-size: 1rem; /* Tamaño adecuado */
+    color: white; /* Texto en blanco */
+    margin-bottom: 15px; /* Espaciado inferior */
 }
 
+/* Muestra los formatos permitidos */
 .upload-formats {
-    font-size: 1rem;
-    color: white;
-    margin-top: 5px;
+    font-size: 1rem; /* Tamaño adecuado */
+    color: white; /* Texto en blanco */
+    margin-top: 5px; /* Espaciado superior */
 }
 
+/* =========================== SECCIÓN DE PREVISUALIZACIÓN =========================== */
+
+/* Contenedor de imágenes de vista previa */
 .preview-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    display: flex; /* Usa flexbox */
+    flex-wrap: wrap; /* Permite múltiples líneas */
+    justify-content: center; /* Centra imágenes */
+    gap: 10px; /* Espaciado entre imágenes */
+    margin-bottom: 20px; /* Espaciado inferior */
 }
 
+/* Estilos para cada imagen en miniatura */
 .preview-box {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    position: relative; /* Permite posicionar el botón de eliminar */
+    width: 100px; /* Tamaño fijo */
+    height: 100px; /* Tamaño fijo */
+    border-radius: 5px; /* Bordes redondeados */
+    overflow: hidden; /* Evita que la imagen sobresalga */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra para resaltar */
 }
 
+/* Imágenes dentro de la previsualización */
 .preview-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 100%; /* Ocupar todo el ancho */
+    height: 100%; /* Ocupar toda la altura */
+    object-fit: cover; /* Ajusta sin distorsión */
 }
 
+/* =========================== BOTÓN DE ELIMINAR ARCHIVOS =========================== */
+
+/* Botón para eliminar una imagen seleccionada */
 .remove-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background-color: red;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 12px;
+    position: absolute; /* Posicionamiento absoluto */
+    top: 5px; /* Espaciado desde la parte superior */
+    right: 5px; /* Espaciado desde la derecha */
+    background-color: red; /* Fondo rojo */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin bordes */
+    border-radius: 50%; /* Bordes circulares */
+    cursor: pointer; /* Cambia el cursor al pasar */
+    width: 20px; /* Tamaño fijo */
+    height: 20px; /* Tamaño fijo */
+    display: flex; /* Usa flexbox */
+    justify-content: center; /* Centra el contenido */
+    align-items: center; /* Centra verticalmente */
+    font-size: 12px; /* Tamaño pequeño */
 }
 
+/* =========================== BOTÓN PARA SUBIR ARCHIVOS =========================== */
+
+/* Estilos generales del botón de carga */
 .upload-button {
-    padding: 12px 24px;
-    font-size: 1.2rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease-in-out;
+    padding: 12px 24px; /* Espaciado interno */
+    font-size: 1.2rem; /* Tamaño adecuado */
+    background-color: #007bff; /* Azul */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin bordes */
+    border-radius: 8px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar */
+    transition: background 0.3s ease-in-out; /* Transición suave */
 }
 
+/* Cambio de color al pasar el mouse sobre el botón */
 .upload-button:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* Azul más oscuro */
 }
 
+/* =========================== TEXTO DE FORMATOS PERMITIDOS =========================== */
+
+/* Muestra los formatos permitidos en la caja de carga */
 .upload-box::after {
-    content: "Formatos permitidos: JPG, PNG, MP4";
-    font-size: 0.9rem;
-    color: #555;
-    position: absolute;
-    bottom: 10px;
+    content: "Formatos permitidos: JPG, PNG, MP4"; /* Texto informativo */
+    font-size: 0.9rem; /* Tamaño adecuado */
+    color: #555; /* Color gris oscuro */
+    position: absolute; /* Posicionamiento absoluto */
+    bottom: 10px; /* Espaciado desde la parte inferior */
 }

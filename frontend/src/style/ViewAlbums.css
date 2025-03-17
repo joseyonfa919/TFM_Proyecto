@@ -1,119 +1,169 @@
+/* =========================== ESTILOS GENERALES DEL CONTENEDOR =========================== */
+
+/* Contenedor principal de la página de álbumes */
 .albums-container {
+    display: flex; /* Usa flexbox */
+    flex-direction: column; /* Organiza en columna */
+    align-items: center; /* Centra horizontalmente */
+    justify-content: flex-start; /* Alinea el contenido al inicio */
+    padding: 20px; /* Espaciado interno */
+    background: linear-gradient(to bottom, #4a90e2, #8ebcdd); /* Degradado azul */
+    min-height: 100vh; /* Ocupa toda la pantalla */
+    overflow-y: auto; /* Permite desplazamiento si el contenido es largo */
+}
+
+/* =========================== ESTILOS DEL TÍTULO =========================== */
+
+/* Estilos del título principal */
+.title {
+    font-size: 2rem; /* Tamaño grande */
+    font-weight: bold; /* Negrita */
+    color: white; /* Texto en blanco */
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5); /* Sombra para mejor visibilidad */
+    margin-bottom: 20px; /* Espaciado inferior */
+}
+
+/* =========================== BARRA DE BÚSQUEDA =========================== */
+
+/* Contenedor de la barra de búsqueda */
+.search-container {
+    width: 90%; /* Ocupar el 90% del ancho */
+    max-width: 500px; /* Ancho máximo */
+    margin-bottom: 20px; /* Espaciado inferior */
+}
+
+/* Estilos del input de búsqueda */
+.search-bar {
+    width: 100%; /* Ocupar todo el ancho */
+    padding: 10px; /* Espaciado interno */
+    font-size: 1rem; /* Tamaño adecuado */
+    border: 2px solid #ccc; /* Borde gris claro */
+    border-radius: 8px; /* Bordes redondeados */
+    outline: none; /* Quita el contorno predeterminado */
+}
+
+/* =========================== LISTA DE ÁLBUMES =========================== */
+
+/* Contenedor de la lista de álbumes */
+.albums-list {
+    display: flex; /* Usa flexbox */
+    flex-wrap: wrap; /* Permite múltiples líneas */
+    gap: 20px; /* Espaciado entre álbumes */
+    justify-content: center; /* Centrar álbumes */
+    width: 90%; /* Ancho del 90% de la pantalla */
+}
+
+/* =========================== TARJETAS DE ÁLBUM =========================== */
+
+/* Contenedor de cada álbum */
+.album-card {
+    background: rgba(255, 255, 255, 0.9); /* Fondo blanco con opacidad */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 12px; /* Bordes redondeados */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra para resaltar */
+    text-align: center; /* Centrar contenido */
+    min-width: 500px; /* Ancho mínimo */
+    max-width: 650px; /* Ancho máximo */
+}
+
+/* =========================== ESTILOS DEL NOMBRE DEL ÁLBUM =========================== */
+
+/* Nombre del álbum */
+.album-title {
+    font-size: 1.8rem; /* Tamaño adecuado */
+    font-weight: bold; /* Negrita */
+    color: #2c3e50; /* Azul oscuro */
+    text-align: center; /* Centrar texto */
+    margin-bottom: 15px; /* Espaciado inferior */
+    text-transform: capitalize; /* Capitaliza el texto */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para resaltar */
+}
+
+/* =========================== BOTÓN DE ELIMINACIÓN =========================== */
+
+/* Botón para eliminar un álbum */
+.delete-button {
+    padding: 10px 15px; /* Espaciado interno */
+    font-size: 1rem; /* Tamaño adecuado */
+    background-color: #e74c3c; /* Rojo */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin bordes */
+    border-radius: 8px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar */
+    transition: background 0.3s ease-in-out; /* Transición suave */
+}
+
+/* Efecto hover en el botón de eliminación */
+.delete-button:hover {
+    background-color: #c0392b; /* Rojo más oscuro */
+}
+
+/* =========================== GALERÍA DE FOTOS DEL ÁLBUM =========================== */
+
+/* Contenedor de la galería de fotos */
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); /* Espacio más grande */
+    gap: 20px; /* Mayor separación */
+    margin-top: 25px;
+}
+
+/* Estilos de las imágenes */
+.photo-thumbnail {
+    width: 100%;
+    height: auto;
+    max-width: 500px !important; /* Aumentar tamaño */
+    border-radius: 10px; /* Ajustar bordes */
+    object-fit: cover;
+}
+/* =========================== BOTÓN DE COMPARTIR ÁLBUM =========================== */
+
+/* Botón para compartir un álbum */
+.share-button {
+    padding: 10px 15px; /* Espaciado interno */
+    font-size: 1rem; /* Tamaño adecuado */
+    background-color: #3498db; /* Azul */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin bordes */
+    border-radius: 8px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar */
+    transition: background 0.3s ease-in-out; /* Transición suave */
+    margin-left: 10px; /* Espaciado entre botones */
+}
+
+/* Efecto hover en el botón de compartir */
+.share-button:hover {
+    background-color: #2980b9; /* Azul más oscuro */
+}
+
+/* =========================== ENLACE DEL ÁLBUM COMPARTIDO =========================== */
+
+/* Estilo del enlace generado para compartir */
+.share-link {
+    margin-top: 10px; /* Espaciado superior */
+    font-size: 0.9rem; /* Tamaño adecuado */
+    color: #2c3e50; /* Azul oscuro */
+    word-break: break-all; /* Permite que los enlaces largos se dividan en varias líneas */
+}
+.video-thumbnail {
+    width: 100%;
+    height: auto;
+    max-width: 120px;  /* Tamaño uniforme con las imágenes */
+    border-radius: 8px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.video-expanded {
+    width: 90%;
+    max-width: 500px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.video-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    padding: 20px;
-    background: linear-gradient(to bottom, #4a90e2, #8ebcdd);
-    min-height: 100vh;
-    overflow-y: auto;
-}
-
-.title {
-    font-size: 2rem;
-    font-weight: bold;
-    color: white;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-    margin-bottom: 20px;
-}
-
-.search-container {
-    width: 90%;
-    max-width: 500px;
-    margin-bottom: 20px;
-}
-
-.search-bar {
-    width: 100%;
-    padding: 10px;
-    font-size: 1rem;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-}
-
-.albums-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
     justify-content: center;
-    width: 90%;
-}
-
-.album-card {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    min-width: 500px;
-    max-width: 650px;
-}
-
-.album-title {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.delete-button {
-    padding: 10px 15px;
-    font-size: 1rem;
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease-in-out;
-}
-
-.delete-button:hover {
-    background-color: #c0392b;
-}
-
-.photo-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.photo-thumbnail {
-    width: 100%;
-    border-radius: 8px;
-    height: auto;
-    object-fit: cover;
-}
-
-.share-button {
-    padding: 10px 15px;
-    font-size: 1rem;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease-in-out;
-    margin-left: 10px; /* Para separar de "Eliminar Álbum" */
-}
-
-.share-button:hover {
-    background-color: #2980b9;
-}
-
-.share-link {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    color: #2c3e50;
-    word-break: break-all;
-}
-
-.album-title {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #2c3e50; /* Un color oscuro para contraste */
-    text-align: center;
-    margin-bottom: 15px;
-    text-transform: capitalize;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }

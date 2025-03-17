@@ -1,74 +1,92 @@
+/* =========================== ESTILOS GENERALES DEL BODY =========================== */
+
+/* Configuración global del cuerpo del documento */
 body {
   background-color: #dfc7c7; /* Fondo claro y suave */
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  color: #333; /* Texto oscuro */
+  font-family: 'Arial', sans-serif; /* Fuente estándar */
+  margin: 0; /* Elimina márgenes predeterminados */
+  padding: 0; /* Elimina relleno predeterminado */
+  color: #333; /* Texto oscuro para mayor contraste */
 }
 
+/* =========================== CONTENEDOR PRINCIPAL =========================== */
+
+/* Contenedor centralizado para los elementos principales */
 .container {
-  text-align: center;
-  margin-top: 50px;
+  text-align: center; /* Centra el contenido */
+  margin-top: 50px; /* Espaciado superior */
 }
 
+/* =========================== ESTILOS DEL TÍTULO =========================== */
+
+/* Título principal */
 h1 {
-  font-size: 3em;
+  font-size: 3em; /* Tamaño grande para mayor impacto */
   color: #007bff; /* Azul vibrante */
 }
 
+/* =========================== ESTILOS DE LOS PÁRRAFOS =========================== */
+
+/* Estilos generales para los párrafos */
 p {
-  font-size: 1.2em;
-  color: #555; /* Gris suave */
+  font-size: 1.2em; /* Tamaño de fuente adecuado */
+  color: #555; /* Gris suave para mayor legibilidad */
 }
 
+/* =========================== ESTILOS DE LAS IMÁGENES =========================== */
+
+/* Ajustes generales para las imágenes */
 img {
-  max-width: 300px;
-  margin-bottom: 20px;
-  border-radius: 10px;
+  max-width: 300px; /* Tamaño máximo para evitar desbordamientos */
+  margin-bottom: 20px; /* Espaciado inferior */
+  border-radius: 10px; /* Bordes redondeados para un diseño moderno */
 }
 
+/* =========================== ESTILOS DE LOS BOTONES =========================== */
+
+/* Botones generales */
 button {
-  background-color: #007bff; /* Azul para botones */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 1em;
-  cursor: pointer;
-  margin: 5px;
-  transition: background-color 0.3s;
+  background-color: #007bff; /* Azul vibrante */
+  color: white; /* Texto en blanco */
+  border: none; /* Sin bordes */
+  border-radius: 5px; /* Bordes redondeados */
+  padding: 10px 20px; /* Espaciado interno */
+  font-size: 1em; /* Tamaño adecuado */
+  cursor: pointer; /* Cambia el cursor al pasar */
+  margin: 5px; /* Espaciado entre botones */
+  transition: background-color 0.3s; /* Transición suave */
 }
 
+/* Efecto hover en los botones */
 button:hover {
-  background-color: #0056b3; /* Azul más oscuro al pasar el cursor */
+  background-color: #0056b3; /* Azul más oscuro */
 }
 
+/* Efecto al presionar los botones */
 button:active {
-  background-color: #004085; /* Azul más intenso al presionar */
+  background-color: #004085; /* Azul aún más oscuro */
 }
+
+/* =========================== ESTILOS DEL ÁREA DE TEXTO =========================== */
+
+/* Área de texto general */
 textarea {
-  width: 100%;
-  height: 100px;
-  margin-bottom: 10px;
+  width: 100%; /* Ocupar todo el ancho disponible */
+  height: 100px; /* Altura fija */
+  margin-bottom: 10px; /* Espaciado inferior */
 }
 
+/* =========================== ESTILOS DEL INPUT DE ARCHIVOS =========================== */
+
+/* Configuración de margen para inputs de archivos */
 input[type="file"] {
-  margin: 10px 0;
+  margin: 10px 0; /* Espaciado superior e inferior */
 }
 
+/* =========================== ESTILOS DEL SUBTÍTULO =========================== */
+
+/* Estilos generales para subtítulos */
 h3 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
+  font-size: 24px; /* Tamaño adecuado */
+  margin-bottom: 20px; /* Espaciado inferior */
 }

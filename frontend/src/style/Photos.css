@@ -1,86 +1,142 @@
+/* =========================== ESTILOS GENERALES DEL CONTENEDOR =========================== */
+
+/* Contenedor principal de la galería de fotos */
 .photos-container {
+    display: flex; /* Usa flexbox */
+    flex-direction: column; /* Organiza los elementos en columna */
+    align-items: center; /* Centra horizontalmente */
+    justify-content: center; /* Centra verticalmente */
+    padding: 20px; /* Espaciado interno */
+    background: linear-gradient(to bottom, #4a90e2, #8ebcdd); /* Degradado azul */
+    min-height: 100vh; /* Ocupa toda la pantalla */
+}
+
+/* =========================== ESTILOS DEL TÍTULO =========================== */
+
+/* Título principal */
+.title {
+    font-size: 2rem; /* Tamaño grande */
+    font-weight: bold; /* Negrita */
+    color: white; /* Texto en blanco */
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5); /* Sombra para mejor visibilidad */
+    margin-bottom: 20px; /* Espaciado inferior */
+}
+
+/* =========================== ESTILOS DE LOS FILTROS Y ACCIONES =========================== */
+
+/* Contenedor de los botones de acción y la barra de búsqueda */
+.top-actions {
+    display: flex; /* Usa flexbox */
+    justify-content: center; /* Centra los elementos */
+    gap: 15px; /* Espaciado entre elementos */
+    margin-bottom: 20px; /* Espaciado inferior */
+}
+
+/* Barra de búsqueda */
+.search-bar {
+    padding: 10px; /* Espaciado interno */
+    font-size: 1rem; /* Tamaño adecuado */
+    border: 2px solid #ccc; /* Borde gris claro */
+    border-radius: 8px; /* Bordes redondeados */
+    outline: none; /* Quita el contorno predeterminado */
+    width: 250px; /* Ancho fijo */
+}
+
+/* =========================== BOTÓN PARA ELIMINAR FOTOS =========================== */
+
+/* Botón de eliminación */
+.delete-button {
+    padding: 10px 15px; /* Espaciado interno */
+    font-size: 1rem; /* Tamaño adecuado */
+    background-color: #e74c3c; /* Rojo */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin borde */
+    border-radius: 8px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar */
+    transition: background 0.3s ease-in-out; /* Transición suave */
+}
+
+/* Efecto hover para el botón de eliminación */
+.delete-button:hover {
+    background-color: #c0392b; /* Rojo más oscuro */
+}
+
+/* =========================== DISEÑO DE LA GALERÍA DE FOTOS =========================== */
+
+/* Contenedor de las fotos en cuadrícula */
+.photo-grid {
+    display: grid; /* Usa un diseño de cuadrícula */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Tamaño adaptable */
+    gap: 15px; /* Espaciado entre imágenes */
+    width: 90%; /* Ancho del 90% de la pantalla */
+    max-width: 1000px; /* Máximo ancho */
+}
+
+/* =========================== ESTILOS DE CADA TARJETA DE FOTO =========================== */
+
+/* Contenedor de cada foto */
+.photo-card {
+    width: 190px; /* Mantiene un ancho uniforme */
+    height: 200px; /* Altura suficiente para incluir imagen + texto */
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background: linear-gradient(to bottom, #4a90e2, #8ebcdd);
-    min-height: 100vh;
-}
-
-.title {
-    font-size: 2rem;
-    font-weight: bold;
-    color: white;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-    margin-bottom: 20px;
-}
-
-.top-actions {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.search-bar {
+    justify-content: space-between;
     padding: 10px;
-    font-size: 1rem;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-    width: 250px;
-}
-
-.delete-button {
-    padding: 10px 15px;
-    font-size: 1rem;
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease-in-out;
-}
-
-.delete-button:hover {
-    background-color: #c0392b;
-}
-
-.photo-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 15px;
-    width: 90%;
-    max-width: 1000px;
-}
-
-.photo-card {
-    position: relative;
     background: white;
-    padding: 10px;
-    border-radius: 8px;
+    border-radius: 12px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    text-align: center;
 }
+/* =========================== ESTILOS DE LAS IMÁGENES =========================== */
 
-.photo-image {
-    width: 100%;
+/* Imágenes dentro de la galería */
+.photo-image,
+.photo-video {
+    width: 90%;  /* Ocupar todo el ancho del contenedor */
+    height: 100%; /* Ocupar todo el alto del contenedor */
+    object-fit: cover; /* Recortar para que se ajuste sin distorsionarse */
     border-radius: 8px;
-    height: auto;
-    object-fit: cover;
 }
 
+/* =========================== CHECKBOX PARA SELECCIONAR FOTOS =========================== */
+
+/* Checkbox de selección de fotos */
 .photo-checkbox {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    transform: scale(1.3);
+    position: absolute; /* Posicionamiento absoluto */
+    top: 10px; /* Espaciado desde la parte superior */
+    left: 10px; /* Espaciado desde la izquierda */
+    transform: scale(1.3); /* Aumenta el tamaño del checkbox */
 }
 
+/* =========================== FECHA DE SUBIDA DE LA FOTO =========================== */
+
+/* Estilo del texto de la fecha */
 .photo-date {
-    margin-top: 5px;
-    font-size: 0.9rem;
-    color: #333;
+    margin-top: 5px; /* Espaciado superior */
+    font-size: 0.9rem; /* Tamaño de fuente pequeño */
+    color: #333; /* Color oscuro */
 }
 
+.photo-item {
+    width: 180px; /* Ajusta el ancho de cada contenedor */
+    height: 200px; /* Ajusta la altura del contenedor */
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.photo-media-container {
+    width: 100%;
+    height: 140px; /* Ajustar la altura para que todos sean iguales */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Evita desbordamientos si la imagen es muy grande */
+    border-radius: 8px;
+}

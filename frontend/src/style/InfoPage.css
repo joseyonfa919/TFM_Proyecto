@@ -1,70 +1,98 @@
+/* =========================== ESTILOS GENERALES DEL CONTENEDOR =========================== */
+
+/* Contenedor principal de la página de información */
 .info-page-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: linear-gradient(to bottom, #92c9f8, #4b92e6);
-  }
-  
-  .info-card {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 500px;
-    width: 90%;
-  }
-  
-  .info-image {
-    width: 100%;
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
-  
-  .info-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #1d4ed8;
-    margin-bottom: 10px;
-  }
-  
-  .info-subtitle {
-    font-size: 1.2rem;
-    color: #6b7280;
-    margin-bottom: 20px;
-  }
-  
-  .button-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-  }
-  
-  .btn-lg {
-    padding: 12px 24px;
-    font-size: 1.2rem;
-    border-radius: 8px;
-  }
-  
-  .btn-primary {
-    background-color: #2563eb;
-    border: none;
-    transition: 0.3s ease-in-out;
-  }
-  
-  .btn-primary:hover {
-    background-color: #1e40af;
-  }
-  
-  .btn-outline-primary {
-    border-color: #2563eb;
-    color: #2563eb;
-    transition: 0.3s ease-in-out;
-  }
-  
-  .btn-outline-primary:hover {
-    background-color: #2563eb;
-    color: white;
-  }
-  
+  display: flex; /* Usa flexbox para centrar el contenido */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  height: 100vh; /* Ocupa toda la altura de la pantalla */
+  background: linear-gradient(to bottom, #92c9f8, #4b92e6); /* Fondo con degradado de azul claro a azul oscuro */
+}
+
+/* =========================== ESTILOS DE LA TARJETA PRINCIPAL =========================== */
+
+/* Caja que contiene la información principal */
+.info-card {
+  background: white; /* Fondo blanco */
+  padding: 40px; /* Espaciado interno */
+  border-radius: 12px; /* Bordes redondeados */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para efecto de elevación */
+  text-align: center; /* Centrar el contenido dentro */
+  max-width: 500px; /* Limita el ancho máximo */
+  width: 90%; /* Se adapta a distintos tamaños de pantalla */
+}
+
+/* =========================== ESTILOS DE LA IMAGEN =========================== */
+
+/* Imagen superior de la tarjeta */
+.info-image {
+  width: 100%; /* Ajusta la imagen al ancho del contenedor */
+  border-radius: 8px; /* Bordes redondeados */
+  margin-bottom: 20px; /* Espaciado inferior */
+}
+
+/* =========================== ESTILOS DEL TÍTULO =========================== */
+
+/* Estilos del título principal */
+.info-title {
+  font-size: 2.5rem; /* Tamaño grande para mayor impacto */
+  font-weight: bold; /* Texto en negrita */
+  color: #1d4ed8; /* Azul oscuro */
+  margin-bottom: 10px; /* Espaciado inferior */
+}
+
+/* =========================== ESTILOS DEL SUBTÍTULO =========================== */
+
+/* Estilos del subtítulo */
+.info-subtitle {
+  font-size: 1.2rem; /* Tamaño adecuado */
+  color: #6b7280; /* Gris oscuro */
+  margin-bottom: 20px; /* Espaciado inferior */
+}
+
+/* =========================== CONTENEDOR DE BOTONES =========================== */
+
+/* Contenedor de los botones */
+.button-container {
+  display: flex; /* Usa flexbox */
+  justify-content: center; /* Centra los botones */
+  gap: 15px; /* Espaciado entre botones */
+}
+
+/* =========================== ESTILOS DE LOS BOTONES =========================== */
+
+/* Botón de mayor tamaño */
+.btn-lg {
+  padding: 12px 24px; /* Espaciado interno */
+  font-size: 1.2rem; /* Tamaño de fuente adecuado */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+/* =========================== BOTÓN PRIMARIO (AZUL) =========================== */
+
+/* Estilos del botón principal */
+.btn-primary {
+  background-color: #2563eb; /* Azul intenso */
+  border: none; /* Sin bordes */
+  transition: 0.3s ease-in-out; /* Transición suave */
+}
+
+/* Efecto hover del botón principal */
+.btn-primary:hover {
+  background-color: #1e40af; /* Azul más oscuro */
+}
+
+/* =========================== BOTÓN SECUNDARIO (BORDE AZUL) =========================== */
+
+/* Estilos del botón con borde */
+.btn-outline-primary {
+  border-color: #2563eb; /* Borde azul */
+  color: #2563eb; /* Texto azul */
+  transition: 0.3s ease-in-out; /* Transición suave */
+}
+
+/* Efecto hover del botón con borde */
+.btn-outline-primary:hover {
+  background-color: #2563eb; /* Azul sólido */
+  color: white; /* Texto en blanco */
+}

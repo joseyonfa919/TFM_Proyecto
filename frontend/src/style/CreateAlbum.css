@@ -1,89 +1,127 @@
+/* =========================== ESTILOS GENERALES DEL CONTENEDOR =========================== */
+
+/* Contenedor principal de la página de creación de álbumes */
 .album-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 20px;
-    background: linear-gradient(to bottom, #4a90e2, #8ebcdd);
-    min-height: 100vh;
-    overflow-y: auto;
+    display: flex; /* Usa flexbox para centrar contenido */
+    flex-direction: column; /* Organiza los elementos en columna */
+    align-items: center; /* Centra horizontalmente */
+    justify-content: flex-start; /* Alinea el contenido en la parte superior */
+    padding: 20px; /* Espaciado interno */
+    background: linear-gradient(to bottom, #4a90e2, #8ebcdd); /* Degradado de azul */
+    min-height: 100vh; /* Ocupa toda la altura de la pantalla */
+    overflow-y: auto; /* Permite desplazamiento vertical si el contenido es grande */
 }
 
+/* =========================== SECCIONES DEL ÁLBUM =========================== */
+
+/* Contenedor para las secciones de creación manual y con IA */
 .album-sections {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    width: 95%; /* Aumentar el ancho total */
-    max-width: 1800px; /* Hacerlo más ancho */
-    gap: 20px;
-    margin-top: 20px;
-    align-items: flex-start;
+    display: flex; /* Usa flexbox para organizar secciones */
+    flex-wrap: wrap; /* Permite que los elementos se ajusten en varias líneas */
+    justify-content: space-around; /* Distribuye los elementos uniformemente */
+    width: 95%; /* Ajuste del ancho total */
+    max-width: 1800px; /* Limita el ancho máximo */
+    gap: 20px; /* Espaciado entre secciones */
+    margin-top: 20px; /* Espaciado superior */
+    align-items: flex-start; /* Alinea los elementos al inicio */
 }
 
+/* =========================== ESTILOS DE LOS CONTENEDORES DE ÁLBUM =========================== */
+
+/* Estilos de las secciones de creación manual y con IA */
 .album-manual, .album-ai {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    flex: 1;
-    text-align: center;
-    min-width: 650px; /* Aumentar tamaño del contenedor */
-    max-width: 1200px; /* Limitar el ancho para que no sea demasiado grande */
+    background: rgba(255, 255, 255, 0.9); /* Fondo blanco con opacidad */
+    padding: 30px; /* Espaciado interno */
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para efecto de elevación */
+    flex: 1; /* Permite que los elementos crezcan equitativamente */
+    text-align: center; /* Centra el texto */
+    min-width: 650px; /* Asegura un tamaño mínimo */
+    max-width: 1200px; /* Limita el tamaño máximo */
 }
 
+/* =========================== ESTILOS DE LOS CAMPOS DE ENTRADA =========================== */
+
+/* Campos de entrada de texto y búsqueda */
 .album-input, .search-bar {
-    width: 90%;
-    padding: 12px;
-    font-size: 1rem;
-    border: 2px solid #221e1e;
-    border-radius: 10px;
-    outline: none;
-    margin-bottom: 15px;
+    width: 90%; /* Ajuste del ancho */
+    padding: 12px; /* Espaciado interno */
+    font-size: 1rem; /* Tamaño de fuente */
+    border: 2px solid #221e1e; /* Borde negro */
+    border-radius: 10px; /* Bordes redondeados */
+    outline: none; /* Quita el contorno predeterminado */
+    margin-bottom: 15px; /* Espaciado inferior */
 }
 
+/* =========================== DISEÑO DE LA GALERÍA DE IMÁGENES =========================== */
+
+/* Contenedor de la galería de fotos */
 .photo-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Aumentar tamaño de las imágenes */
-    gap: 20px;
-    margin-top: 10px;
+    display: grid; /* Usa un diseño en cuadrícula */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Tamaño adaptable */
+    gap: 20px; /* Espaciado entre imágenes */
+    margin-top: 10px; /* Espaciado superior */
 }
 
+/* =========================== ESTILOS DE LAS TARJETAS DE FOTOS =========================== */
+
+/* Contenedor de cada imagen */
 .photo-card {
     position: relative;
-    background: white;
-    padding: 10px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    width: 150px; /* Hacer las imágenes un poco más grandes */
-}
-
-.photo-image {
-    width: 100%;
+    width: 150px; /* Ajusta según el tamaño deseado */
+    height: 150px;
     border-radius: 10px;
-    height: auto;
-    object-fit: cover;
+    overflow: hidden;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    transition: transform 0.2s ease-in-out;
 }
 
+/* Imágenes dentro de la galería */
+.photo-image, .photo-video {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* =========================== ESTILOS DE CHECKBOX EN LAS IMÁGENES =========================== */
+
+/* Checkbox para seleccionar imágenes */
 .photo-checkbox {
     position: absolute;
-    top: 8px;
-    left: 8px;
-    transform: scale(1.5); /* Hacer checkbox más grande */
+    top: 5px;
+    left: 5px;
+    width: 20px;
+    height: 20px;
+    z-index: 2;
 }
+/* =========================== ESTILOS DE BOTONES =========================== */
 
+/* Botón para crear álbum manualmente y mediante IA */
 .btn-album, .btn-ai {
-    padding: 14px 30px;
-    font-size: 1.3rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.3s ease-in-out;
-    margin-top: 15px;
+    padding: 14px 30px; /* Espaciado interno */
+    font-size: 1.3rem; /* Tamaño de fuente */
+    background-color: #007bff; /* Color azul */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin bordes */
+    border-radius: 10px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar */
+    transition: background 0.3s ease-in-out; /* Transición suave */
+    margin-top: 15px; /* Espaciado superior */
 }
 
+/* Efecto hover al pasar el cursor sobre los botones */
 .btn-album:hover, .btn-ai:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* Azul más oscuro */
+}
+
+.photo-media {
+    width: 100%;  /* Ocupar todo el ancho disponible */
+    height: 100%; /* Mantener una altura uniforme */
+    object-fit: cover; /* Ajustar el contenido sin deformarlo */
+    border-radius: 8px;
 }

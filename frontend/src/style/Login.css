@@ -1,69 +1,89 @@
-/* Estilos para la página de inicio de sesión */
+/* =========================== ESTILOS GENERALES DEL CONTENEDOR =========================== */
+
+/* Contenedor principal de la página de inicio de sesión */
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 40px auto;
-    padding: 25px;
-    border-radius: 12px;
+    display: flex; /* Usa flexbox para centrar el contenido */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    margin: 40px auto; /* Espaciado superior e inferior automático */
+    padding: 25px; /* Espaciado interno */
+    border-radius: 12px; /* Bordes redondeados */
 }
 
+/* =========================== ESTILOS DE LA TARJETA DEL FORMULARIO =========================== */
+
+/* Caja que contiene el formulario de inicio de sesión */
 .login-card {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    width: 350px;
+    background: white; /* Fondo blanco para mayor contraste */
+    padding: 30px; /* Espaciado interno */
+    border-radius: 12px; /* Bordes redondeados */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para efecto de elevación */
+    text-align: center; /* Centrar el contenido */
+    width: 350px; /* Ancho fijo */
 }
 
+/* =========================== ESTILOS DEL TÍTULO =========================== */
+
+/* Estilos del título "Iniciar Sesión" */
 .login-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
+    font-size: 24px; /* Tamaño grande para mejor visibilidad */
+    font-weight: bold; /* Texto en negrita */
+    color: #333; /* Color oscuro para mejor contraste */
+    margin-bottom: 20px; /* Espaciado inferior */
 }
 
+/* =========================== ESTILOS DE LOS CAMPOS DE ENTRADA =========================== */
+
+/* Estilos generales para los inputs del formulario */
 .login-input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 16px;
-    outline: none;
+    width: 100%; /* Ocupar todo el ancho disponible */
+    padding: 12px; /* Espaciado interno */
+    margin: 10px 0; /* Espaciado entre los campos */
+    border: 1px solid #ccc; /* Borde gris claro */
+    border-radius: 8px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente adecuado */
+    outline: none; /* Quitar el contorno predeterminado */
 }
 
+/* Cambia el color del borde cuando el usuario enfoca el campo */
 .login-input:focus {
-    border-color: #4A90E2;
+    border-color: #4A90E2; /* Azul resaltado */
 }
 
+/* =========================== ESTILOS DEL BOTÓN DE INICIO DE SESIÓN =========================== */
+
+/* Botón de envío del formulario */
 .login-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
+    width: 100%; /* Ocupar todo el ancho disponible */
+    padding: 12px; /* Espaciado interno */
+    background-color: #007BFF; /* Azul corporativo */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin bordes */
+    border-radius: 8px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente adecuado */
+    cursor: pointer; /* Cambia el cursor al pasar */
+    transition: 0.3s; /* Transición suave */
 }
 
+/* Cambia el color del botón cuando el usuario pasa el mouse */
 .login-button:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* Azul más oscuro */
 }
 
+/* =========================== ENLACE PARA RECUPERAR CONTRASEÑA =========================== */
+
+/* Botón de "Olvidaste tu contraseña?" */
 .forgot-password {
-    margin-top: 10px;
-    background: none;
-    border: none;
-    color: #007BFF;
-    font-size: 14px;
-    cursor: pointer;
-    text-decoration: underline;
+    margin-top: 10px; /* Espaciado superior */
+    background: none; /* Sin fondo */
+    border: none; /* Sin bordes */
+    color: #007BFF; /* Azul */
+    font-size: 14px; /* Tamaño de fuente estándar */
+    cursor: pointer; /* Cambia el cursor a mano */
+    text-decoration: underline; /* Subrayado para indicar enlace */
 }
 
+/* Cambia el color del botón cuando el usuario pasa el mouse */
 .forgot-password:hover {
-    color: #0056b3;
+    color: #0056b3; /* Azul más oscuro */
 }

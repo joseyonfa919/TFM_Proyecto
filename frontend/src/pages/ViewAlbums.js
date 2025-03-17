@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-//import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import '../style/ViewAlbums.css';
@@ -8,8 +7,8 @@ function ViewAlbums() {
     const [albums, setAlbums] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const userId = localStorage.getItem('user_id');
-    //const navigate = useNavigate();
     const [sharedLinks, setSharedLinks] = useState({});
+    
 
     useEffect(() => {
         if (!userId) {
@@ -38,21 +37,20 @@ function ViewAlbums() {
         }
     };
 
-
     const handleDeleteAlbum = (albumId) => {
         if (window.confirm('¿Estás seguro de que deseas eliminar este álbum? Esta acción no se puede deshacer.')) {
             axios.post('http://127.0.0.1:5000/albums/delete', {
                 user_id: localStorage.getItem('user_id'),
-                album_ids: [albumId]  // La API espera una lista de álbumes
+                album_ids: [albumId]
             })
-            .then(() => {
-                setAlbums(albums.filter(album => album.id !== albumId));
-                alert('Álbum eliminado correctamente.');
-            })
-            .catch(error => {
-                console.error('Error al eliminar el álbum:', error);
-                alert('Hubo un error al eliminar el álbum.');
-            });
+                .then(() => {
+                    setAlbums(albums.filter(album => album.id !== albumId));
+                    alert('Álbum eliminado correctamente.');
+                })
+                .catch(error => {
+                    console.error('Error al eliminar el álbum:', error);
+                    alert('Hubo un error al eliminar el álbum.');
+                });
         }
     };
 
@@ -64,8 +62,8 @@ function ViewAlbums() {
         <div>
             <Navbar />
             <div className="albums-container">
-
                 <h2 className="title">Mis Álbumes</h2>
+
                 <div className="search-container">
                     <input
                         type="text"
@@ -75,6 +73,7 @@ function ViewAlbums() {
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
+
                 <div className="albums-list">
                     {filteredAlbums.length === 0 ? (
                         <p className="no-albums">No hay álbumes disponibles</p>
@@ -82,25 +81,51 @@ function ViewAlbums() {
                         filteredAlbums.map(album => (
                             <div key={album.id} className="album-card">
                                 <h3 className="album-title">{album.name}</h3>
+
                                 <button
                                     onClick={() => handleDeleteAlbum(album.id)}
                                     className="delete-button"
                                 >
                                     🗑️ Eliminar Álbum
                                 </button>
-                                <button className="share-button" onClick={() => handleShareAlbum(album.id)}>Compartir Álbum</button>
+
+                                <button className="share-button" onClick={() => handleShareAlbum(album.id)}>
+                                    Compartir Álbum
+                                </button>
+
                                 {sharedLinks[album.id] && (
-                                    <p className="share-link">Enlace: <a href={sharedLinks[album.id]} target="_blank" rel="noopener noreferrer">{sharedLinks[album.id]}</a></p>
+                                    <p className="share-link">
+                                        Enlace: <a href={sharedLinks[album.id]} target="_blank" rel="noopener noreferrer">
+                                            {sharedLinks[album.id]}
+                                        </a>
+                                    </p>
                                 )}
+
                                 <div className="photo-grid">
                                     {album.photos && album.photos.length > 0 ? (
                                         album.photos.map(photo => (
-                                            <img
-                                                key={photo.id}
-                                                src={`http://127.0.0.1:5000/uploads/${photo.file_name}`}
-                                                alt={photo.file_name}
-                                                className="photo-thumbnail"
-                                            />
+                                            <div key={photo.id} className="media-container">
+                                                {photo.file_name.toLowerCase().endsWith('.mp4') ||
+                                                    photo.file_name.toLowerCase().endsWith('.webm') ||
+                                                    photo.file_name.toLowerCase().endsWith('.ogg') ||
+                                                    photo.file_name.toLowerCase().endsWith('.avi') ||
+                                                    photo.file_name.toLowerCase().endsWith('.mov') ? (
+                                                    <div className="video-container">
+                                                        {/* Video Expandido */}
+                                                        <video
+                                                            controls
+                                                            className="video-expanded"
+                                                            src={`http://127.0.0.1:5000/uploads/${photo.file_name}`}
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <img
+                                                        src={`http://127.0.0.1:5000/uploads/${photo.file_name}`}
+                                                        alt={photo.file_name}
+                                                        className="photo-thumbnail"
+                                                    />
+                                                )}
+                                            </div>
                                         ))
                                     ) : (
                                         <p className="no-photos">No hay fotos en este álbum</p>

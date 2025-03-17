@@ -1,24 +1,25 @@
-import os
-
+import os  # Módulo para manejar rutas y directorios del sistema operativo
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = 'postgresql://user_generico:UserGenerico@localhost:5432/DB_PRUEBAS_1?client_encoding=utf8' #Jose
-    #SQLALCHEMY_DATABASE_URI = 'postgresql://user_generico:UserGenerico@tfm_proyecto-db-1:5432/db_pruebas_1?client_encoding=utf8' #Bryan
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = "secret_key"
-    CORS_HEADERS = "Content-Type"
-    JWT_ACCESS_TOKEN_EXPIRES = False  # Deshabilita la expiración del token
+    # Configuración de la conexión a la base de datos PostgreSQL
+    SQLALCHEMY_DATABASE_URI = 'postgresql://user_generico:UserGenerico@localhost:5432/DB_PRUEBAS_1?client_encoding=utf8'  # Conexión de José
+    #SQLALCHEMY_DATABASE_URI = 'postgresql://user_generico:UserGenerico@tfm_proyecto-db-1:5432/db_pruebas_1?client_encoding=utf8'  # Conexión de Bryan
+    
+    SQLALCHEMY_TRACK_MODIFICATIONS = False  # Desactiva el rastreo de modificaciones de SQLAlchemy para mejorar el rendimiento
+    JWT_SECRET_KEY = "secret_key"  # Clave secreta para la autenticación con JWT
+    CORS_HEADERS = "Content-Type"  # Define qué cabeceras se permiten en solicitudes CORS
+    JWT_ACCESS_TOKEN_EXPIRES = False  # Deshabilita la expiración del token de acceso JWT
 
-# Ruta base del proyecto
+# Obtiene la ruta base del proyecto
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
 
-# Directorio para subir archivos
+# Define el directorio donde se subirán los archivos
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
 
-# Directorio temporal para guardar audios
+# Define el directorio temporal donde se almacenarán los audios
 TEMP_AUDIO_DIR = os.path.join(BASE_DIR1, 'temp_audio')
 
-# Crear directorios si no existen
+# Crea los directorios si no existen para evitar errores en tiempo de ejecución
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(TEMP_AUDIO_DIR, exist_ok=True)

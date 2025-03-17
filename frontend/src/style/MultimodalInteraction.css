@@ -1,134 +1,173 @@
+/* =========================== ESTILOS GENERALES DEL CONTENEDOR =========================== */
+
+/* Contenedor principal de la interacción multimodal */
 .multimodal-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: linear-gradient(to bottom, #4a90e2, #8ebcdd);
-  min-height: 100vh;
-  width: 100%;
+  display: flex; /* Usa flexbox para organizar elementos */
+  flex-direction: column; /* Organiza en columna */
+  align-items: center; /* Centra horizontalmente */
+  justify-content: center; /* Centra verticalmente */
+  padding: 20px; /* Espaciado interno */
+  background: linear-gradient(to bottom, #4a90e2, #8ebcdd); /* Degradado de azul */
+  min-height: 100vh; /* Ocupa toda la altura de la pantalla */
+  width: 100%; /* Ocupar todo el ancho */
 }
 
+/* =========================== ESTILOS DEL TÍTULO =========================== */
+
+/* Título principal */
 h2 {
-  font-size: 2rem;
-  font-weight: bold;
-  color: white;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-  margin-bottom: 20px;
+  font-size: 2rem; /* Tamaño grande */
+  font-weight: bold; /* Texto en negrita */
+  color: white; /* Texto en blanco */
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.5); /* Sombra para mejor visibilidad */
+  margin-bottom: 20px; /* Espaciado inferior */
 }
 
+/* =========================== CONTENEDORES DE SECCIONES =========================== */
+
+/* Contenedor para la entrada de texto y grabación de audio */
 .input-section, .audio-section {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-  width: 80%;
-  max-width: 600px;
-  text-align: center;
-  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.9); /* Fondo blanco semi-transparente */
+  padding: 20px; /* Espaciado interno */
+  border-radius: 12px; /* Bordes redondeados */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra para resaltar */
+  width: 80%; /* Ancho adaptable */
+  max-width: 600px; /* Ancho máximo */
+  text-align: center; /* Centrar contenido */
+  margin-bottom: 20px; /* Espaciado inferior */
 }
 
+/* =========================== ESTILOS DEL ÁREA DE TEXTO =========================== */
+
+/* Campo de entrada de texto */
 .text-input {
-  width: 100%;
-  height: 100px;
-  padding: 10px;
-  font-size: 1rem;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  outline: none;
+  width: 100%; /* Ocupar todo el ancho */
+  height: 100px; /* Altura fija */
+  padding: 10px; /* Espaciado interno */
+  font-size: 1rem; /* Tamaño de fuente */
+  border: 2px solid #ccc; /* Borde gris */
+  border-radius: 8px; /* Bordes redondeados */
+  outline: none; /* Eliminar contorno predeterminado */
 }
 
+/* =========================== ESTILOS DE BOTONES =========================== */
+
+/* Botón general de envío */
 .submit-button {
-  width: 100%;
-  padding: 12px;
-  font-size: 1.2rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease-in-out;
-  margin-top: 10px;
+  width: 100%; /* Ocupar todo el ancho */
+  padding: 12px; /* Espaciado interno */
+  font-size: 1.2rem; /* Tamaño de fuente */
+  background-color: #007bff; /* Azul */
+  color: white; /* Texto en blanco */
+  border: none; /* Sin borde */
+  border-radius: 8px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar */
+  transition: background 0.3s ease-in-out; /* Transición suave */
+  margin-top: 10px; /* Espaciado superior */
 }
 
+/* Efecto hover en el botón */
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: #0056b3; /* Azul más oscuro */
 }
 
+/* Botones para grabar y detener grabación */
 .record-button, .stop-button {
-  width: 100%;
-  padding: 12px;
-  font-size: 1.2rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease-in-out;
-  margin-top: 10px;
+  width: 100%; /* Ocupar todo el ancho */
+  padding: 12px; /* Espaciado interno */
+  font-size: 1.2rem; /* Tamaño de fuente */
+  border: none; /* Sin borde */
+  border-radius: 8px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar */
+  transition: background 0.3s ease-in-out; /* Transición suave */
+  margin-top: 10px; /* Espaciado superior */
 }
 
+/* Estilos específicos para el botón de grabación */
 .record-button {
-  background-color: #e74c3c;
-  color: white;
+  background-color: #e74c3c; /* Rojo */
+  color: white; /* Texto en blanco */
 }
 
+/* Estilos específicos para el botón de detener */
 .stop-button {
-  background-color: #27ae60;
-  color: white;
+  background-color: #27ae60; /* Verde */
+  color: white; /* Texto en blanco */
 }
 
+/* =========================== ESTILOS PARA SUBIR ARCHIVOS =========================== */
+
+/* Contenedor del botón de carga */
 .file-upload {
-  margin-top: 10px;
+  margin-top: 10px; /* Espaciado superior */
 }
 
+/* Etiqueta del campo de carga */
 .file-upload-label {
-  display: block;
-  font-size: 1rem;
-  margin-bottom: 5px;
+  display: block; /* Hace que la etiqueta ocupe toda la línea */
+  font-size: 1rem; /* Tamaño de fuente */
+  margin-bottom: 5px; /* Espaciado inferior */
 }
 
+/* Input para subir archivos */
 .file-upload-input {
-  width: 100%;
-  padding: 10px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  outline: none;
-  background: white;
+  width: 100%; /* Ocupar todo el ancho */
+  padding: 10px; /* Espaciado interno */
+  border: 2px solid #ccc; /* Borde gris */
+  border-radius: 8px; /* Bordes redondeados */
+  outline: none; /* Eliminar contorno predeterminado */
+  background: white; /* Fondo blanco */
 }
 
+/* =========================== SECCIÓN DE RESPUESTA =========================== */
+
+/* Contenedor de la respuesta generada */
 .response-section {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-  width: 80%;
-  max-width: 600px;
-  text-align: center;
+  background: rgba(255, 255, 255, 0.9); /* Fondo semi-transparente */
+  padding: 20px; /* Espaciado interno */
+  border-radius: 12px; /* Bordes redondeados */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra para resaltar */
+  width: 80%; /* Ancho adaptable */
+  max-width: 600px; /* Ancho máximo */
+  text-align: center; /* Centrar contenido */
 }
 
+/* Título de la sección de respuesta */
 .response-section h4 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #007bff;
+  font-size: 1.5rem; /* Tamaño de fuente */
+  font-weight: bold; /* Texto en negrita */
+  color: #007bff; /* Azul */
 }
 
+/* =========================== GALERÍA DE IMÁGENES =========================== */
+
+/* Contenedor de la galería de fotos */
 .photo-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 10px;
-  margin-top: 15px;
+  display: grid; /* Usa un diseño de cuadrícula */
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Tamaño adaptable */
+  gap: 10px; /* Espaciado entre imágenes */
+  margin-top: 15px; /* Espaciado superior */
 }
 
+/* =========================== ESTILOS DE LOS ELEMENTOS DE LA GALERÍA =========================== */
+
+/* Contenedor de cada imagen */
 .photo-item {
-  background: white;
+  width: 180px; /* 🔹 Ajustar el ancho del contenedor */
   padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
   text-align: center;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  background: white;
 }
 
-.photo-image {
-  width: 100%;
-  border-radius: 8px;
-  height: auto;
-  object-fit: cover;
+
+/* Estilos de las imágenes */
+.photo-image,
+.photo-video {
+  width: 150px; /* 🔹 Define un ancho más pequeño */
+  height: auto; /* 🔹 Mantiene la proporción de la imagen */
+  border-radius: 10px; /* 🔹 Bordes redondeados para mejor apariencia */
+  object-fit: cover; /* 🔹 Asegura que la imagen se vea bien sin deformarse */
 }
+

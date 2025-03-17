@@ -1,64 +1,83 @@
+/* =========================== ESTILOS GENERALES DE LA BARRA DE NAVEGACIÓN =========================== */
+
+/* Contenedor principal de la barra de navegación */
 .navbar {
-    
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; /* Usa flexbox para organizar los elementos en una fila */
+    align-items: center; /* Centra verticalmente los elementos */
+    justify-content: space-between; /* Distribuye los elementos uniformemente */
     background-color: #222; /* Color oscuro elegante */
-    padding: 10px 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px; /* Espaciado interno */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para dar efecto de elevación */
 }
 
+/* =========================== ESTILOS DE LOS ENLACES DE NAVEGACIÓN =========================== */
+
+/* Estilos de los elementos del menú de navegación */
 .nav-item {
-    color: white;
-    text-decoration: none;
-    margin: 0 15px;
-    font-size: 1.1rem;
-    transition: color 0.3s ease-in-out;
+    color: white; /* Texto en color blanco */
+    text-decoration: none; /* Elimina el subrayado de los enlaces */
+    margin: 0 15px; /* Espaciado entre los elementos */
+    font-size: 1.1rem; /* Tamaño de fuente adecuado */
+    transition: color 0.3s ease-in-out; /* Transición suave en el cambio de color */
 }
 
+/* Cambio de color al pasar el mouse sobre los enlaces */
 .nav-item:hover {
     color: #f8b400; /* Color amarillo dorado al pasar el mouse */
 }
 
+/* =========================== ESTILOS DEL PERFIL DEL USUARIO =========================== */
+
+/* Contenedor del icono del usuario y el menú desplegable */
 .profile-container {
-    position: relative;
-    display: flex;
-    align-items: center;
+    position: relative; /* Permite posicionar el menú desplegable correctamente */
+    display: flex; /* Alinea el contenido en fila */
+    align-items: center; /* Centra los elementos */
 }
 
+/* Icono del usuario */
 .profile-icon {
-    color: white;
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
+    color: white; /* Color blanco */
+    cursor: pointer; /* Cambia el cursor a mano al pasar el mouse */
+    transition: transform 0.3s ease-in-out; /* Transición suave */
 }
 
+/* Efecto hover en el icono del usuario */
 .profile-icon:hover {
-    transform: scale(1.1);
+    transform: scale(1.1); /* Aumenta ligeramente el tamaño */
 }
 
+/* =========================== MENÚ DESPLEGABLE =========================== */
+
+/* Contenedor del menú desplegable */
 .dropdown {
-    position: absolute;
-    top: 40px;
-    right: 0;
-    background-color: #333;
-    color: white;
-    border-radius: 5px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    width: 150px;
+    position: absolute; /* Permite que el menú se posicione de forma flotante */
+    top: 40px; /* Se posiciona debajo del icono del usuario */
+    right: 0; /* Se alinea a la derecha */
+    background-color: #333; /* Fondo oscuro */
+    color: white; /* Texto en blanco */
+    border-radius: 5px; /* Bordes redondeados */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra para dar efecto de profundidad */
+    width: 150px; /* Ancho fijo del menú */
 }
 
+/* Lista del menú desplegable */
 .menu-list {
-    list-style: none;
-    margin: 0;
-    padding: 10px 0;
+    list-style: none; /* Elimina los estilos de lista */
+    margin: 0; /* Elimina los márgenes */
+    padding: 10px 0; /* Espaciado interno */
 }
 
+/* =========================== ELEMENTOS DEL MENÚ DESPLEGABLE =========================== */
+
+/* Estilos de cada opción dentro del menú */
 .menu-item {
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: background 0.3s;
+    padding: 10px 15px; /* Espaciado interno */
+    cursor: pointer; /* Cambia el cursor a mano */
+    transition: background 0.3s; /* Transición suave en el color de fondo */
 }
 
+/* Efecto hover en los elementos del menú desplegable */
 .menu-item:hover {
-    background-color: #444;
+    background-color: #444; /* Fondo gris oscuro al pasar el mouse */
 }

@@ -1,22 +1,29 @@
-import React, { useState, useRef } from "react";
-import axios from "axios";
-import Navbar from "./Navbar";
-import Recorder from "recorder-js";
-import "../style/MultimodalInteraction.css";
+import React, { useState, useRef } from "react"; // Importación de React y hooks para manejar estados y referencias
+import axios from "axios"; // Librería para hacer peticiones HTTP al backend
+import Navbar from "./Navbar"; // Importación del componente Navbar
+import Recorder from "recorder-js"; // Librería para grabación de audio en el navegador
+import "../style/MultimodalInteraction.css"; // Importación de los estilos CSS del componente
+
+// =========================== COMPONENTE PRINCIPAL ===========================
 
 const MultimodalInteraction = () => {
+  // Estados para manejar texto, respuesta del backend y estados de carga
   const [text, setText] = useState("");
   const [response, setResponse] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // Estados para manejar la grabación de audio
   const [recording, setRecording] = useState(false);
-  //const mediaRecorderRef = useRef(null);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioURL, setAudioURL] = useState(null);
   const [uploadedAudio, setUploadedAudio] = useState(null);
+
+  // Referencias para la grabadora de audio
   const audioContextRef = useRef(null);
   const recorderRef = useRef(null);
 
-  // Inicializar grabadora con `recorder-js`
+  // =========================== INICIALIZAR GRABADORA ===========================
+
   const initializeRecorder = async () => {
     try {
       audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
@@ -29,7 +36,8 @@ const MultimodalInteraction = () => {
     }
   };
 
-  // Iniciar grabación
+  // =========================== INICIAR Y DETENER GRABACIÓN ===========================
+
   const startRecording = async () => {
     if (!recorderRef.current) {
       await initializeRecorder();
@@ -38,24 +46,25 @@ const MultimodalInteraction = () => {
     setRecording(true);
   };
 
-  // Detener grabación y guardar el audio en WAV
   const stopRecording = async () => {
     if (!recorderRef.current) return;
     const { blob } = await recorderRef.current.stop();
     setAudioBlob(blob);
-    setAudioURL(URL.createObjectURL(blob));
+    setAudioURL(URL.createObjectURL(blob)); // Generar URL para previsualización
     setUploadedAudio(null);
     setRecording(false);
   };
 
-  // Eliminar el audio grabado o subido
+  // =========================== ELIMINAR AUDIO GRABADO ===========================
+
   const deleteRecording = () => {
     setAudioBlob(null);
     setAudioURL(null);
     setUploadedAudio(null);
   };
 
-  // Manejo de archivos subidos
+  // =========================== MANEJO DE ARCHIVOS DE AUDIO SUBIDOS ===========================
+
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -65,14 +74,34 @@ const MultimodalInteraction = () => {
     }
   };
 
-  // Enviar texto al backend
+  // =========================== ENVÍO DE TEXTO AL BACKEND ===========================
+
   const handleTextSubmit = async () => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/process-text", { text });
+      const userId = localStorage.getItem("user_id"); // 🔥 Obtener el ID del usuario
+
+      if (!userId) {
+        alert("No se encontró el ID del usuario. Inicia sesión nuevamente.");
+        return;
+      }
+
+      console.log("📡 Enviando texto con user_id:", userId); // 🛠 Debugging
+
+      const res = await axios.post(
+        "http://localhost:5000/process-text",
+        { text, user_id: userId }, // 🔥 Enviar user_id en el body
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}` // 🔒 Enviar token de autenticación
+          }
+        }
+      );
+
+      console.log("📡 Respuesta del backend:", res.data); // 🔍 Verificar en la consola
       setResponse(res.data.photos || []);
     } catch (error) {
-      console.error("Error enviando texto:", error);
+      console.error("❌ Error enviando texto:", error);
       alert("Error procesando el texto.");
     } finally {
       setLoading(false);
@@ -80,7 +109,9 @@ const MultimodalInteraction = () => {
     }
   };
 
-  // Enviar audio al backend
+
+  // =========================== ENVÍO DE AUDIO AL BACKEND ===========================
+
   const handleAudioSubmit = async () => {
     if (!audioBlob && !uploadedAudio) {
       alert("Por favor, grabe o cargue un archivo de audio antes de enviarlo.");
@@ -176,11 +207,18 @@ const MultimodalInteraction = () => {
           <h4>Resultado:</h4>
           {response.length > 0 ? (
             <div className="photo-gallery">
-              {response.map((photo, index) => (
+              {response.map((media, index) => (
                 <div key={index} className="photo-item">
-                  <img src={photo.url} alt={photo.name} className="photo-image" />
-                  <p>{photo.name}</p>
-                  <p>Score: {photo.score.toFixed(2)}</p>
+                  {media.type === "video" ? (
+                    <video controls className="photo-video">
+                      <source src={`http://localhost:5000${media.url}`} type="video/mp4" />
+                      Tu navegador no soporta el tag de video.
+                    </video>
+                  ) : (
+                    <img src={`http://localhost:5000${media.url}`} alt={media.name} className="photo-image" />
+                  )}
+                  <p>{media.name.replace(/^[0-9]+_/, '').split('.')[0]}</p>
+                  <p>Score: {media.score.toFixed(2)}</p>
                 </div>
               ))}
             </div>
@@ -193,4 +231,4 @@ const MultimodalInteraction = () => {
   );
 };
 
-export default MultimodalInteraction;
+export default MultimodalInteraction; // Exportación del componente

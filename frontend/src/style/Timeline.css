@@ -1,111 +1,141 @@
-/* Estilos generales */
+/* =========================== ESTILOS GENERALES =========================== */
+
+/* Contenedor principal de la cronología */
 .timeline-container {
-    max-width: 900px;
-    margin: 40px auto;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 900px; /* Limita el ancho del contenedor */
+    margin: 40px auto; /* Centra el contenedor en la pantalla */
+    background: white; /* Fondo blanco */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para efecto de elevación */
 }
 
-/* Títulos */
+/* =========================== ESTILOS DE LOS TÍTULOS =========================== */
+
+/* Estilo del título principal */
 .timeline-title {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
+    text-align: center; /* Centrar texto */
+    font-size: 24px; /* Tamaño de fuente grande */
+    font-weight: bold; /* Texto en negrita */
+    color: #333; /* Color oscuro */
 }
 
+/* Estilo del nombre de cada cronología */
 .timeline-name {
-    font-size: 20px;
-    font-weight: bold;
-    color: #444;
+    font-size: 20px; /* Tamaño adecuado */
+    font-weight: bold; /* Texto en negrita */
+    color: #444; /* Color intermedio */
 }
 
-/* Fechas */
+/* =========================== ESTILOS DE FECHAS =========================== */
+
+/* Estilos para las fechas de creación y eventos */
 .timeline-date {
-    font-size: 14px;
-    color: #777;
+    font-size: 14px; /* Tamaño reducido */
+    color: #777; /* Color gris oscuro */
 }
 
-/* Botón de eliminación */
+/* =========================== BOTÓN DE ELIMINACIÓN =========================== */
+
+/* Estilos del botón de eliminación de cronologías */
 .delete-timeline-button {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease-in-out;
+    background-color: #e74c3c; /* Rojo */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin bordes */
+    padding: 8px 12px; /* Espaciado interno */
+    font-size: 14px; /* Tamaño adecuado */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor tipo mano */
+    transition: background 0.3s ease-in-out; /* Transición suave */
 }
 
+/* Efecto hover del botón de eliminación */
 .delete-timeline-button:hover {
-    background-color: #c0392b;
+    background-color: #c0392b; /* Rojo más oscuro */
 }
 
-/* Eventos */
+/* =========================== SECCIÓN DE EVENTOS =========================== */
+
+/* Estilo del título de la sección de eventos */
 .events-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    margin-top: 15px;
+    font-size: 18px; /* Tamaño de fuente adecuado */
+    font-weight: bold; /* Texto en negrita */
+    color: #333; /* Color oscuro */
+    margin-top: 15px; /* Espaciado superior */
 }
 
+/* Lista de eventos */
 .events-list {
-    list-style: none;
-    padding: 0;
+    list-style: none; /* Elimina viñetas de la lista */
+    padding: 0; /* Elimina el padding predeterminado */
 }
 
+/* Cada evento dentro de la cronología */
 .event-item {
-    background: #f7f7f7;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    background: #f7f7f7; /* Fondo gris claro */
+    padding: 12px; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    margin-bottom: 10px; /* Espaciado entre eventos */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para resaltar */
 }
 
+/* Estilo de la fecha del evento */
 .event-date {
-    font-weight: bold;
-    color: #2c3e50;
+    font-weight: bold; /* Texto en negrita */
+    color: #2c3e50; /* Azul oscuro */
 }
 
+/* Descripción del evento */
 .event-description {
-    color: #555;
+    color: #555; /* Color intermedio */
 }
 
-/* Galería de fotos */
+/* =========================== GALERÍA DE FOTOS =========================== */
+
+/* Contenedor de la galería de fotos */
 .photo-grid {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 10px;
+    display: flex; /* Usa flexbox */
+    gap: 10px; /* Espaciado entre imágenes */
+    flex-wrap: wrap; /* Permite múltiples líneas */
+    margin-top: 10px; /* Espaciado superior */
 }
 
+/* Imágenes dentro de la galería */
 .photo-preview {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 5px;
-    transition: transform 0.3s ease-in-out;
+    width: 100px; /* Tamaño fijo */
+    height: 100px; /* Tamaño fijo */
+    object-fit: cover; /* Ajusta sin distorsión */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: transform 0.3s ease-in-out; /* Efecto suave */
 }
 
+/* Efecto hover en las imágenes */
 .photo-preview:hover {
-    transform: scale(1.1);
+    transform: scale(1.1); /* Aumenta ligeramente */
 }
 
-/* Mensajes */
+/* =========================== MENSAJES DE ERROR Y CARGA =========================== */
+
+/* Mensajes cuando no hay cronologías */
 .no-timelines-text,
 .no-events-text,
 .no-photos-text {
-    color: #888;
-    font-style: italic;
+    color: #888; /* Texto gris */
+    font-style: italic; /* Texto en cursiva */
 }
 
-/* Mensajes de error y carga */
+/* Mensajes de carga y error */
 .loading-text,
 .error-text {
-    text-align: center;
-    font-size: 16px;
-    color: #e74c3c;
+    text-align: center; /* Centrar texto */
+    font-size: 16px; /* Tamaño adecuado */
+    color: #e74c3c; /* Rojo */
+}
+
+.video-preview {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 8px;
+    margin: 5px;
 }
