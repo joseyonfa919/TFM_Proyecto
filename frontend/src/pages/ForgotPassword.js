@@ -58,7 +58,7 @@ const ForgotPassword = () => {
                         />
                         {/* Botón de envío del formulario */}
                         <button type="submit" className="forgot-password-button" disabled={loading}>
-                            {loading ? 'Enviando...' : 'Enviar'}
+                        {loading ? <div className="spinner-button"></div> : 'Enviar'}
                         </button>
                     </form>
                     {/* Mostrar mensaje de éxito o error */}
