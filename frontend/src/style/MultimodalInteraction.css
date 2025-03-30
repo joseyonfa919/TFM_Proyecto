@@ -153,21 +153,43 @@ h2 {
 
 /* Contenedor de cada imagen */
 .photo-item {
-  width: 180px; /* 🔹 Ajustar el ancho del contenedor */
+  width: 180px;
+  height: 180px; /* NUEVO: altura fija */
   padding: 10px;
   text-align: center;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   border-radius: 12px;
   background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Para que el contenido no se desborde */
 }
 
 
 /* Estilos de las imágenes */
 .photo-image,
 .photo-video {
-  width: 150px; /* 🔹 Define un ancho más pequeño */
-  height: auto; /* 🔹 Mantiene la proporción de la imagen */
-  border-radius: 10px; /* 🔹 Bordes redondeados para mejor apariencia */
-  object-fit: cover; /* 🔹 Asegura que la imagen se vea bien sin deformarse */
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Mantiene proporción y recorta si es necesario */
+  border-radius: 10px;
+}
+
+
+/* =========================== SPINNER DE CARGA =========================== */
+.spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #3498db;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  animation: spin 1s linear infinite;
+  margin: 10px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 

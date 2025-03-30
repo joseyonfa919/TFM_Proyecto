@@ -26,6 +26,7 @@ class User(db.Model):
 
     # Relación con las imágenes subidas por el usuario
     images = db.relationship('Image', back_populates='user', lazy=True)
+    albums = db.relationship('Album', back_populates='user', lazy=True)
 
 # Modelo de álbum para agrupar imágenes
 class Album(db.Model):
@@ -35,9 +36,13 @@ class Album(db.Model):
     name = db.Column(db.String(100), nullable=False)  # Nombre del álbum
     created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Fecha de creación del álbum
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Relación con el usuario propietario
+    share_token = db.Column(db.String(100), unique=True) 
 
     # Relación con las imágenes contenidas en el álbum
+
+    user = db.relationship('User', back_populates='albums', lazy=True)
     photos = db.relationship('Image', back_populates='album', lazy=True)
+
 
 # Modelo de imagen
 class Image(db.Model):

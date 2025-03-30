@@ -476,26 +476,28 @@ def share_album():
     Recibe una solicitud POST con los siguientes datos en formato JSON:
     - 'album_id': ID del álbum a compartir.
     - 'user_id': ID del usuario que comparte el álbum.
-
-    Retorna:
-        - 200 (OK): Enlace único generado con éxito.
-        - 400 (Bad Request): Si falta algún dato obligatorio.
     """
-    data = request.json
-    album_id = data.get('album_id')
-    user_id = data.get('user_id')
+    try:
+        data = request.json
+        album_id = data.get('album_id')
+        user_id = data.get('user_id')
 
-    # Validar que se proporcionaron todos los datos requeridos
-    if not album_id or not user_id:
-        return jsonify({"message": "Faltan parámetros."}), 400
+        if not album_id or not user_id:
+            return jsonify({"message": "Faltan parámetros."}), 400
 
-    # Generar un identificador único para compartir el álbum
-    share_token = str(uuid.uuid4())
+        album = Album.query.filter_by(id=album_id, user_id=user_id).first()
+        if not album:
+            return jsonify({"message": "Álbum no encontrado."}), 404
 
-    # Nota: Se podría guardar este enlace en la base de datos para su persistencia.
-    # Por ahora, solo devolvemos el token generado.
-    return jsonify({"share_link": f"http://localhost:3000/shared/{share_token}"}), 200
+        if not album.share_token:
+            album.share_token = str(uuid.uuid4())  # Generar token único
+            db.session.commit()
 
+        return jsonify({"share_link": f"http://localhost:3000/shared/{album.share_token}"}), 200
+
+    except Exception as e:
+        print(f"Error al compartir el álbum: {e}", flush=True)
+        return jsonify({"error": "Error interno"}), 500
 
 # =========================== CAMBIAR CONTRASEÑA ===========================
 @api_bp.route('/change-password', methods=['POST'])
@@ -1045,60 +1047,66 @@ def reset_password():
 # =========================== PROCESAMIENTO DE AUDIO Y TRANSCRIPCIÓN ===========================
 @api_bp.route('/process-voice', methods=['POST'])
 def process_voice():
-    """
-    Recibe un archivo de audio, lo guarda temporalmente y lo transcribe a texto usando reconocimiento de voz.
-
-    Recibe una solicitud POST con:
-    - 'audio': Archivo de audio enviado en formato WAV.
-    - 'user_id': ID del usuario que envía el audio.
-
-    La función guarda el archivo en un directorio temporal y lo transcribe a texto usando Google Speech Recognition.
-
-    Retorna:
-        - 200 (OK): Transcripción del audio en formato JSON.
-        - 400 (Bad Request): Si faltan datos obligatorios (archivo de audio o user_id).
-        - 500 (Internal Server Error): Si ocurre un error inesperado en la transcripción.
-    """
     try:
         print("Solicitud recibida en /process-voice")
 
-        # Verificar que se haya enviado un archivo de audio y el user_id
         if 'audio' not in request.files or 'user_id' not in request.form:
-            print("Faltan datos: archivo de audio o user_id")
             return jsonify({"error": "Faltan datos (audio o user_id)."}), 400
 
-        # Obtener el archivo de audio y el user_id
         audio_file = request.files['audio']
         user_id = request.form['user_id']
-        print(f"Archivo recibido: {audio_file.filename}, User ID: {user_id}")
 
-        # Crear el directorio temporal si no existe
         if not os.path.exists(TEMP_AUDIO_DIR):
             os.makedirs(TEMP_AUDIO_DIR)
 
-        # Guardar el archivo en formato WAV en el directorio temporal
         wav_path = os.path.join(TEMP_AUDIO_DIR, f"{user_id}_audio.wav")
         audio_file.save(wav_path)
-        print(f"Audio guardado en: {wav_path}")
 
-        # Inicializar el reconocedor de voz
         recognizer = sr.Recognizer()
         with sr.AudioFile(wav_path) as source:
-            print("Cargando audio para transcripción...")
             audio_data = recognizer.record(source)
             try:
-                # Transcribir el audio usando Google Speech Recognition
                 transcription = recognizer.recognize_google(audio_data, language="es-ES")
-                print(f"Transcripción obtenida: {transcription}")
+                print(f"🗣 Transcripción: {transcription}")
             except Exception as e:
                 print(f"Error en la transcripción: {e}")
-                transcription = "No se pudo transcribir el audio."
+                transcription = ""
 
-        return jsonify({"message": "Audio procesado con éxito", "transcription": transcription}), 200
+        # Si hay transcripción, buscar coincidencias en las imágenes
+        photos = []
+        if transcription:
+            user_photos = Image.query.filter_by(user_id=user_id).all()
+            for photo in user_photos:
+                path = photo.file_path
+                if path.lower().endswith(('.mp4', '.avi', '.mov')):
+                    frames = extract_frames(path, num_frames=5)
+                    for idx, frame in enumerate(frames):
+                        frame_path = f"{path}_frame_{idx}.jpg"
+                        frame.save(frame_path)
+                        similarity = calculate_similarity_with_text(clip_model, clip_processor, transcription, frame_path)
+                        if similarity > 0.25:
+                            photos.append({
+                                "url": f"/uploads/{photo.file_name}",
+                                "name": photo.file_name,
+                                "score": similarity,
+                                "type": "video"
+                            })
+                            break
+                else:
+                    similarity = calculate_similarity_with_text(clip_model, clip_processor, transcription, path)
+                    if similarity > 0.25:
+                        photos.append({
+                            "url": f"/uploads/{photo.file_name}",
+                            "name": photo.file_name,
+                            "score": similarity,
+                            "type": "image"
+                        })
+
+        return jsonify({"transcription": transcription, "photos": photos}), 200
+
     except Exception as e:
         print(f"Error procesando el audio: {e}")
-        return jsonify({"error": "Error interno procesando el audio", "details": str(e)}), 500
-
+        return jsonify({"error": "Error interno", "details": str(e)}), 500
 
 # =========================== OBTENER TODAS LAS CRONOLOGÍAS DEL USUARIO ===========================
 @api_bp.route('/timelines', methods=['GET'])
@@ -1216,7 +1224,7 @@ def process_text():
                     frame.save(frame_path)
 
                     similarity = calculate_similarity_with_text(clip_model, clip_processor, input_text, frame_path)
-                    if similarity > 0.2:
+                    if similarity > 0.25:
                         photos.append({
                             "url": f"/uploads/{photo.file_name}",  # Enviar el video en la respuesta
                             "name": photo.file_name,
@@ -1226,7 +1234,7 @@ def process_text():
                         break  # Si al menos un frame es relevante, añadimos el video y pasamos al siguiente
             else:  # Procesar como imagen
                 similarity = calculate_similarity_with_text(clip_model, clip_processor, input_text, photo_path)
-                if similarity > 0.2:
+                if similarity > 0.25:
                     photos.append({
                         "url": f"/uploads/{photo.file_name}",
                         "name": photo.file_name,
@@ -1287,3 +1295,44 @@ def create_timeline():
         print(f"Error creando la cronología: {e}")
         return jsonify({"error": "Error interno"}), 500
 
+@api_bp.route('/timelines/delete', methods=['POST'])
+def delete_timeline():
+    try:
+        data = request.get_json()
+        timeline_id = data.get('timeline_id')
+
+        if not timeline_id:
+            return jsonify({"error": "Timeline ID es obligatorio"}), 400
+
+        timeline = Timeline.query.get(timeline_id)
+        if not timeline:
+            return jsonify({"error": "Cronología no encontrada"}), 404
+
+        db.session.delete(timeline)
+        db.session.commit()
+
+        return jsonify({"message": "Cronología eliminada con éxito"}), 200
+    except Exception as e:
+        print(f"Error eliminando cronología: {e}")
+        return jsonify({"error": "Error interno"}), 500
+
+@api_bp.route('/shared/<share_token>', methods=['GET'])
+def get_shared_album(share_token):
+    try:
+        album = Album.query.filter_by(share_token=share_token).first()
+        if not album:
+            return jsonify({"error": "Álbum no encontrado"}), 404
+
+        album_data = {
+            "id": album.id,
+            "name": album.name,
+            "photos": [
+                {"id": photo.id, "file_name": photo.file_name}
+                for photo in album.photos
+            ]
+        }
+
+        return jsonify(album_data), 200
+    except Exception as e:
+        print(f"Error al obtener álbum compartido: {e}")
+        return jsonify({"error": "Error interno"}), 500

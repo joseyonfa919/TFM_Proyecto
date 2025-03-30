@@ -158,21 +158,26 @@ const MultimodalInteraction = () => {
             value={text}
             onChange={(e) => setText(e.target.value)}
             className="text-input"
+            disabled={loading}
           />
-          <button onClick={handleTextSubmit} className="submit-button" disabled={loading}>
-            {loading ? "Procesando..." : "Enviar Texto"}
-          </button>
+          {loading ? (
+            <div className="spinner"></div>
+          ) : (
+            <button onClick={handleTextSubmit} className="submit-button" disabled={loading}>
+              Enviar Texto
+            </button>
+          )}
         </div>
 
         {/* Grabación de audio */}
         <div className="audio-section">
           <div className="recording-controls">
             {!recording ? (
-              <button onClick={startRecording} className="record-button">
+              <button onClick={startRecording} className="record-button" disabled={loading}>
                 Grabar Audio
               </button>
             ) : (
-              <button onClick={stopRecording} className="stop-button">
+              <button onClick={stopRecording} className="stop-button" disabled={loading}>
                 Detener Grabación
               </button>
             )}
@@ -193,13 +198,21 @@ const MultimodalInteraction = () => {
             <label htmlFor="file-upload" className="file-upload-label">
               Subir Archivo de Audio
             </label>
-            <input type="file" id="file-upload" accept="audio/*" onChange={handleFileUpload} className="file-upload-input" />
+            <input type="file" id="file-upload" accept="audio/*"
+              onChange={handleFileUpload}
+              className="file-upload-input"
+              disabled={loading}
+            />
           </div>
 
           {/* Botón para enviar audio */}
-          <button onClick={handleAudioSubmit} className="submit-button" disabled={loading}>
-            {loading ? "Procesando..." : "Enviar Audio"}
-          </button>
+          {loading ? (
+            <div className="spinner"></div>
+          ) : (
+            <button onClick={handleAudioSubmit} className="submit-button" disabled={loading}>
+              Enviar Audio
+            </button>
+          )}
         </div>
 
         {/* Sección de respuesta */}
@@ -217,8 +230,6 @@ const MultimodalInteraction = () => {
                   ) : (
                     <img src={`http://localhost:5000${media.url}`} alt={media.name} className="photo-image" />
                   )}
-                  <p>{media.name.replace(/^[0-9]+_/, '').split('.')[0]}</p>
-                  <p>Score: {media.score.toFixed(2)}</p>
                 </div>
               ))}
             </div>
