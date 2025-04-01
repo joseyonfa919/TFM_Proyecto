@@ -27,7 +27,10 @@ function Navbar() {
   };
 
   // Verificar si la página actual es una página de autenticación
-  const isAuthPage = location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/forgot-password";
+  //const isAuthPage = location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/forgot-password";
+
+  const isAuthPage = ["/login", "/register", "/forgot-password"].some(path => location.pathname.startsWith(path)) || location.pathname.startsWith("/reset-password");
+
 
   return (
     <nav className="navbar">
