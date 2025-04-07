@@ -79,7 +79,7 @@ function Upload() {
         <div>
             <Navbar /> {/* Incluir la barra de navegación */}
             <div className="upload-container">
-                
+
                 <h2 className="upload-title">📤 Subir Fotos o Videos</h2> {/* Título principal */}
 
                 {/* Contenedor para seleccionar archivos */}
@@ -100,14 +100,26 @@ function Upload() {
 
                 {/* Contenedor de previsualización de imágenes */}
                 <div className="preview-container">
-                    {previews.map((preview, index) => (
-                        <div key={index} className="preview-box">
-                            <img src={preview} alt={`Preview ${index}`} className="preview-image" />
-                            <button className="remove-button" onClick={() => handleRemoveFile(index)}>
-                                <FaTrash />
-                            </button>
-                        </div>
-                    ))}
+                    {selectedFiles.map((file, index) => {
+                        const previewUrl = previews[index];
+                        const isVideo = file.type.startsWith("video/");
+
+                        return (
+                            <div key={index} className="preview-box">
+                                {isVideo ? (
+                                    <video className="preview-video" width="150" height="150" controls>
+                                        <source src={previewUrl} type={file.type} />
+                                        Tu navegador no soporta el video.
+                                    </video>
+                                ) : (
+                                    <img src={previewUrl} alt={`Preview ${index}`} className="preview-image" />
+                                )}
+                                <button className="remove-button" onClick={() => handleRemoveFile(index)}>
+                                    <FaTrash />
+                                </button>
+                            </div>
+                        );
+                    })}
                 </div>
 
                 {/* Botón para subir archivos */}

@@ -141,3 +141,11 @@
     position: absolute; /* Posicionamiento absoluto */
     bottom: 10px; /* Espaciado desde la parte inferior */
 }
+
+
+.preview-video {
+    border-radius: 8px;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+  }

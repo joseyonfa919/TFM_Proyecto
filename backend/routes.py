@@ -73,11 +73,6 @@ def register():
     Recibe una solicitud POST con los datos del usuario en formato JSON.
     Verifica si el usuario ya existe en la base de datos.
     Si no existe, crea un nuevo usuario con la contraseña encriptada y lo almacena en la base de datos.
-
-    Retorna:
-        - 201 (Created): Si el usuario fue registrado exitosamente.
-        - 400 (Bad Request): Si algún campo obligatorio está vacío o si el usuario ya está registrado.
-        - 500 (Internal Server Error): Si ocurre un error inesperado.
     """
     try:
         # Obtener los datos del cuerpo de la solicitud
@@ -115,11 +110,6 @@ def login():
     Recibe una solicitud POST con el email y la contraseña del usuario.
     Verifica si el usuario existe y si la contraseña ingresada es correcta.
     Si la autenticación es exitosa, genera y retorna un token de acceso JWT.
-
-    Retorna:
-        - 200 (OK): Si el inicio de sesión fue exitoso, devuelve el token de acceso.
-        - 401 (Unauthorized): Si el usuario no existe o la contraseña es incorrecta.
-        - 500 (Internal Server Error): Si ocurre un error inesperado.
     """
     try:
         # Obtener los datos JSON de la solicitud
@@ -153,16 +143,6 @@ def login():
         return jsonify({'error': 'Error interno'}), 500  # Retorna un error de servidor
 
     
-
-#Recuperar contraseña
-#@api_bp.route('/forgot-password', methods=['POST'])
-#def forgot_password():
-#    data = request.get_json()
-#    user = User.query.filter_by(email=data['email']).first()
-#    if not user:
-#        return jsonify({"message": "User not found"}), 404
-#    return jsonify({"message": "Password reset instructions sent!"}), 200
-
 # =========================== SUBIDA DE FOTOS ===========================
 @api_bp.route('/upload', methods=['POST'])
 def upload_file():
@@ -172,11 +152,6 @@ def upload_file():
     Recibe una solicitud POST con imágenes adjuntas y el ID del usuario.
     Valida que los archivos sean proporcionados y los almacena en el servidor.
     Luego, registra los archivos en la base de datos con el ID del usuario.
-
-    Retorna:
-        - 201 (Created): Si las imágenes se suben exitosamente.
-        - 400 (Bad Request): Si faltan datos o los archivos son inválidos.
-        - 500 (Internal Server Error): Si ocurre un error inesperado.
     """
     try:
         # Obtener el ID del usuario desde el formulario
@@ -234,10 +209,6 @@ def get_photos():
 
     Recibe una solicitud GET con el parámetro 'user_id' en la URL.
     Recupera todas las fotos asociadas al usuario desde la base de datos.
-
-    Retorna:
-        - 200 (OK): Lista de fotos del usuario.
-        - 400 (Bad Request): Si no se proporciona el ID del usuario.
     """
     # Obtener el user_id del parámetro de consulta
     user_id = request.args.get('user_id')
@@ -271,10 +242,6 @@ def serve_file(filename):
 
     Recibe una solicitud GET con el nombre del archivo en la URL.
     Busca el archivo en el directorio de uploads y lo envía como respuesta.
-
-    Retorna:
-        - 200 (OK): El archivo solicitado.
-        - 500 (Internal Server Error): Si ocurre un error al recuperar el archivo.
     """
     try:
         file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
@@ -303,11 +270,6 @@ def create_album():
     - 'name': Nombre del álbum.
     - 'photo_ids': Lista de IDs de fotos que pertenecen al álbum.
     - 'user_id': ID del usuario propietario del álbum.
-
-    Retorna:
-        - 201 (Created): Si el álbum se crea exitosamente.
-        - 400 (Bad Request): Si falta algún dato obligatorio.
-        - 500 (Internal Server Error): Si ocurre un error inesperado.
     """
     try:
         # Obtener los datos del cuerpo de la solicitud
@@ -422,6 +384,7 @@ def delete_photos():
         print(f"Error al eliminar fotos: {e}", flush=True)
         return jsonify({"message": "Error al eliminar fotos", "error": str(e)}), 500
 
+
 # =========================== ELIMINAR ÁLBUMES ===========================
 @api_bp.route('/albums/delete', methods=['POST'])
 def delete_albums():
@@ -499,6 +462,7 @@ def share_album():
         print(f"Error al compartir el álbum: {e}", flush=True)
         return jsonify({"error": "Error interno"}), 500
 
+
 # =========================== CAMBIAR CONTRASEÑA ===========================
 @api_bp.route('/change-password', methods=['POST'])
 def change_password():
@@ -542,9 +506,8 @@ def change_password():
         print(f"Error al cambiar contraseña: {e}")
         return jsonify({'error': 'Error interno del servidor'}), 500
 
-# =========================== ORGANIZACIÓN AUTOMÁTICA DE CONTENIDO ===========================
-@api_bp.route('/albums/organize', methods=['POST'])
-def organize_content():
+
+
     """
     Organiza automáticamente el contenido multimedia (fotos, videos y textos).
 
@@ -580,114 +543,6 @@ def organize_content():
         return jsonify({"error": "Error interno"}), 500
 
 
-# =========================== ORGANIZACIÓN MANUAL DE CONTENIDO ===========================
-@api_bp.route('/organize/manual', methods=['POST'])
-def organize_manual():
-    """
-    Organiza manualmente el contenido multimedia basado en la entrada del usuario.
-
-    Recibe una solicitud POST con los siguientes datos en formato JSON:
-    - 'photos': Lista de IDs de fotos seleccionadas.
-    - 'videos': Lista de IDs de videos seleccionados.
-    - 'notes': Lista de notas o textos introducidos por el usuario.
-
-    Retorna:
-        - 200 (OK): Contenido organizado en formato JSON.
-        - 500 (Internal Server Error): Si ocurre un error inesperado.
-    """
-    try:
-        # Obtener los datos enviados en la solicitud
-        data = request.get_json()
-        photos = data.get('photos', [])  # Lista de fotos
-        videos = data.get('videos', [])  # Lista de videos
-        notes = data.get('notes', [])  # Lista de notas
-
-        # Organización manual del contenido en categorías
-        organized_content = {
-            "Fotos": photos,
-            "Videos": videos,
-            "Notas": notes
-        }
-
-        return jsonify({"organized_content": organized_content}), 200
-    except Exception as e:
-        # Manejo de errores en caso de problemas con los datos recibidos
-        print(f"Error en la organización manual: {e}")
-        return jsonify({"error": "Error interno"}), 500
-
-# =========================== FUNCIÓN DE ORGANIZACIÓN CON IA (SIMULADA) ===========================
-def ai_organize(photos, videos, notes):
-    """
-    Simulación de procesamiento basado en Inteligencia Artificial (IA).
-
-    Esta función simplemente agrupa las fotos, videos y notas en categorías sin aplicar
-    un modelo de IA real. Se puede mejorar integrando modelos de clasificación automática.
-
-    Parámetros:
-        - photos (list): Lista de identificadores o rutas de fotos.
-        - videos (list): Lista de identificadores o rutas de videos.
-        - notes (str): Texto o notas asociadas.
-
-    Retorna:
-        - dict: Estructura JSON con el contenido organizado.
-    """
-    return {
-        "Fotos organizadas por IA": photos,
-        "Videos organizados por IA": videos,
-        "Notas analizadas por IA": notes
-    }
-
-
-# =========================== ORGANIZACIÓN AUTOMÁTICA CON IA ===========================
-@api_bp.route('/organize/ai', methods=['POST'])
-def organize_ai():
-    """
-    Organiza contenido multimedia utilizando Inteligencia Artificial.
-
-    Recibe una solicitud POST con los siguientes datos en formato JSON:
-    - 'photos': Lista de IDs de fotos a organizar.
-    - 'notes': Texto descriptivo o notas que puedan ayudar a la clasificación.
-
-    La función busca las imágenes en la base de datos, valida que existan y luego
-    utiliza un modelo de IA para analizarlas y organizarlas en categorías.
-
-    Retorna:
-        - 200 (OK): Contenido organizado en formato JSON.
-        - 400 (Bad Request): Si no se proporcionan fotos o las rutas de imágenes no existen.
-        - 404 (Not Found): Si no se encuentran imágenes con los IDs proporcionados.
-        - 500 (Internal Server Error): Si ocurre un error inesperado.
-    """
-    try:
-        # Obtener los datos enviados en la solicitud
-        data = request.get_json()
-        photo_ids = data.get('photos', [])  # Lista de IDs de fotos
-        notes = data.get('notes', '')  # Texto o notas asociadas
-
-        # Validar que al menos se haya proporcionado una foto
-        if not photo_ids:
-            return jsonify({"error": "No se proporcionaron IDs de fotos"}), 400
-
-        # Buscar imágenes en la base de datos
-        images = Image.query.filter(Image.id.in_(photo_ids)).all()
-        if not images:
-            return jsonify({"error": "No se encontraron imágenes con los IDs proporcionados"}), 404
-
-        # Obtener las rutas de las imágenes verificando que existan en el servidor
-        image_paths = [image.file_path for image in images if os.path.exists(image.file_path)]
-        if not image_paths:
-            return jsonify({"error": "No se encontraron rutas de imágenes válidas"}), 400
-
-        # Procesar imágenes y notas con un modelo de IA
-        analysis_results = process_images_with_ai(image_paths)
-
-        # Agrupar las imágenes en categorías usando clustering con IA
-        organized_content = cluster_images(analysis_results)
-
-        return jsonify({"organized_content": organized_content}), 200
-    except Exception as e:
-        # Manejo de errores en caso de problemas con la base de datos o procesamiento
-        print(f"Error en organización por IA: {e}")
-        return jsonify({"error": "Error interno", "details": str(e)}), 500
 # =========================== SUGERENCIA DE ÁLBUMES BASADA EN IA ===========================
 @api_bp.route('/albums/suggestions', methods=['POST'])
 def suggest_albums_with_ai():
@@ -700,12 +555,6 @@ def suggest_albums_with_ai():
 
     La función usa el modelo CLIP para extraer características de las imágenes
     y agruparlas mediante KMeans en un número de clústeres óptimo.
-
-    Retorna:
-        - 200 (OK): Lista de álbumes sugeridos con las fotos agrupadas.
-        - 400 (Bad Request): Si no se proporcionan fotos o las rutas no existen.
-        - 404 (Not Found): Si no se encuentran imágenes con los IDs proporcionados.
-        - 500 (Internal Server Error): Si ocurre un error inesperado.
     """
     try:
         # Obtener los datos enviados en la solicitud
@@ -902,10 +751,6 @@ def send_email(to_email, subject, body):
         - to_email (str): Dirección de correo del destinatario.
         - subject (str): Asunto del correo.
         - body (str): Cuerpo del mensaje.
-
-    Retorna:
-        - True si el correo se envió con éxito.
-        - False si ocurrió un error durante el envío.
     """
     try:
         sender_email = "recuerdosprototipo@gmail.com"  # Correo del remitente (reemplazar con uno real)
@@ -945,12 +790,6 @@ def forgot_password():
 
     La función verifica si el usuario existe en la base de datos, genera un token de recuperación
     válido por 1 hora, y envía un correo con un enlace de restablecimiento.
-
-    Retorna:
-        - 200 (OK): Si el correo se envió con éxito.
-        - 400 (Bad Request): Si el correo electrónico no fue proporcionado.
-        - 404 (Not Found): Si el usuario no existe en la base de datos.
-        - 500 (Internal Server Error): Si ocurre un error inesperado.
     """
     try:
         # Obtener el correo electrónico desde el cuerpo de la solicitud
@@ -994,7 +833,10 @@ def forgot_password():
         print(f"Error en la recuperación de contraseña: {e}")
         return jsonify({"message": "Error interno del servidor"}), 500
 
-   # =========================== RESTABLECER CONTRASEÑA ===========================
+# =========================== RESTABLECER CONTRASEÑA ===========================
+
+
+# =========================== RESETEO DE CONTRASEÑA ===========================
 @api_bp.route('/reset-password', methods=['POST'])
 def reset_password():
     """
@@ -1007,11 +849,6 @@ def reset_password():
     La función busca al usuario por el token, verifica que no haya expirado,
     y actualiza la contraseña si es válido.
 
-    Retorna:
-        - 200 (OK): Si la contraseña se restableció correctamente.
-        - 400 (Bad Request): Si falta algún dato o el token ha expirado.
-        - 404 (Not Found): Si el token no es válido o el usuario no existe.
-        - 500 (Internal Server Error): Si ocurre un error inesperado.
     """
     try:
         # Obtener los datos enviados en la solicitud
@@ -1044,6 +881,8 @@ def reset_password():
     except Exception as e:
         print(f"Error en reset_password: {e}")
         return jsonify({'error': 'Error interno del servidor'}), 500
+
+
 # =========================== PROCESAMIENTO DE AUDIO Y TRANSCRIPCIÓN ===========================
 @api_bp.route('/process-voice', methods=['POST'])
 def process_voice():
@@ -1159,7 +998,9 @@ def get_timelines():
     except Exception as e:
         print(f"Error obteniendo cronologías: {e}")
         return jsonify({"error": "Error interno"}), 500
-# =========================== SERVIR ARCHIVOS SUBIDOS ===========================
+
+
+# ===================================== SERVIR ARCHIVOS SUBIDOS ====================================
 @api_bp.route('/uploads/<filename>')
 def serve_uploaded_file(filename):
     """
@@ -1169,10 +1010,6 @@ def serve_uploaded_file(filename):
     - 'filename': Nombre del archivo a recuperar.
 
     La función busca el archivo en el directorio 'uploads' y lo devuelve como respuesta.
-
-    Retorna:
-        - 200 (OK): El archivo solicitado.
-        - 500 (Internal Server Error): Si ocurre un error al recuperar el archivo.
     """
     try:
         file_path = os.path.join(PHOTO_DIR, filename)
@@ -1191,6 +1028,7 @@ def serve_uploaded_file(filename):
         return jsonify({"message": "Error al servir el archivo"}), 500
 
 
+# ===================================== PROCESO DE TEXTO ====================================
 @api_bp.route('/process-text', methods=['POST'])
 #@jwt_required()  # 🔒 Requiere autenticación
 def process_text():
@@ -1254,6 +1092,7 @@ def process_text():
         return jsonify({"error": "Error interno", "details": str(e)}), 500
 
 
+# ===================================== CREACIÓN CRONOLOGÍA ====================================
 @api_bp.route('/timelines/create', methods=['POST'])
 def create_timeline():
     try:
@@ -1295,6 +1134,8 @@ def create_timeline():
         print(f"Error creando la cronología: {e}")
         return jsonify({"error": "Error interno"}), 500
 
+
+# ===================================== ELIMINACIÓN CRONOLOGÍA ====================================
 @api_bp.route('/timelines/delete', methods=['POST'])
 def delete_timeline():
     try:
@@ -1316,6 +1157,8 @@ def delete_timeline():
         print(f"Error eliminando cronología: {e}")
         return jsonify({"error": "Error interno"}), 500
 
+
+# ===================================== ENLACE PARA COMPARTIR ====================================
 @api_bp.route('/shared/<share_token>', methods=['GET'])
 def get_shared_album(share_token):
     try:
